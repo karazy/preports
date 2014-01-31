@@ -1,21 +1,38 @@
-<div class="row">
-	<div class="col-md-12" style="margin-bottom: 10px;">	
-		<select ng-model="search.year" ng-change="loadReports()">
-			<option ng-selected="true">2014</option>
-			<option>2015</option>
-			<option>2016</option>
-		</select>
-		<select ng-model="search.calweek" ng-change="loadReports()" ng-options="c.week as c.week for c in calWeeks">			
-			<option value="">all</option>
-		</select>
-		<input type="" placeholder="New project name" ng-model="newReportName"></input>
-		<button type="button" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> New Report</button>
+<div class="row" style="margin-bottom: 10px;">
+	<div class="col-md-12">
+		<form role="form" class="form-inline">	
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="New project name" ng-model="newReportName"></input>				
+			</div>
+			<button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> New Report</button>
+		</form>
 	</div>
 </div>
-<!-- <div class="row">
-	<div class="col-md-12">	
+<div class="row">
+	<div class="col-md-12">
+		<form role="form" class="form-inline">	
+			<div class="form-group">
+			<div class="input-group input-group" style="width: 220px;">
+			  <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+			  <input type="text" class="form-control" placeholder="search" ng-model="reportQuickSearch.name">
+			</div>
+		</div>
+		<div class="form-group">
+			<select ng-model="search.year" ng-change="loadReports()"  class="form-control"  >
+				<option ng-selected="true">2014</option>
+				<option>2015</option>
+				<option>2016</option>
+			</select>
+		</div>
+				<div class="form-group">
+			<select ng-model="search.calweek" ng-change="loadReports()" ng-options="c.week as c.week for c in calWeeks"  class="form-control" >		
+				<option value="">all</option>
+			</select>
+		</div>
+		
+	</form>
 	</div>
-</div> -->
+</div> 
 <div class="row">
 <div class="col-md-12">	
 	<table class="table table-hover">
@@ -25,7 +42,7 @@
 			<th>Year</th>
 		</thead>
 		<tbody>
-			<tr ng-repeat="r in reports">
+			<tr ng-repeat="r in reports | filter:reportQuickSearch.name">
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>
