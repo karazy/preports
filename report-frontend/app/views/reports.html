@@ -5,6 +5,8 @@
 			<option>2015</option>
 			<option>2016</option>
 		</select>
+		<select ng-model="search.calweek" ng-change="loadReports()" ng-options="c.week as c.week for c in calWeeks">			
+		</select>
 		<button type="button" class="btn btn-primary" ng-click="createNewReport()"><i class="glyphicon glyphicon-plus"></i> New Report</button>
 	</div>
 </div>

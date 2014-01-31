@@ -28,6 +28,7 @@ MongoClient = mongo.MongoClient;
 exports.getAll = function(req, res) {
 	var results,
 		searchYear = req.query.year;
+		searcCalWeek = req.query.calweek;
 
 	getReportsCollection(callback);
 	debugObject(req.query, 'search params');
@@ -45,7 +46,8 @@ exports.getAll = function(req, res) {
 	 	res.status(200);
 	 	
 	 	col.find({
-	 		'year' : searchYear
+	 		'year' : searchYear,
+	 		'week' : searcCalWeek
 	 	}).toArray(function(err, items) {
             res.send(items);
         });
