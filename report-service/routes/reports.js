@@ -111,11 +111,12 @@ exports.createReport = function(req, res) {
 		}
 
 		debugObject(req.body, 'Insert new report')
-		reports.insert(req.body, function(err) {
+		reports.insert(req.body, function(err, result) {
 			if(err) {
 				res.send(500)
-			} else {
-				res.send(200);
+			} else {				
+				//TODO check if array
+				res.send(200, result[0]);
 			}
 
 		});

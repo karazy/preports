@@ -1,8 +1,10 @@
 'use strict';
 
-PReports.ReportCtrl =  function ($scope, $location, Report) {
+PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) {
 
   	$scope.reports = [];
+
+    $scope.currentReport = null;
 
   	$scope.search = {
   		year: 2014
@@ -59,6 +61,16 @@ PReports.ReportCtrl =  function ($scope, $location, Report) {
   		});
   	}
 
+    $scope.loadReport =  function(id) {
+      if(!id) {
+        $log.log('loadReport: No Id provided.');
+        return;
+      }
+
+      $scope.currentReport = Report.get({'id':id});
+
+    }
+
   	$scope.createNewReport = function() {
   		var newReport = {},
           date = new Date();
@@ -86,8 +98,10 @@ PReports.ReportCtrl =  function ($scope, $location, Report) {
         //new
         resource.$save(function(saved) {
           console.log('saved new report');
-          $scope.loadReports();
+          //$scope.loadReports();
           $scope.newReportName = null;
+          $location.path('reports/' + resource._id)
+          
         }, function(response) {
           alert('could not save report')
         });
@@ -100,10 +114,14 @@ PReports.ReportCtrl =  function ($scope, $location, Report) {
         return Math.ceil((((date - onejan) / 86400000) + onejan.getDay() + 1) / 7);
     }
 
-  	//initially load reports
-  	$scope.loadReports();
-
-
+  	
+    //initially load reports or report entity
+    if($routeParams.reportId) {
+      $scope.loadReport($routeParams.reportId);
+    } else {
+      $scope.loadReports();  
+    }
+  
   }
 
-PReports.ReportCtrl.$inject = ['$scope', '$location', 'Report'];
+PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log'];
