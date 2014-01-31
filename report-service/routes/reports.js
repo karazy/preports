@@ -15,7 +15,7 @@ MongoClient = mongo.MongoClient;
 
 
 //connect to db new way
- MongoClient.connect("mongodb://localhost:27017/preports", function(err, _db) {
+ MongoClient.connect("mongodb://127.0.0.1:27017/preports", function(err, _db) {
   
   test.equal(null, err);
   test.ok(_db != null);
@@ -27,16 +27,28 @@ MongoClient = mongo.MongoClient;
 
 exports.getAll = function(req, res) {
 	var results,
-		searchYear = req.query.year;
-		searcCalWeek = req.query.calweek;
+		searchYear = req.query.year,
+		searchWeek = req.query.calweek,
+		searchParams = {};
 
 	getReportsCollection(callback);
-	debugObject(req.query, 'search params');
+	
+
+	
+	//debugObject(req.query, 'search query');
+	//debugObject(searchParams, 'search params');
 
 	// res.send([{name:'report1'}, {name:'report2'}, {name:'report3'}]);
 	//  this.db= new Db('preports', new Server('localhost', 3000, {auto_reconnect: true}, {}));
  // this.db.open(function(){});
 	 function callback(error, col) {
+	 	if(searchYear) {
+			searchParams.year = parseInt(req.query.year);
+		}
+
+		if(searchWeek) {
+			searchParams.week = parseInt(req.query.calweek);
+		}
 	 	if(error) {
 	 		res.send(404);
 	 		return;
@@ -45,10 +57,7 @@ exports.getAll = function(req, res) {
 	 	res.setHeader('Content-Type', 'application/json');
 	 	res.status(200);
 	 	
-	 	col.find({
-	 		'year' : searchYear,
-	 		'week' : searcCalWeek
-	 	}).toArray(function(err, items) {
+	 	col.find(searchParams).toArray(function(err, items) {
             res.send(items);
         });
 	 
@@ -109,7 +118,7 @@ exports.createReport = function(req, res) {
 				res.send(200);
 			}
 
-		});		
+		});
 
 	}
 }

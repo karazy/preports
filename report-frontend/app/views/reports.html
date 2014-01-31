@@ -6,8 +6,10 @@
 			<option>2016</option>
 		</select>
 		<select ng-model="search.calweek" ng-change="loadReports()" ng-options="c.week as c.week for c in calWeeks">			
+			<option value="">all</option>
 		</select>
-		<button type="button" class="btn btn-primary" ng-click="createNewReport()"><i class="glyphicon glyphicon-plus"></i> New Report</button>
+		<input type="" placeholder="New project name" ng-model="newReportName"></input>
+		<button type="button" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> New Report</button>
 	</div>
 </div>
 <!-- <div class="row">
@@ -18,7 +20,7 @@
 <div class="col-md-12">	
 	<table class="table table-hover">
 		<tr ng-repeat="r in reports">
-			<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.project}}</a></td>
+			<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 			<td>{{r.week}}</td>
 			<td>{{r.year}}</td>
 		</tr>
