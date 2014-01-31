@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<form role="form" class="form-inline">	
 			<div class="form-group">
-				<input type="text" class="form-control" placeholder="New project name" ng-model="newReportName"></input>				
+				<input type="text" class="form-control" placeholder="New report" ng-model="newReportName"></input>				
 			</div>
 			<button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> New Report</button>
 		</form>
@@ -40,12 +40,14 @@
 			<th>Project name</th>
 			<th>Week</th>
 			<th>Year</th>
+			<th>Actions</th>
 		</thead>
 		<tbody>
 			<tr ng-repeat="r in reports | filter:reportQuickSearch.name">
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>
+				<td><i class="glyphicon glyphicon-download"></i> Copy</td>
 			</tr>
 		</tbody>
 	</table>
