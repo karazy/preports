@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="col-md-12" style="margin-bottom: 10px;">	
+		<select ng-model="search.year" ng-change="loadReports()">
+			<option ng-selected="true">2014</option>
+			<option>2015</option>
+			<option>2016</option>
+		</select>
+		<button type="button" class="btn btn-primary" ng-click="createNewReport()"><i class="glyphicon glyphicon-plus"></i> New Report</button>
+	</div>
+</div>
+<!-- <div class="row">
+	<div class="col-md-12">	
+	</div>
+</div> -->
+<div class="row">
+<div class="col-md-12">	
+	<table class="table table-hover">
+		<tr ng-repeat="r in reports">
+			<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.project}}</a></td>
+			<td>{{r.week}}</td>
+			<td>{{r.year}}</td>
+		</tr>
+	</table>
+</div>
+</div>
