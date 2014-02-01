@@ -120,6 +120,26 @@
 	</div>
 </div>
 <div class="row">
+	<div class="col-md-6">
+		<p l="report.potentials.title" class="section-header">Identified potentials</p>
+		<div simple-property-editor editor-title="report.potentials.title" editor-on-save="updateReport();" editor-placeholder="report.potentials.ph" editor-required editor-field="potentials" editor-entity="currentReport" editor-type="textarea">			
+			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">	
+			<span l="report.start.empty" ng-hide="currentReport.potentials" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter identified potentials</span>		
+				{{currentReport.potentials}}
+			</p>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<p l="report.risksimpediments.title" class="section-header">Risks & Impediments</p>
+		<div simple-property-editor editor-title="report.risksimpediments.title" editor-on-save="updateReport();" editor-placeholder="report.risksimpediments.ph" editor-required editor-field="risksImpediments" editor-entity="currentReport" editor-type="textarea">			
+			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">				
+				<span l="report.risksimpediments.empty" ng-hide="currentReport.risksImpediments" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter risks and impediments</span>
+				{{currentReport.risksImpediments}}
+			</p>
+		</div>		
+	</div>
+</div>
+<div class="row">
 	<div class="col-md-12">
 		<div style="margin-bottom: 10px;">			
 			<button class="btn btn-primary btn-sm pull-right" ng-click="addCodeReview();"><i class="glyphicon glyphicon-plus"></i></button>
