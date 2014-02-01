@@ -152,6 +152,65 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) 
   			name: 'New milestone'
   		});
 
+  		$scope.updateReport();
+    }
+
+    $scope.removeMilestone = function(index) {
+    	if(!$scope.currentReport) {
+  			console.log('addMilestone: no current report');
+  			return;
+  		}
+
+  		if(!index) {
+  			console.log('addMilestone: no index given');
+  			return;
+  		}
+
+  		if(!$scope.currentReport.milestones || $scope.currentReport.milestones.length == 0 || !$scope.currentReport.milestones[index]) {
+  			return;
+  		}
+
+  		$scope.currentReport.milestones.splice(index, 1);
+  		$scope.updateReport();
+
+    }
+
+
+    $scope.addCodeReview = function() {
+    	if(!$scope.currentReport) {
+  			console.log('addCodeReview: no current report');
+  			return;
+  		}
+
+  		if(!$scope.currentReport.codeReviews) {
+  			$scope.currentReport.codeReviews = [];
+  		}
+
+  		$scope.currentReport.codeReviews.push({
+  			authors: 'Add authors',
+  		});
+
+  		$scope.updateReport();
+    }
+
+    $scope.removeCodeReview = function(index) {
+    	if(!$scope.currentReport) {
+  			console.log('removeCodeReview: no current report');
+  			return;
+  		}
+
+  		if(!index) {
+  			console.log('removeCodeReview: no index given');
+  			return;
+  		}
+
+  		if(!$scope.currentReport.codeReviews || $scope.currentReport.codeReviews.length == 0 || !$scope.currentReport.codeReviews[index]) {
+  			return;
+  		}
+
+  		$scope.currentReport.codeReviews.splice(index, 1);
+  		$scope.updateReport();
+
     }
 
   	
