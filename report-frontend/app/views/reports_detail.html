@@ -15,6 +15,26 @@
 </div>
 <div class="row">
 	<div class="col-md-4">
+		<p l="report.start.title" class="section-header">Project start</p>
+		<div simple-property-editor editor-title="report.start.title" editor-on-save="updateReport();" editor-placeholder="report.start.ph" editor-required editor-field="start" editor-entity="currentReport">			
+			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">	
+			<span l="report.start.empty" ng-hide="currentReport.start" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter start</span>		
+				{{currentReport.start}}
+			</p>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<p l="report.projectManagers.title" class="section-header">Project GoLive</p>
+		<div simple-property-editor editor-title="report.leaddevelopers" editor-on-save="updateReport();" editor-placeholder="report.golive.ph" editor-required editor-field="goLive" editor-entity="currentReport">			
+			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">				
+				<span l="report.golive.empty" ng-hide="currentReport.goLive" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter go live</span>
+				{{currentReport.goLive}}
+			</p>
+		</div>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-4">
 		<p l="report.year" class="section-header">Year</p>
 		<select ng-model="currentReport.year" ng-change="updateReport()"  class="form-control"  style="width: 100px;">
 			<option value="2014">2014</option>
