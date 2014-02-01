@@ -5,13 +5,18 @@ var PReports = PReports || {};
 
 //define resources module
 angular.module('PReports.resources', []);
+angular.module('PReports.directives', []);
+angular.module('PReports.services', []);
 
 PReports = angular.module('PReports', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'PReports.resources'
+  'PReports.resources',
+  'PReports.directives',
+  'PReports.services',
+  'PReports.translations'
 ]).config(function ($routeProvider) {
     $routeProvider
       .when('/reports', {

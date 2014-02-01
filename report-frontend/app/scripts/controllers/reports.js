@@ -20,7 +20,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) 
     /*
       {
         name: 'IPM',
-        leadDevelopers: 'Fre dund Guido',
+        leadDevelopers: 'Fred und Guido',
         projectManagers: 'Meike Rieken',
         start: '2013-01-01'
         golive: '2014-10-31'
@@ -82,6 +82,28 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) 
       saveReport(newReport);
   	}
 
+  	$scope.updateReport = function() {
+  		if(!$scope.currentReport) {
+  			console.log('updateReport: no current report');
+  			return;
+  		}
+  		//always convert to int before saving
+  		$scope.currentReport.year = parseInt($scope.currentReport.year);
+  		$scope.currentReport.week = parseInt($scope.currentReport.week);
+
+  		$scope.currentReport.$update();
+  	}
+
+  	$scope.deleteReport = function() {
+  		if(!$scope.currentReport) {
+  			console.log('deleteReport: no current report');
+  			return;
+  		}
+
+  		$scope.currentReport.$delete();
+  		$location.path('/');
+  	}
+
     function saveReport(report) {
       var resource;
 
@@ -93,10 +115,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) 
       resource = new Report(report);
 
       if(report._id) {
-        //update
+        //error
       } else {
         //new
-        resource.$save(function(saved) {
+        resource.$create(function(saved) {
           console.log('saved new report');
           //$scope.loadReports();
           $scope.newReportName = null;

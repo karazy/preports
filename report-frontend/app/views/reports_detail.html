@@ -2,9 +2,61 @@
 
 <div class="row">
 	<div class="col-md-8">
-		<h1>{{currentReport.name}}</h1>
+		<div simple-property-editor editor-title="Project name" editor-on-save="updateReport();" editor-placeholder="project report name" editor-required editor-field="name" editor-entity="currentReport">
+			<h1 ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				
+				{{currentReport.name}}
+			</h1>
+		</div>
+		
 	</div>
 	<div class="col-md-4">
-		<button type="button" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+		<button type="button" class="btn btn-danger" ng-click="deleteReport()"><i class="glyphicon glyphicon-trash"></i></button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-4">
+		<p l="report.year">Year</p>
+		<select ng-model="currentReport.year" ng-change="updateReport()"  class="form-control"  style="width: 100px;">
+			<option value="2014">2014</option>
+			<option value="2015">2015</option>
+			<option value="2016">2016</option>
+			<option value="2017">2017</option>
+		</select>		
+	</div>
+	<div class="col-md-4">
+		<p l="report.week">Calendar week</p>
+		<select ng-model="currentReport.week" ng-change="updateReport()" ng-options="c.week as c.week for c in calWeeks"  class="form-control" style="width: 50px;">
+		</select>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<p l="report.leaddevelopers.title">Lead developers</p>
+		<div simple-property-editor editor-title="report.leaddevelopers.title" editor-on-save="updateReport();" editor-placeholder="report.leaddevelopers.title" editor-required editor-field="leadDevelopers" editor-entity="currentReport">			
+			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				
+				{{currentReport.leadDevelopers}}
+			</p>
+		</div>
+		<p l="report.lastweektasks.title">Last week tasks</p>
+		<div simple-property-editor editor-title="report.lastweektasks.title" editor-on-save="updateReport();" editor-placeholder="report.lastweektasks.title" editor-required editor-field="lastWeekTasks" editor-entity="currentReport" editor-type="textarea">
+			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				
+				{{currentReport.lastWeekTasks}}
+			</p>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<p l="report.projectManagers.title">Project manager</p>
+		<div simple-property-editor editor-title="report.leaddevelopers" editor-on-save="updateReport();" editor-placeholder="report.projectManagers" editor-required editor-field="projectManagers" editor-entity="currentReport">			
+			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				
+				<span l="report.projectManagers.title" ng-hide="currentReport.projectManagers" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Project manager</span>
+				{{currentReport.projectManagers}}
+			</p>
+		</div>
+		<p l="report.nextweektasks.title">Next week tasks</p>
+		<div simple-property-editor editor-title="report.nextweektasks.title" editor-on-save="updateReport();" editor-placeholder="report.nextweektasks.title" editor-required editor-field="nextWeekTasks" editor-entity="currentReport" editor-type="textarea">
+			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				
+				{{currentReport.nextWeekTasks}}
+			</p>
+		</div>
 	</div>
 </div>

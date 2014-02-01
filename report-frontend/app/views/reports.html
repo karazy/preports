@@ -1,15 +1,20 @@
 <div class="row" style="margin-bottom: 10px;">
-	<div class="col-md-12">
+	<div class="col-md-8">
 		<form role="form" class="form-inline">	
 			<div class="form-group">
-				<input type="text" class="form-control" placeholder="New report" ng-model="newReportName"></input>				
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="New report" ng-model="newReportName"></input>
+					<span class="input-group-btn">
+					<button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> New Report</button>	 
+				</span>
+				</div>
 			</div>
-			<button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> New Report</button>
+			
 		</form>
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-12">
+	<div class="col-md-8">
 		<form role="form" class="form-inline">	
 			<div class="form-group">
 			<div class="input-group input-group" style="width: 220px;">
@@ -19,12 +24,14 @@
 		</div>
 		<div class="form-group">
 			<select ng-model="search.year" ng-change="loadReports()"  class="form-control"  >
-				<option ng-selected="true">2014</option>
-				<option>2015</option>
-				<option>2016</option>
+				<option value="">all</option>
+				<option value="2014" ng-selected="true">2014</option>
+				<option value="2015">2015</option>
+				<option value="2016">2016</option>
+				<option value="2017">2017</option>
 			</select>
 		</div>
-				<div class="form-group">
+		<div class="form-group">
 			<select ng-model="search.calweek" ng-change="loadReports()" ng-options="c.week as c.week for c in calWeeks"  class="form-control" >		
 				<option value="">all</option>
 			</select>

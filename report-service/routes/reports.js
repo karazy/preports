@@ -29,7 +29,18 @@ exports.getAll = function(req, res) {
 	var results,
 		searchYear = req.query.year,
 		searchWeek = req.query.calweek,
-		searchParams = {};
+		searchParams = {
+			$or: [
+				{ week: { $type: 16 } },
+				{ week: { $type: 2 } },
+				{ week: { $type: 1 } }
+	        ],
+	        $or: [
+				{ year: { $type: 16 } },
+				{ year: { $type: 2 } },
+				{ year: { $type: 1 } }
+	        ]				
+		};
 
 	getReportsCollection(callback);
 	
@@ -48,11 +59,15 @@ exports.getAll = function(req, res) {
 
 		if(searchWeek) {
 			searchParams.week = parseInt(req.query.calweek);
+
+
 		}
 	 	if(error) {
 	 		res.send(404);
 	 		return;
 	 	}
+
+	 	debugObject(searchParams, 'getAll: searchParams');
 	 	
 	 	res.setHeader('Content-Type', 'application/json');
 	 	res.status(200);
@@ -139,6 +154,8 @@ exports.updateReport = function(req, res) {
 		res.send(500);
 		return;
 	}
+
+	delete docToUpdate._id;
 	
 	getReportsCollection(callback);
 
@@ -155,9 +172,10 @@ exports.updateReport = function(req, res) {
 				return;
 			}
 
+			docToUpdate._id = _id;
+
 			console.log('Updated ' + numberOfUpdatedDocs + ' records');
-			// res.status(200);
-			res.send(200);
+			res.send(200, docToUpdate);
         });
 	}
 }

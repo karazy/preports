@@ -2,6 +2,8 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 @import 'sass-bootstrap/lib/bootstrap';
 
+$global-border-radius: 3px;
+
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
@@ -88,4 +90,61 @@ body {
     .jumbotron {
         border-bottom: 0;
     }
+}
+
+.loading-indicator {
+  height: 32px;
+  width: 32px;
+  background-image: url('../images/ajax-loader.gif');
+  background-size: auto;
+  background-repeat: no-repeat;
+  margin: 5px;
+}
+
+.simple-property-editor {
+  border: 1px solid gray;
+  background-color: white;
+  padding: 5px;
+  box-sizing:border-box;
+  border-radius: $global-border-radius;
+  right: 5px;
+  left: 5px;
+  z-index: 101;
+  max-width: 400px;
+  min-width: 250px;
+}
+
+.simple-property-editor input {
+  width: 85%;
+}
+
+.simple-property-editor textarea {
+  width: 85%;
+}
+
+.simple-property-placeholder {
+  color: gray;
+}
+
+.simple-property-editor-mask {
+  position:fixed;
+  top: 0;
+  left: 0;
+  z-index:100;
+  background-color:#000;
+  opacity: .4;
+  display:none;
+}
+
+.edit {
+    padding: 2px;
+}
+
+.muted {
+  padding: 2px;
+}
+
+.edit:hover {
+    background-color: lightblue;
+    border-radius: $global-border-radius;
 }
