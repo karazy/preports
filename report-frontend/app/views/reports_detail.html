@@ -37,12 +37,6 @@
 				{{currentReport.leadDevelopers}}
 			</p>
 		</div>
-		<p l="report.lastweektasks.title">Last week tasks</p>
-		<div simple-property-editor editor-title="report.lastweektasks.title" editor-on-save="updateReport();" editor-placeholder="report.lastweektasks.title" editor-required editor-field="lastWeekTasks" editor-entity="currentReport" editor-type="textarea">
-			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				
-				{{currentReport.lastWeekTasks}}
-			</p>
-		</div>
 	</div>
 	<div class="col-md-6">
 		<p l="report.projectManagers.title">Project manager</p>
@@ -51,7 +45,46 @@
 				<span l="report.projectManagers.title" ng-hide="currentReport.projectManagers" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Project manager</span>
 				{{currentReport.projectManagers}}
 			</p>
+		</div>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<button class="btn btn-primary btn-sm pull-right" ng-click="addMilestone();"><i class="glyphicon glyphicon-plus"></i></button>
+		<p l="report.milestones.title">Milestones</p>			
+		<div ng-repeat="m in currentReport.milestones">
+			<div class="row">
+				<div class="col-md-4">	
+					<div simple-property-editor editor-title="report.milestone.title" editor-on-save="updateReport();" editor-placeholder="report.milestone.title" editor-required editor-field="name" editor-entity="currentReport.milestones[$index]" editor-type="textfield">
+						<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">{{m.name}}</p>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div simple-property-editor editor-title="report.milestone.title" editor-on-save="updateReport();" editor-placeholder="report.milestone.title" editor-required editor-field="start" editor-entity="currentReport.milestones[$index]" editor-type="textfield">
+						<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">
+							<span l="report.milestone.start" ng-hide="currentReport.milestones[$index].start" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Start</span>
+							{{m.start}}
+						</p>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div simple-property-editor editor-title="report.milestone.title" editor-on-save="updateReport();" editor-placeholder="report.milestone.title" editor-required editor-field="end" editor-entity="currentReport.milestones[$index]" editor-type="textfield">
+						<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">{{m.end}}</p>
+					</div>
+				</div>
 		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<p l="report.lastweektasks.title">Last week tasks</p>
+		<div simple-property-editor editor-title="report.lastweektasks.title" editor-on-save="updateReport();" editor-placeholder="report.lastweektasks.title" editor-required editor-field="lastWeekTasks" editor-entity="currentReport" editor-type="textarea">
+			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				
+				{{currentReport.lastWeekTasks}}
+			</p>
+		</div>
+	</div>
+	<div class="col-md-6">
 		<p l="report.nextweektasks.title">Next week tasks</p>
 		<div simple-property-editor editor-title="report.nextweektasks.title" editor-on-save="updateReport();" editor-placeholder="report.nextweektasks.title" editor-required editor-field="nextWeekTasks" editor-entity="currentReport" editor-type="textarea">
 			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				

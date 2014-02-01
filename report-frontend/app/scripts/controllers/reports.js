@@ -79,6 +79,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) 
       newReport.week = getWeek(date);
       newReport.name = $scope.newReportName;
 
+      newReport.milestones = [];
+
       saveReport(newReport);
   	}
 
@@ -134,6 +136,22 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) 
     function getWeek(date) {
         var onejan = new Date(date.getFullYear(), 0, 1);
         return Math.ceil((((date - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    }
+
+    $scope.addMilestone = function() {
+    	if(!$scope.currentReport) {
+  			console.log('addMilestone: no current report');
+  			return;
+  		}
+
+  		if(!$scope.currentReport.milestones) {
+  			$scope.currentReport.milestones = [];
+  		}
+
+  		$scope.currentReport.milestones.push({
+  			name: 'New milestone'
+  		});
+
     }
 
   	
