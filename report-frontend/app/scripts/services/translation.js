@@ -46,6 +46,15 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Mehr",
 			"EN" : "More"
 		},
+		//reports
+		"reports.new" : {
+			"DE" :  "Projektname",
+			"EN" : "Project name"
+		},
+		"reports.new.button" : {
+			"DE" :  "Neuer Report",
+			"EN" : "New report"
+		},
 		//report
 		"report.name" : {
 			"DE" :  "Projektname",
@@ -187,7 +196,11 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"propertyeditor.error.required" : {
 			"DE" :  "Pflichtfeld",
 			"EN" : "Required"
-		}
+		},
+		"search" : {
+			"DE" :  "Suche",
+			"EN" : "Search"
+		},
 	};
 
 	$provide.value("translation", map);
