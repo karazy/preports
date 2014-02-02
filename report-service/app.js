@@ -36,6 +36,7 @@ app.get('/', function(req, res) {
 
 //Reports CRUD API
 app.get('/reports', reports.getAll);
+app.get('/reports/names', reports.getProjectNames);
 app.get('/reports/:id', reports.getById);
 app.post('/reports', reports.createReport);
 app.put('/reports/:id', reports.updateReport);

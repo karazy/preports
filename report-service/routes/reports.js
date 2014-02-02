@@ -432,8 +432,22 @@ exports.deleteImage = function(req, res) {
 	        });		
 		
 	}
+}
 
-	
+exports.getProjectNames = function(req, res) {
+
+	getReportsCollection(getDistinctProjectNames);
+
+	function getDistinctProjectNames(err, col) {
+		col.distinct('name', function(err, values) {
+			if(err) {
+				res.send(500, err);
+				return;
+			}
+
+			res.send(200, values);
+		});
+	}
 }
 
 getReportsCollection = function(callback) {

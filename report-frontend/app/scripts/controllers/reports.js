@@ -17,6 +17,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	$scope.config = config;
 
+  	$scope.projectNames = [];
+
     //Report Structure
 
     /*
@@ -276,12 +278,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     	//TODO duplicated images!
  	}
 
+ 	function loadProjectNames() {
+ 		$http.get($scope.config.serviceUrl + '/reports/names').success(function(data, status, headers, config) {
+ 			$scope.projectNames = data;
+ 		}).error(errorHandler);
+ 	}
+
   	
     //initially load reports or report entity
     if($routeParams.reportId) {
       $scope.loadReport($routeParams.reportId);
     } else {
-      $scope.loadReports();  
+      $scope.loadReports();
+      loadProjectNames();
     }
   
   }
