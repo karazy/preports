@@ -91,8 +91,8 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 						// createRepeatedFormInput(editorEntityAttr.translations, attrs) +							
 					'</div>'+
 					'<div class="row-fluid" style="margin-top: 5px">'+
-						'<button type="button" ng-click="closeDialog()" class="btn" data-dismiss="modal" style="margin-right: 5px;">'+l('common.cancel')+'</button>'+
-						'<button type="submit" class="btn btn-primary" ng-disabled="simplePropertyForm.$invalid">'+l('common.save')+'</button>'+
+						'<button type="button" ng-click="closeDialog()" class="btn" data-dismiss="modal" style="margin-right: 5px;">'+l('cancel')+'</button>'+
+						'<button type="submit" class="btn btn-primary" ng-disabled="simplePropertyForm.$invalid">'+l('save')+'</button>'+
 					'</div>'+
 					'</form>'+
 				'</div>';
