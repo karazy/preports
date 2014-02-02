@@ -299,9 +299,52 @@ exports.getImage = function(req, res) {
 		imgId = req.params.imgId;
 
 	// debugObject(req.params, 'getImage: params');
-	getReportsCollection(loadReport);
+	getReportsCollection(loadReportImage);
 
-	function loadReport(error, reports) {
+	function loadReportImage(error, reports) {
+
+		if(error) {
+			callback(500);
+			return;
+		}
+
+		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : ObjectID.createFromHexString(imgId)},
+			 { images: { $elemMatch: { '_id': ObjectID.createFromHexString(imgId) } } } , function(err, item) {
+			if(err) {
+				console.log(err);
+				res.send(500);
+				return;
+			}
+
+			if(!item) {
+				res.send(404);
+				return;
+			}
+
+			// console.log('getImage: found Image ' + item);
+			debugObject(item.images[0], 'Load image metadata');			
+
+			readAndSendFile(item.images[0]);
+			            
+        });
+	}
+
+	function readAndSendFile(image) {
+		var img = fs.readFileSync(image.path);
+		res.contentLength = img.size;
+		res.contentType = 'image/jpeg';
+		res.status(200);
+        res.end(img, 'binary');
+	}
+}
+
+exports.deleteImage = function(req, res) {
+	var _id = req.params.id,
+		imgId = req.params.imgId;
+
+	getReportsCollection(loadReportImage);
+
+	function loadReportImage(error, reports) {
 		var img;
 
 		if(error) {
@@ -325,23 +368,57 @@ exports.getImage = function(req, res) {
 			// console.log('getImage: found Image ' + item);
 			debugObject(item.images[0], 'Load image metadata');			
 
-			img = fs.readFileSync(item.images[0].path);
-			res.contentLength = img.size;
-			res.contentType = 'image/jpeg';
-			res.status(200);
-            res.end(img, 'binary');
-            
+			deleteFile(reports, item.images[0]);
+			            
         });
 	}
 
+	function deleteFile(col, img) {
+		var imgId,
+			path;
+
+		if(!img) {
+			res.send(500, 'No image found');
+			return;
+		}
+
+		if(!img._id) {
+			res.send(500, 'Image has no Id');
+			return;
+		}
+
+		imgId = img._id;
+		imgPath = img.path;
+
+		// '_id': ObjectID.createFromHexString(_id), 'images._id' : ObjectID.createFromHexString(imgId)
+		col.update( {}, 
+
+			{ $pull: { 'images' :{ '_id' : imgId}}},
+			{
+				upsert: false,
+				multi: true
+			},
+			function(err) {
+				if(err) {
+					console.log('deleteImage: delete failed ' + err);
+					callback(500);
+					return;
+				}
+
+				fs.unlink(imgPath, function(err) {
+					if(err) {
+						console.log('deleteImage: file already deleted? ' + err);
+						res.send(500);
+						return;
+					}
+					res.send(200);
+				});
+				
+	        });		
+		
+	}
+
 	
-
-	// res.send(200);
-}
-
-exports.deleteImage = function(req, res) {
-	console.log('deleteImage');
-	res.send(200);
 }
 
 getReportsCollection = function(callback) {
