@@ -3,6 +3,7 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import 'sass-bootstrap/lib/bootstrap';
 
 $global-border-radius: 3px;
+$header-color: #4A6E09;
 
 .browsehappy {
     margin: 0.2em 0;
@@ -92,6 +93,10 @@ body {
     }
 }
 
+.navbar-brand {
+    color: $header-color;
+}
+
 .loading-indicator {
   height: 32px;
   width: 32px;
@@ -158,7 +163,7 @@ body {
     }
 
     .section-header {
-        color: #4A6E09;
+        color: $header-color;
         font-size: 14px;
     }
 }

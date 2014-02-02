@@ -46,7 +46,11 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Mehr",
 			"EN" : "More"
 		},
-		//report		
+		//report
+		"report.name" : {
+			"DE" :  "Projektname",
+			"EN" : "Project name"
+		},
 		"report.start.title" : {
 			"DE" :  "Start",
 			"EN" : "Start"
@@ -180,6 +184,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Bilder hierher ziehen",
 			"EN" : "Drop images"
 		},
+		"propertyeditor.error.required" : {
+			"DE" :  "Pflichtfeld",
+			"EN" : "Required"
+		}
 	};
 
 	$provide.value("translation", map);

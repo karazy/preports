@@ -1,7 +1,7 @@
 <a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="back">back</span></a>
 <div class="row section">
 	<div class="col-md-8">
-		<div simple-property-editor editor-title="Project name" editor-on-save="updateReport();" editor-placeholder="project report name" editor-required editor-field="name" editor-entity="currentReport">
+		<div simple-property-editor editor-title="report.name" editor-on-save="updateReport();" editor-placeholder="project report name" editor-required editor-field="name" editor-entity="currentReport">
 			<h1 ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				
 				{{currentReport.name}}
 			</h1>
