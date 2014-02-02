@@ -1,6 +1,7 @@
 var mongo = require('mongodb'),
 	test = require('assert'),
 	fs = require('fs'),
+	mv = require('mv'),
 	Db,
 	Connection,
 	Server,
@@ -251,6 +252,8 @@ exports.deleteReport = function(req, res) {
 
 exports.uploadImage = function(req, res) {
 	var _id = req.params.id,
+		filename,		
+		newFilename,
 		image;
 
 	// debugObject(req.files, 'uploadImage: req.files');
@@ -259,6 +262,18 @@ exports.uploadImage = function(req, res) {
 		res.send(500);
 		return;
 	}
+
+	function getFilename(image) {
+		var index = image.path.lastIndexOf('/') + 1;
+
+		return image.path.substring(index, image.path.length);
+	}
+
+	newFilename = '/Users/frederikreifschneider/karazy/nodejs/' + getFilename(req.files.image);
+
+	mv(req.files.image.path, newFilename, function(err) {
+	  console.log('uploadImage: failed to move image ' + err);
+	});
 
 	debugObject(req.files.image, 'uploadImage: req.files.image');
 	// debugObject(req.files.image.ws, 'uploadImage: req.files.image.ws');
@@ -272,7 +287,7 @@ exports.uploadImage = function(req, res) {
 			}
 
 			image = {
-				path: req.files.image.path,
+				path: newFilename,
 				name: req.files.image.name,
 				_id: new ObjectID()
 			};

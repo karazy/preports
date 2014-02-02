@@ -109,8 +109,8 @@
 		<p l="report.lastweektasks" class="section-header">Last week tasks</p>
 		<div simple-property-editor editor-title="report.lastweektasks" editor-on-save="updateReport();" editor-placeholder="report.tasks.ph" editor-required editor-field="lastWeekTasks" editor-entity="currentReport" editor-type="textarea">
 			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">	
-			<span l="report.tasks.ph" ng-hide="currentReport.lastWeekTasks" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter tasks</span>
-				{{currentReport.lastWeekTasks}}
+				<span l="report.tasks.ph" ng-hide="currentReport.lastWeekTasks" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter tasks</span>
+				<span ng-bind-html="currentReport.lastWeekTasks | breakFilter"></span>
 			</p>
 		</div>
 	</div>
@@ -118,8 +118,8 @@
 		<p l="report.nextweektasks" class="section-header">Next week tasks</p>
 		<div simple-property-editor editor-title="report.nextweektasks" editor-on-save="updateReport();" editor-placeholder="report.tasks.ph" editor-required editor-field="nextWeekTasks" editor-entity="currentReport" editor-type="textarea">
 			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">	
-			<span l="report.tasks.ph" ng-hide="currentReport.nextWeekTasks" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter tasks</span>			
-				{{currentReport.nextWeekTasks}}
+			<span l="report.tasks.ph" ng-hide="currentReport.nextWeekTasks" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter tasks</span>
+			<span ng-bind-html="currentReport.nextWeekTasks | breakFilter"></span>
 			</p>
 		</div>
 	</div>
@@ -130,7 +130,7 @@
 		<div simple-property-editor editor-title="report.potentials" editor-on-save="updateReport();" editor-placeholder="report.potentials.ph" editor-required editor-field="potentials" editor-entity="currentReport" editor-type="textarea">			
 			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content" class="section-content">	
 			<span l="report.potentials.ph" ng-hide="currentReport.potentials" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter</span>		
-				{{currentReport.potentials}}
+			<span ng-bind-html="currentReport.potentials | breakFilter"></span>
 			</p>
 		</div>
 	</div>
@@ -139,7 +139,7 @@
 		<div simple-property-editor editor-title="report.risks" editor-on-save="updateReport();" editor-placeholder="report.risks.ph" editor-required editor-field="risksImpediments" editor-entity="currentReport" editor-type="textarea">			
 			<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content" class="section-content">				
 				<span l="report.risks.ph" ng-hide="currentReport.risksImpediments" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter risks/impediments</span>
-				{{currentReport.risksImpediments}}
+				<span ng-bind-html="currentReport.risksImpediments | breakFilter"></span>
 			</p>
 		</div>		
 	</div>
@@ -174,7 +174,7 @@
 					<div simple-property-editor editor-title="report.codereview.content" editor-on-save="updateReport();" editor-placeholder="report.codereview.content.ph" editor-required editor-field="results" editor-entity="currentReport.codeReviews[$index]" editor-type="textarea">
 						<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">
 							<span l="report.codereviews.content.ph" ng-hide="currentReport.codeReviews[$index].results" class="simple-property-placeholder" ng-class="{'alert-error' : infoPageInvalid, 'simple-property-placeholder' : !infoPageInvalid}">Enter results</span>
-							{{cr.results}}
+							<span ng-bind-html="currentReport.codeReviews[$index].results | breakFilter"></span>
 						</p>
 					</div>
 				</div>
