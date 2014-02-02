@@ -1,6 +1,6 @@
 'use strict';
 
-PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) {
+PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader) {
 
   	$scope.reports = [];
 
@@ -67,7 +67,9 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) 
         return;
       }
 
-      $scope.currentReport = Report.get({'id':id});
+      $scope.currentReport = Report.get({'id':id}, function() {
+      	setupFileUpload();
+      });
 
     }
 
@@ -213,6 +215,31 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) 
 
     }
 
+    $scope.uploadReportImage = function() {
+    	console.log('uploadReportImage');
+
+    	// $http.post('http://127.0.0.1:3000/reports/' + $scope.currentReport._id + '/images', $scope.reportImageUpload);
+    }
+
+    function setupFileUpload() {
+     var uploader = $scope.uploader = $fileUploader.create({
+            scope: $scope,                          // to automatically update the html. Default: $rootScope
+            url: 'http://127.0.0.1:3000/reports/' + $scope.currentReport._id + '/images',
+            alias: 'image',
+            removeAfterUpload: true,
+            // formData: [
+            //     { key: 'value' }
+            // ],
+            filters: [
+                function (item) {
+                    var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
+		            type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
+		            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+                }
+            ]
+        });
+ 	}
+
   	
     //initially load reports or report entity
     if($routeParams.reportId) {
@@ -223,4 +250,4 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log) 
   
   }
 
-PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log'];
+PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader'];

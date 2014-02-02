@@ -86,28 +86,67 @@ exports.getById = function(req, res) {
 		console.log('getById: no id given');
 	}
 
-	console.log('getById: load report with id ' + _id);
+	console.log('getById: load report with id ' + _id);	
 
-	getReportsCollection(callback);
+	findReport(_id, function(status, report) {		
+		console.log('SADASDASDASD');
+		res.send(status, report);
+	});
 
-	function callback(error, reports) {
+}
+
+function findReport(id, callback) {
+
+	if(!id) {
+		console.log('findReport: no id given');
+	}
+
+	getReportsCollection(loadReport);
+
+	function loadReport(error, reports) {
 		if(error) {
-			res.send(500);
+			callback(500);
 			return;
 		}
 
-		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, item) {
+		reports.findOne({'_id': ObjectID.createFromHexString(id)}, function(err, item) {
 			if(err) {
 				console.log(err);
-				res.status(404);
-				return;
+				callback(404);
 			}
 			debugObject(item, 'Load report');
-			res.status(200);
-            res.send(item);
+            callback(200, item)
         });
 	}
+}
 
+function persistReportChanges(report, callback) {
+	var _id = report._id;
+
+	debugObject(report, 'persistReportChanges: report');
+	delete report._id;
+
+	getReportsCollection(doPersist);
+
+	function doPersist(error, reports) {
+		if(error) {
+			callback(500);
+			return;
+		}
+
+		//_id is already an object ID so no conversion
+		reports.update({'_id':_id}, report, function(err) {
+			if(err) {
+				console.log(err);
+				callback(500);
+				return;
+			}
+
+			report._id = _id;
+
+			callback(200, report);
+        });
+	}
 }
 
 exports.createReport = function(req, res) {
@@ -189,6 +228,8 @@ exports.deleteReport = function(req, res) {
 	
 	getReportsCollection(callback);
 
+	//TODO delete images!
+
 	function callback(error, reports) {
 		if(error) {
 			res.send(500);
@@ -206,6 +247,49 @@ exports.deleteReport = function(req, res) {
 			res.send(200);
         });
 	}
+}
+
+exports.uploadImage = function(req, res) {
+	var _id = req.params.id,
+		image;
+
+	// debugObject(req.files, 'uploadImage: req.files');
+	if(!req.files || !req.files.image) {
+		console.log('uploadImage: no image received');
+		res.send(500);
+		return;
+	}
+
+	debugObject(req.files.image, 'uploadImage: req.files.image');
+
+	console.log('uploadImage: received image ' + req.files.image.name);
+
+	findReport(_id, function(status, report) {
+		if(status != 404 && status != 500) {
+			if(!report.images) {
+				report.images = [];
+			}
+
+			image = {
+				url: req.files.image.path,
+				name: req.files.image.name
+			};
+
+			report.images.push(image);
+
+			persistReportChanges(report, function(status, updatedReport) {
+				if(status == 500) {
+					res.send(500);
+				} else {
+					res.send(200, report);
+				}
+			});
+
+
+		}
+	})
+
+	res.send(200);
 }
 
 getReportsCollection = function(callback) {

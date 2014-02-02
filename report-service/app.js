@@ -11,7 +11,10 @@ var allowCrossDomain = function(req, res, next) {
 
 //define usages
 app.configure(function() {
-	app.use(express.bodyParser());
+	app.use(express.bodyParser({ 
+		keepExtensions: true
+		// uploadDir: '~/Pictures/nodejs' 
+	}));
 	app.use(express.methodOverride());
 	app.use(allowCrossDomain);
 	app.use(app.router);
@@ -36,6 +39,8 @@ app.get('/reports', reports.getAll);
 app.get('/reports/:id', reports.getById);
 app.post('/reports', reports.createReport);
 app.put('/reports/:id', reports.updateReport);
+app.post('/reports/:id/images', reports.uploadImage);
+// app.delete('/reports/:id/images/:imgId', reports.deleteImage);
 app.delete('/reports/:id', reports.deleteReport);
 
 

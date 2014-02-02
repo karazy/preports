@@ -16,7 +16,8 @@ PReports = angular.module('PReports', [
   'PReports.resources',
   'PReports.directives',
   'PReports.services',
-  'PReports.translations'
+  'PReports.translations',
+  'angularFileUpload'
 ]).config(function ($routeProvider) {
     $routeProvider
       .when('/reports', {
