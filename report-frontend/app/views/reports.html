@@ -50,11 +50,11 @@
 			<th>Actions</th>
 		</thead>
 		<tbody>
-			<tr ng-repeat="r in reports | filter:reportQuickSearch.name">
+			<tr ng-repeat="r in reports | filter:reportQuickSearch.name | orderBy:['year','week']">
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>
-				<td><i class="glyphicon glyphicon-download"></i> Copy</td>
+				<td><button class="btn btn-primary btn-xs" ng-click="copyReport(r);"><i class="glyphicon glyphicon-download"></i> <span l="copy">Copy</span></button></td>
 			</tr>
 		</tbody>
 	</table>

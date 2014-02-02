@@ -9,7 +9,7 @@
 		
 	</div>
 	<div class="col-md-4">
-		<button type="button" class="btn btn-danger" ng-click="deleteReport()"><i class="glyphicon glyphicon-trash"></i></button>
+		<button type="button" class="btn btn-danger pull-right" ng-click="deleteReport()" style="margin-top: 20px;"><i class="glyphicon glyphicon-trash"></i></button>
 	</div>
 </div>
 <div class="row">
@@ -185,7 +185,7 @@
 			</div>
 		</div>
 		<!-- Define complete report as drop area for files. -->
-		<div class="row">
+		<div class="row" style="margin-bottom: 10px">
 			<div class="col-md-5">
 				<div ng-file-drop ng-file-over="file-drop-over" class="file-drop">
 					<span l="file.dropzone">Drop images</span>
@@ -199,7 +199,7 @@
 			</div>
 		</div>	
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<div class="progress" style="">
                     <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
                 </div>

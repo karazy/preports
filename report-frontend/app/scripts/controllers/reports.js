@@ -217,12 +217,6 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     }
 
-    // $scope.uploadReportImage = function() {
-    // 	console.log('uploadReportImage');
-
-    // 	// $http.post('http://127.0.0.1:3000/reports/' + $scope.currentReport._id + '/images', $scope.reportImageUpload);
-    // }
-
     $scope.deleteReportImage = function(image) {
     	if(!image) {
     		console.log('deleteReportImage: no image given');
@@ -266,6 +260,20 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
             $scope.loadReport($scope.currentReport._id);
             console.info('Complete all', items);
         });
+ 	}
+
+ 	$scope.copyReport = function(reportToCopy) {
+ 		if(!reportToCopy) {
+    		console.log('copyReport: no reportToCopy given');
+    		return;
+    	}
+
+    	delete reportToCopy._id;
+
+    	reportToCopy.name = reportToCopy.name +'_copy';
+
+    	saveReport(reportToCopy);
+    	//TODO duplicated images!
  	}
 
   	
