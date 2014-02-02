@@ -1,5 +1,6 @@
 var mongo = require('mongodb'),
 	test = require('assert'),
+	fs = require('fs'),
 	Db,
 	Connection,
 	Server,
@@ -71,8 +72,8 @@ exports.getAll = function(req, res) {
 	 	
 	 	res.setHeader('Content-Type', 'application/json');
 	 	res.status(200);
-	 	
-	 	col.find(searchParams).toArray(function(err, items) {
+	 	//exclude images
+	 	col.find(searchParams, {'images' : 0}).toArray(function(err, items) {
             res.send(items);
         });
 	 
@@ -86,10 +87,9 @@ exports.getById = function(req, res) {
 		console.log('getById: no id given');
 	}
 
-	console.log('getById: load report with id ' + _id);	
+	console.log('getById: load report with id ' + _id);		
 
 	findReport(_id, function(status, report) {		
-		console.log('SADASDASDASD');
 		res.send(status, report);
 	});
 
@@ -114,7 +114,7 @@ function findReport(id, callback) {
 				console.log(err);
 				callback(404);
 			}
-			debugObject(item, 'Load report');
+			// debugObject(item, 'findReport: report');
             callback(200, item)
         });
 	}
@@ -261,6 +261,7 @@ exports.uploadImage = function(req, res) {
 	}
 
 	debugObject(req.files.image, 'uploadImage: req.files.image');
+	// debugObject(req.files.image.ws, 'uploadImage: req.files.image.ws');
 
 	console.log('uploadImage: received image ' + req.files.image.name);
 
@@ -271,8 +272,9 @@ exports.uploadImage = function(req, res) {
 			}
 
 			image = {
-				url: req.files.image.path,
-				name: req.files.image.name
+				path: req.files.image.path,
+				name: req.files.image.name,
+				_id: new ObjectID()
 			};
 
 			report.images.push(image);
@@ -292,6 +294,56 @@ exports.uploadImage = function(req, res) {
 	res.send(200);
 }
 
+exports.getImage = function(req, res) {
+	var _id = req.params.id,
+		imgId = req.params.imgId;
+
+	// debugObject(req.params, 'getImage: params');
+	getReportsCollection(loadReport);
+
+	function loadReport(error, reports) {
+		var img;
+
+		if(error) {
+			callback(500);
+			return;
+		}
+
+		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : ObjectID.createFromHexString(imgId)},
+			 { images: { $elemMatch: { '_id': ObjectID.createFromHexString(imgId) } } } , function(err, item) {
+			if(err) {
+				console.log(err);
+				res.send(500);
+				return;
+			}
+
+			if(!item) {
+				res.send(404);
+				return;
+			}
+
+			// console.log('getImage: found Image ' + item);
+			debugObject(item.images[0], 'Load image metadata');			
+
+			img = fs.readFileSync(item.images[0].path);
+			res.contentLength = img.size;
+			res.contentType = 'image/jpeg';
+			res.status(200);
+            res.end(img, 'binary');
+            
+        });
+	}
+
+	
+
+	// res.send(200);
+}
+
+exports.deleteImage = function(req, res) {
+	console.log('deleteImage');
+	res.send(200);
+}
+
 getReportsCollection = function(callback) {
 	 db.collection('reports', function(error, reports_collection) {
     	if( error ) {
@@ -303,7 +355,6 @@ getReportsCollection = function(callback) {
     			callback(_err, _collection);
     		});
     	} else {
-    		console.log('getReportsCollection: found');
     		callback(null, reports_collection);
     	}
  	 });

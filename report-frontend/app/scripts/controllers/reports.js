@@ -1,6 +1,6 @@
 'use strict';
 
-PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader) {
+PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler) {
 
   	$scope.reports = [];
 
@@ -14,6 +14,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	
   	$scope.calWeeks = [
   	];
+
+  	$scope.config = config;
 
     //Report Structure
 
@@ -215,10 +217,26 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     }
 
-    $scope.uploadReportImage = function() {
-    	console.log('uploadReportImage');
+    // $scope.uploadReportImage = function() {
+    // 	console.log('uploadReportImage');
 
-    	// $http.post('http://127.0.0.1:3000/reports/' + $scope.currentReport._id + '/images', $scope.reportImageUpload);
+    // 	// $http.post('http://127.0.0.1:3000/reports/' + $scope.currentReport._id + '/images', $scope.reportImageUpload);
+    // }
+
+    $scope.deleteReportImage = function(image) {
+    	if(!image) {
+    		console.log('deleteReportImage: no image given');
+    		return;
+    	}
+
+    	if(!$scope.currentReport) {
+  			console.log('deleteReportImage: no current report');
+  			return;
+  		}
+
+    	$http.delete(config.serviceUrl + '/reports/' + $scope.currentReport._id + '/images/' + image._id,
+    		angular.noop,
+    		errorHandler);
     }
 
     function setupFileUpload() {
@@ -227,9 +245,6 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
             url: 'http://127.0.0.1:3000/reports/' + $scope.currentReport._id + '/images',
             alias: 'image',
             removeAfterUpload: true,
-            // formData: [
-            //     { key: 'value' }
-            // ],
             filters: [
                 function (item) {
                     var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
@@ -237,6 +252,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 		            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
                 }
             ]
+        });
+
+     	uploader.bind('completeall', function (event, items) {
+      		//reload report
+            $scope.loadReport($scope.currentReport._id);
+            console.info('Complete all', items);
         });
  	}
 
@@ -250,4 +271,4 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   
   }
 
-PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader'];
+PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader', 'config', 'errorHandler'];

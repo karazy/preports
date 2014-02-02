@@ -40,7 +40,8 @@ app.get('/reports/:id', reports.getById);
 app.post('/reports', reports.createReport);
 app.put('/reports/:id', reports.updateReport);
 app.post('/reports/:id/images', reports.uploadImage);
-// app.delete('/reports/:id/images/:imgId', reports.deleteImage);
+app.get('/reports/:id/images/:imgId', reports.getImage);
+app.delete('/reports/:id/images/:imgId', reports.deleteImage);
 app.delete('/reports/:id', reports.deleteReport);
 
 
