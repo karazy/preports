@@ -30,6 +30,9 @@ PReports = angular.module('PReports', [
         templateUrl: 'views/reports_detail.html',
         controller: 'PReports.ReportCtrl'
       })
+       .when('/about', {
+        templateUrl: 'views/about.html'
+       })
       .otherwise({
         redirectTo: '/reports'
       });
