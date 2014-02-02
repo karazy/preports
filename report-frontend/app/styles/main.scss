@@ -149,9 +149,18 @@ body {
     border-radius: $global-border-radius;
 }
 
-.section-header {
-    color: #888;
-    font-size: 14px;
+.section {
+    margin-bottom: 10px;
+
+    .section-row {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .section-header {
+        color: #4A6E09;
+        font-size: 14px;
+    }
 }
 
 .section-content {
