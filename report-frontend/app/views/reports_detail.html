@@ -197,8 +197,15 @@
 			<div class="col-md-5">
 				<input ng-file-select type="file" multiple  />
 			</div>
-		</div>		
-		<table class="table">
+		</div>	
+		<div class="row">
+			<div class="col-md-6">
+				<div class="progress" style="">
+                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                </div>
+			</div>
+		</div>	
+	<!-- 	<table class="table">
             <thead>
                 <tr>
                     <th width="50%">Name</th>
@@ -235,6 +242,6 @@
                     </td>
                 </tr>
             </tbody>
-        </table>			
+        </table> -->			
 	</div>
 </div>

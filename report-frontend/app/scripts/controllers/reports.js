@@ -234,9 +234,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			return;
   		}
 
-    	$http.delete(config.serviceUrl + '/reports/' + $scope.currentReport._id + '/images/' + image._id,
-    		angular.noop,
-    		errorHandler);
+    	$http.delete(config.serviceUrl + '/reports/' + $scope.currentReport._id + '/images/' + image._id).
+    	success(function(data, status, headers, config) {
+			angular.forEach($scope.currentReport.images, function(object, index) {
+				if(object._id  == image._id) {
+					$scope.currentReport.images.splice(index, 1);
+					return false;
+				}
+			});
+		}).error(errorHandler);
     }
 
     function setupFileUpload() {
@@ -245,6 +251,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
             url: 'http://127.0.0.1:3000/reports/' + $scope.currentReport._id + '/images',
             alias: 'image',
             removeAfterUpload: true,
+            autoUpload: true,
             filters: [
                 function (item) {
                     var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
