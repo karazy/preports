@@ -9,7 +9,9 @@
 		
 	</div>
 	<div class="col-md-4">
-		<button type="button" class="btn btn-danger pull-right" ng-click="deleteReport()" style="margin-top: 20px;"><i class="glyphicon glyphicon-trash"></i></button>
+		<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport()" dialog-confirm-button="delete" dialog-class="alert-danger">
+			<button type="button" class="btn btn-danger pull-right" style="margin-top: 20px;"><i class="glyphicon glyphicon-trash"></i></button>
+		</span>			
 	</div>
 </div>
 <div class="row section">

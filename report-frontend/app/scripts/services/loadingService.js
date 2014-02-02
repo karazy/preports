@@ -10,13 +10,13 @@ angular.module('PReports.services').factory('loadingService', function() {
 
   var service = {
     /**
-  * @name Cloobster.services.loadingService#requestCount
+  * @name PReports.services.loadingService#requestCount
   * 
   * Number of running requests.
   */
     requestCount: 0,
     /**
-  * @name Cloobster.services.loadingService#isLoading
+  * @name PReports.services.loadingService#isLoading
   * 
   * Indicates if a request is running.
   * @return true if requestCount > 0, false otherwise

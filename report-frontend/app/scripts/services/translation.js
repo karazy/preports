@@ -160,6 +160,14 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Architektur-Diagramme",
 			"EN" : "Architecture diagrams"
 		},
+		"report.delete.title" : {
+			"DE" :  "Report löschen?",
+			"EN" : "Delete report?"
+		},
+		"report.delete.text" : {
+			"DE" :  "Report wird unwideruflich gelöscht!",
+			"EN" : "Report will be deleted permanent!"
+		},
 		//general
 		"back" : {
 			"DE" :  "zurück",
@@ -201,6 +209,14 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Suche",
 			"EN" : "Search"
 		},
+		"delete" : {
+			"DE" :  "Löschen",
+			"EN" : "Delete"
+		},
+		"copy" : {
+			"DE" :  "Kopieren",
+			"EN" : "Copy"
+		}
 	};
 
 	$provide.value("translation", map);
