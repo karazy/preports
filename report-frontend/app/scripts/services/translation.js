@@ -216,6 +216,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"copy" : {
 			"DE" :  "Kopieren",
 			"EN" : "Copy"
+		},
+		"error.title" : {
+			"DE" :  "Ein Fehler ist aufgetreten",
+			"EN" : "An error occured"
 		}
 	};
 

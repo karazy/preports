@@ -73,7 +73,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
       $scope.currentReport = Report.get({'id':id}, function() {
       	setupFileUpload();
-      });
+      }, errorHandler);
 
     }
 

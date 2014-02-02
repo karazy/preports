@@ -41,13 +41,6 @@ angular.module('PReports.services').factory('errorHandler',['$rootScope','$locat
 
 		// Log the response.
 		$log.error("Error during http method, response object: " + angular.toJson(response));
-
-		if(response.status == 405) {
-			// User tried to modify read-only resource.
-			// Should only happen if a user deletes a resource, while another user edits.
-			// Return to businesses view.
-			$location.path('businesses');
-		}
 	}
 	
 	handleError.reset = function() {

@@ -90,7 +90,7 @@ exports.getById = function(req, res) {
 
 	console.log('getById: load report with id ' + _id);		
 
-	findReport(_id, function(status, report) {		
+	findReport(_id, function(status, report) {
 		res.send(status, report);
 	});
 
@@ -113,7 +113,13 @@ function findReport(id, callback) {
 		reports.findOne({'_id': ObjectID.createFromHexString(id)}, function(err, item) {
 			if(err) {
 				console.log(err);
+				callback(500, err);
+				return;
+			}
+
+			if(!item) {
 				callback(404);
+				return;
 			}
 			// debugObject(item, 'findReport: report');
             callback(200, item)
