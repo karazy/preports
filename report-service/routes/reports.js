@@ -273,10 +273,11 @@ exports.uploadImage = function(req, res) {
 	}
 
 
-
+	/**
+	* Return file name by extracting it from the path.
+	*/
 	function getFilename(image) {
 		var index = image.path.lastIndexOf(pathDelim) + 1;
-
 		return image.path.substring(index, image.path.length);
 	}
 
@@ -291,7 +292,10 @@ exports.uploadImage = function(req, res) {
 			return;
 		} else {
 			console.log('uploadImage: successfully moved image');
-		}
+			//wait for file being moved to prevent file not shown because
+			//request returns before moving is finished
+			saveImageMetaData();
+		}		
 	  
 	});
 
@@ -299,35 +303,36 @@ exports.uploadImage = function(req, res) {
 	// debugObject(req.files.image.ws, 'uploadImage: req.files.image.ws');
 
 	//console.log('uploadImage: received image ' + req.files.image.name);
-
-	findReport(_id, function(status, report) {
-		if(status != 404 && status != 500) {
-			if(!report.images) {
-				report.images = [];
-			}
-
-			image = {
-				path: newFilename,
-				name: req.files.image.name,
-				_id: new ObjectID()
-			};
-
-			//debugObject(image, 'uploadImage: add image metadata to currentReport ' + report._id);
-			report.images.push(image);
-
-			persistReportChanges(report, function(status, updatedReport) {
-				if(status == 500) {
-					res.send(500);
-				} else {
-					res.send(200, report);
+	function saveImageMetaData() {
+		findReport(_id, function(status, report) {
+			if(status != 404 && status != 500) {
+				if(!report.images) {
+					report.images = [];
 				}
-			});
 
+				image = {
+					path: newFilename,
+					name: req.files.image.name,
+					_id: new ObjectID()
+				};
 
-		}
-	})
+				//debugObject(image, 'uploadImage: add image metadata to currentReport ' + report._id);
+				report.images.push(image);
 
-	res.send(200);
+				persistReportChanges(report, function(status, updatedReport) {
+					if(status == 500) {
+						res.send(500);
+					} else {
+						res.send(200, report);
+					}
+				});
+			} else {
+				res.send(status);
+			}
+		});
+	}
+
+	// res.send(200);
 }
 
 exports.getImage = function(req, res) {
