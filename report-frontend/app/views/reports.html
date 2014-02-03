@@ -8,10 +8,10 @@
 					<button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> <span l="reports.new.button">New Report</span></button>	 
 				</span>
 				</div>
-			</div>
-			
+			</div>			
 		</form>
 	</div>
+	<div class="loading-indicator pull-right" ng-show="ajaxLoading"></div>
 </div>
 <div class="row">
 	<div class="col-md-8">

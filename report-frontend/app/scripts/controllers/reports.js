@@ -111,6 +111,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		}
 
   		reportToDelete.$delete(function() {
+        //TODO check view context. remove report in overview or jump back to overview
         $location.path('/');  
       }, errorHandler);
   		
