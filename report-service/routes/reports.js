@@ -2,6 +2,7 @@ var mongo = require('mongodb'),
 	test = require('assert'),
 	fs = require('fs'),
 	mv = require('mv'),
+	pathHelper = require('path'),
 	Db,
 	Connection,
 	Server,
@@ -260,31 +261,44 @@ exports.uploadImage = function(req, res) {
 	var _id = req.params.id,
 		filename,		
 		newFilename,
+		userHome =  getUserHome(),
+		pathDelim = pathHelper.sep,
 		image;
 
-	// debugObject(req.files, 'uploadImage: req.files');
+    //debugObject(req.files.image, 'uploadImage: req.files.image');
 	if(!req.files || !req.files.image) {
 		console.log('uploadImage: no image received');
 		res.send(500);
 		return;
 	}
 
+
+
 	function getFilename(image) {
-		var index = image.path.lastIndexOf('/') + 1;
+		var index = image.path.lastIndexOf(pathDelim) + 1;
 
 		return image.path.substring(index, image.path.length);
 	}
 
-	newFilename = '/Users/frederikreifschneider/karazy/nodejs/' + getFilename(req.files.image);
+	newFilename = pathHelper.join(userHome,'nodejs',getFilename(req.files.image));
+
+	console.log('uploadImage: Trying to move ' + req.files.image.path + ' to ' + newFilename);
 
 	mv(req.files.image.path, newFilename, function(err) {
-	  console.log('uploadImage: failed to move image ' + err);
+		if(err) {
+			console.log('uploadImage: failed to move image ' + err);
+			res.send(500);
+			return;
+		} else {
+			console.log('uploadImage: successfully moved image');
+		}
+	  
 	});
 
-	debugObject(req.files.image, 'uploadImage: req.files.image');
+	//debugObject(req.files.image, 'uploadImage: req.files.image');
 	// debugObject(req.files.image.ws, 'uploadImage: req.files.image.ws');
 
-	console.log('uploadImage: received image ' + req.files.image.name);
+	//console.log('uploadImage: received image ' + req.files.image.name);
 
 	findReport(_id, function(status, report) {
 		if(status != 404 && status != 500) {
@@ -298,6 +312,7 @@ exports.uploadImage = function(req, res) {
 				_id: new ObjectID()
 			};
 
+			//debugObject(image, 'uploadImage: add image metadata to currentReport ' + report._id);
 			report.images.push(image);
 
 			persistReportChanges(report, function(status, updatedReport) {
@@ -429,8 +444,7 @@ exports.deleteImage = function(req, res) {
 				fs.unlink(imgPath, function(err) {
 					if(err) {
 						console.log('deleteImage: file already deleted? ' + err);
-						res.send(500);
-						return;
+						//continue nevertheless also the file may still exist						
 					}
 					res.send(200);
 				});
@@ -489,4 +503,12 @@ debugObject = function(obj, title) {
 	} catch(e) {
 		console.error('RepV.util.Helper.debugObject: failed to debug object ' + e);
 	}
+}
+
+function getUserHome() {
+  return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+}
+
+function getPathDelimiter() {
+	return process.env[(process.platform == 'win32') ? "\\" : '/'];
 }
