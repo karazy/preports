@@ -344,8 +344,11 @@ exports.getImage = function(req, res) {
 			return;
 		}
 
+		//console.log('getImage: trying to load image ' + imgId);
+
 		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : ObjectID.createFromHexString(imgId)},
 			 { images: { $elemMatch: { '_id': ObjectID.createFromHexString(imgId) } } } , function(err, item) {
+			
 			if(err) {
 				console.log(err);
 				res.send(500);
@@ -353,12 +356,13 @@ exports.getImage = function(req, res) {
 			}
 
 			if(!item) {
+				console.log('getImage: image not found. _id ' + _id + ' imgId ' + imgId);
 				res.send(404);
 				return;
 			}
 
-			// console.log('getImage: found Image ' + item);
-			debugObject(item.images[0], 'Load image metadata');			
+			// console.log('getImage: found Image ' + item);			
+			debugObject(item.images[0], 'getImage: image loaded ' + imgId);	
 
 			readAndSendFile(item.images[0]);
 			            

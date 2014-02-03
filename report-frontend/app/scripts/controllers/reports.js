@@ -167,7 +167,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			return;
   		}
 
-  		if(!index) {
+  		if(!index && index !== 0) {
   			console.log('addMilestone: no index given');
   			return;
   		}
@@ -205,7 +205,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			return;
   		}
 
-  		if(!index) {
+  		if(!index && index !== 0) {
   			console.log('removeCodeReview: no index given');
   			return;
   		}
@@ -231,14 +231,14 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		}
 
     	$http.delete(config.serviceUrl + '/reports/' + $scope.currentReport._id + '/images/' + image._id).
-    	success(function(data, status, headers, config) {
-			angular.forEach($scope.currentReport.images, function(object, index) {
-				if(object._id  == image._id) {
-					$scope.currentReport.images.splice(index, 1);
-					return false;
-				}
-			});
-		}).error(errorHandler);
+      	success(function(data, status, headers, config) {
+    			angular.forEach($scope.currentReport.images, function(object, index) {
+    				if(object._id  == image._id) {
+    					$scope.currentReport.images.splice(index, 1);
+    					return false;
+    				}
+    			});
+  		  }).error(errorHandler);
     }
 
     function setupFileUpload() {
