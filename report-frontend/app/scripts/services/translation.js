@@ -10,6 +10,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 	//holds all translations
 	var map = {		
 		//common error messages
+		"error.image.upload" : {
+			"DE" : "Bild hochladen fehlgeschlagen.",
+			"EN" : "Image upload failed."
+		},
 		"error.404" : {
 			"DE" : "Eine Ressource konnte nicht geladen werden.",
 			"EN" : "Resource not available."

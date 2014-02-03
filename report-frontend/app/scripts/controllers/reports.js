@@ -1,6 +1,6 @@
 'use strict';
 
-PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler) {
+PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler, $rootScope, language) {
 
   	$scope.reports = [];
 
@@ -265,7 +265,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
      	uploader.bind('completeall', function (event, items) {
       		//reload report
             $scope.loadReport($scope.currentReport._id);
-            console.info('Complete all', items);
+        });
+
+        uploader.bind('error', function( event, xhr, item, response) {
+        	console.log('setupFileUpload: upload failed');
+        	//show global error. for more information have a look inside the errorHandler
+        	$rootScope.error = true;
+        	$rootScope.errorMessage = language.translate('error.image.upload') || 
+        		language.translate('error.general') || 
+        		"Error during communication with service.";
         });
  	}
 
@@ -300,4 +308,4 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   
   }
 
-PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader', 'config', 'errorHandler'];
+PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader', 'config', 'errorHandler', '$rootScope', 'language'];

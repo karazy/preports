@@ -281,9 +281,16 @@ exports.uploadImage = function(req, res) {
 		return image.path.substring(index, image.path.length);
 	}
 
-	newFilename = pathHelper.join(userHome,'nodejs',getFilename(req.files.image));
+	newFilename = pathHelper.join(userHome,'nodejs/preports',getFilename(req.files.image));
 
 	console.log('uploadImage: Trying to move ' + req.files.image.path + ' to ' + newFilename);
+
+	try {
+		fs.readdirSync(pathHelper.join(userHome,'nodejs/preports'));
+	} catch(err) {
+		console.log('uploadImage: creating upload directory');
+		fs.mkdirSync(pathHelper.join(userHome,'nodejs/preports'));
+	}
 
 	mv(req.files.image.path, newFilename, function(err) {
 		if(err) {
