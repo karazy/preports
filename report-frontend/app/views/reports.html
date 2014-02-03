@@ -54,7 +54,12 @@
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>
-				<td><button class="btn btn-primary btn-xs" ng-click="copyReport(r);"><i class="glyphicon glyphicon-download"></i> <span l="copy">Copy</span></button></td>
+				<td>
+					<button class="btn btn-primary btn-xs" ng-click="copyReport(r);"><i class="glyphicon glyphicon-download"></i> <span l="copy">Copy</span></button>
+					<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport(r)" dialog-confirm-button="delete" dialog-class="alert-danger">
+						<button type="button" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></button>
+					</span>	
+				</td>
 			</tr>
 		</tbody>
 	</table>

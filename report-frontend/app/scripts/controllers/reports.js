@@ -102,14 +102,18 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		$scope.currentReport.$update();
   	}
 
-  	$scope.deleteReport = function() {
-  		if(!$scope.currentReport) {
-  			console.log('deleteReport: no current report');
+  	$scope.deleteReport = function(report) {
+      var reportToDelete = report || $scope.currentReport;
+
+  		if(!reportToDelete) {
+  			console.log('deleteReport: no report to delete');
   			return;
   		}
 
-  		$scope.currentReport.$delete();
-  		$location.path('/');
+  		reportToDelete.$delete(function() {
+        $location.path('/');  
+      }, errorHandler);
+  		
   	}
 
     function saveReport(report) {
