@@ -1,4 +1,4 @@
-angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeout', '$log', 'language',  function($timeout, $log, langService) {
+angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeout', '$log', 'language', 'helper',  function($timeout, $log, langService, helper) {
 	var inputType, //type of the input to generate in form
 		required, //if present marks a required field
 		//directive configuration

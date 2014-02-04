@@ -76,8 +76,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Images"
 		},
 		"reports.table.actions" : {
-			"DE" :  "Aktionen",
-			"EN" : "Actions"
+			"DE" :  "Aktion",
+			"EN" : "Action"
 		},
 		//report
 		"report.name" : {
@@ -124,6 +124,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Meilensteine",
 			"EN" : "Milestones"
 		},
+		"report.milestones.ph" : {
+			"DE" :  "Meilenstein eintragen",
+			"EN" : "Enter milestone"
+		},
 		"report.milestones.start" : {
 			"DE" :  "Meilenstein Start",
 			"EN" : "Milestone start"
@@ -163,6 +167,14 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"report.codereviews" : {
 			"DE" :  "Code Reviews",
 			"EN" : "Code reviews"
+		},
+		"report.codereviews.reviewer" : {
+			"DE" :  "Reviewer",
+			"EN" : "Reviewer"
+		},
+		"report.codereviews.reviewer.ph" : {
+			"DE" :  "Reviewer eintragen",
+			"EN" : "Enter reviewer"
 		},
 		"report.codereviews.topic" : {
 			"DE" :  "Thema",
