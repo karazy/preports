@@ -252,7 +252,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
             url: 'http://127.0.0.1:3000/reports/' + $scope.currentReport._id + '/images',
             alias: 'image',
             removeAfterUpload: true,
-            autoUpload: true,
+            autoUpload: false,
             filters: [
                 function (item) {
                     var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
@@ -283,12 +283,13 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     		return;
     	}
 
+    	//link to original report
+    	reportToCopy.copyOf = reportToCopy._id;
     	delete reportToCopy._id;
 
     	reportToCopy.name = reportToCopy.name +'_copy';
 
     	saveReport(reportToCopy);
-    	//TODO duplicated images!
  	}
 
  	function loadProjectNames() {

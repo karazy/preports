@@ -39,6 +39,7 @@ app.get('/', function(req, res) {
 app.get('/reports', reports.getAll);
 app.get('/reports/names', reports.getProjectNames);
 app.get('/reports/:id', reports.getById);
+app.get('/reports/:id/images', reports.getReportImages);
 app.post('/reports', reports.createReport);
 app.put('/reports/:id', reports.updateReport);
 app.post('/reports/:id/images', reports.uploadImage);

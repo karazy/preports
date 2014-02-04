@@ -1,6 +1,6 @@
 var mongo = require('mongodb'),
 	test = require('assert'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	mv = require('mv'),
 	pathHelper = require('path'),
 	Db,
@@ -74,8 +74,9 @@ exports.getAll = function(req, res) {
 	 	
 	 	res.setHeader('Content-Type', 'application/json');
 	 	res.status(200);
-	 	//exclude images
-	 	col.find(searchParams, {'images' : 0}).toArray(function(err, items) {
+	 	//include images needed for making copies. As alternative
+	 	//exlclude {'images' : 0} and alter copy logic
+	 	col.find(searchParams).toArray(function(err, items) {
             res.send(items);
         });
 	 
@@ -158,6 +159,8 @@ function persistReportChanges(report, callback) {
 }
 
 exports.createReport = function(req, res) {
+	var	 reportToSave = req.body;
+
 	if(!req.body) {
 		return;		
 	}
@@ -175,9 +178,17 @@ exports.createReport = function(req, res) {
 		debugObject(req.body, 'Insert new report')
 		reports.insert(req.body, function(err, result) {
 			if(err) {
-				res.send(500)
-			} else {				
-				//TODO check if array
+				res.send(500);
+			} else {
+				//this is a copied report. Copy the images.
+				if(reportToSave.copyOf && reportToSave.images) {
+					copyReportImages(reportToSave.copyOf, result[0]._id, function(err) {
+						if(err) {
+							console.log('createReport: failed to copy images for ' + result[0]._id);
+						}
+					});
+				}
+				//result is an array
 				res.send(200, result[0]);
 			}
 
@@ -239,10 +250,41 @@ exports.deleteReport = function(req, res) {
 	//TODO delete images!
 
 	function callback(error, reports) {
+		var imgToDelete;
 		if(error) {
 			res.send(500);
 			return;
 		}
+		//delete all images files
+		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, report) {
+			if(report && report.images) {
+        		for (var h = 0; h < report.images.length; h++) {
+    				imgToDelete = report.images[h];
+    				fs.unlink(imgToDelete.path, function(err) {
+						if(!err) {
+							console.log('deleteReport: deleting image at ' + imgToDelete.path);				
+						} else {
+							console.log('deleteReport: failed deleting image at ' + imgToDelete.path);
+						}
+					});
+        		}
+        	}
+		});
+		//each operates on the cursor but report object was always null.
+		// .each(function(report) {
+		// 	console.log('IMAGE DELETE BLABLA ' + report);
+		// 	debugObject(report, 'IMAGE DELETE BLABLA');
+		// 	if(report && report.images) {
+  //       		for (var h = 0; h < report.images.length; h++) {
+  //   				imgToDelete = report.images[h];
+  //   				fs.unlink(imgToDelete.path, function(err) {
+		// 				if(err) {
+		// 					console.log('deleteReport: deleting image at ' + imgToDelete.path);				
+		// 				}
+		// 			});
+  //       		}
+  //       	}
+		// });
 
 		reports.remove({'_id': ObjectID.createFromHexString(_id)}, function(err, numberOfRemovedDocs) {
 			if(err) {
@@ -250,8 +292,7 @@ exports.deleteReport = function(req, res) {
 				res.status(500);
 				return;
 			}
-			console.log('Removed ' + numberOfRemovedDocs + ' records');
-			// res.status(200);
+			console.log('Deleted report ' + _id);
 			res.send(200);
         });
 	}
@@ -260,7 +301,7 @@ exports.deleteReport = function(req, res) {
 exports.uploadImage = function(req, res) {
 	var _id = req.params.id,
 		filename,		
-		newFilename,
+		newAbsFilename,
 		userHome =  getUserHome(),
 		pathDelim = pathHelper.sep,
 		image;
@@ -272,6 +313,7 @@ exports.uploadImage = function(req, res) {
 		return;
 	}
 
+	filename = getFilename(req.files.image);
 
 	/**
 	* Return file name by extracting it from the path.
@@ -281,18 +323,19 @@ exports.uploadImage = function(req, res) {
 		return image.path.substring(index, image.path.length);
 	}
 
-	newFilename = pathHelper.join(userHome,'nodejs/preports',getFilename(req.files.image));
+	//TODO read folder from a config file
+	newAbsFilename = pathHelper.join(userHome,'nodejs', 'preports', _id, filename);
 
-	console.log('uploadImage: Trying to move ' + req.files.image.path + ' to ' + newFilename);
+	console.log('uploadImage: Trying to move ' + req.files.image.path + ' to ' + newAbsFilename);
 
 	try {
-		fs.readdirSync(pathHelper.join(userHome,'nodejs/preports'));
+		fs.readdirSync(pathHelper.join(userHome,'nodejs', 'preports', _id));
 	} catch(err) {
 		console.log('uploadImage: creating upload directory');
-		fs.mkdirSync(pathHelper.join(userHome,'nodejs/preports'));
+		fs.mkdirSync(pathHelper.join(userHome,'nodejs', 'preports', _id));
 	}
 
-	mv(req.files.image.path, newFilename, function(err) {
+	mv(req.files.image.path, newAbsFilename, function(err) {
 		if(err) {
 			console.log('uploadImage: failed to move image ' + err);
 			res.send(500);
@@ -316,11 +359,11 @@ exports.uploadImage = function(req, res) {
 				if(!report.images) {
 					report.images = [];
 				}
-
+				//only store the filename. path can be created
 				image = {
-					path: newFilename,
-					name: req.files.image.name,
-					_id: new ObjectID()
+					'filename': filename,					
+					'name': req.files.image.name,
+					'_id': new ObjectID()
 				};
 
 				//debugObject(image, 'uploadImage: add image metadata to currentReport ' + report._id);
@@ -382,7 +425,12 @@ exports.getImage = function(req, res) {
 	}
 
 	function readAndSendFile(image) {
-		var img = fs.readFileSync(image.path);
+		var img,
+			imgPath;
+
+		imgPath = pathHelper.join(getImageUploadPath(), _id , image.filename);
+		console.log('getImage: loaded from path ' + imgPath);
+		img = fs.readFileSync(imgPath);
 		res.contentLength = img.size;
 		res.contentType = 'image/jpeg';
 		res.status(200);
@@ -486,6 +534,73 @@ exports.getProjectNames = function(req, res) {
 	}
 }
 
+exports.getReportImages = function(req, res) {
+	var _id = req.params.id;
+	//method is ment for debugging
+
+	console.log('getReportImages');
+
+	getReportsCollection(loadImageMetaData);
+
+	function loadImageMetaData(err, reports) {
+		if(err) {
+			res.send(500, err);
+			return;
+		}
+
+		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, report) {
+			console.log('IMAGE DELETE BLABLA ' + report);
+			debugObject(report, 'IMAGE DELETE BLABLA');
+			res.send(200, report.images);
+		});
+
+		// 	).each(function(report) {	
+		// 	console.log('IMAGE DELETE BLABLA ' + report);
+		// 	debugObject(report, 'IMAGE DELETE BLABLA');
+		// 	if(report && report.images) {
+  //       		for (var h = 0; h < report.images.length; h++) {
+  //   	// 			imgToDelete = report.images[h];
+  //   	// 			fs.unlink(imgToDelete.path, function(err) {
+		// 			// 	if(err) {
+		// 			// 		console.log('deleteReport: deleting image at ' + imgToDelete.path);				
+		// 			// 	}
+		// 			// });
+  //       		}
+  //       	}
+		// });
+	}	
+}
+
+/**
+* Copies all images of one report to another.
+* Images are stored in {REPORTS_UPLOAD_DIR}/{REPORT_ID}.
+* So we can simply copy the whole folder content.
+*/
+function copyReportImages(srcDirId, destDirId, callback) {
+	var srcDir, 
+		destDir,
+		userHome =  getUserHome();	
+
+	srcDir = pathHelper.join(userHome, 'nodejs','preports', srcDirId+'');
+	destDir = pathHelper.join(userHome, 'nodejs','preports', destDirId+'');
+
+	try {
+		fs.readdirSync(pathHelper.join(userHome,'nodejs', 'preports', destDirId+''));
+	} catch(err) {
+		console.log('uploadImage: creating upload directory ' + destDir);
+		fs.mkdirSync(pathHelper.join(userHome,'nodejs', 'preports', destDirId+''));
+	}
+
+	console.log('copyReportImages: copy from ' + srcDir + ' to ' + destDir);
+
+	fs.copySync(srcDir, destDir, function(err) {
+		if(err) {
+			console.log('copyReportImages: copy failed ' + err);
+		}
+		callback(err);
+	});
+}
+
 getReportsCollection = function(callback) {
 	 db.collection('reports', function(error, reports_collection) {
     	if( error ) {
@@ -519,6 +634,13 @@ debugObject = function(obj, title) {
 	} catch(e) {
 		console.error('RepV.util.Helper.debugObject: failed to debug object ' + e);
 	}
+}
+
+
+function getImageUploadPath() {
+	var userHome = getUserHome();
+
+	return pathHelper.join(userHome, 'nodejs', 'preports');
 }
 
 function getUserHome() {

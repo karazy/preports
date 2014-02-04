@@ -59,6 +59,26 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Neuer Report",
 			"EN" : "New report"
 		},
+		"reports.table.name" : {
+			"DE" :  "Projektname",
+			"EN" : "Project name"
+		},
+		"reports.table.year" : {
+			"DE" :  "Jahr",
+			"EN" : "Year"
+		},
+		"reports.table.week" : {
+			"DE" :  "KW",
+			"EN" : "Week"
+		},
+		"reports.table.images" : {
+			"DE" :  "Bilder",
+			"EN" : "Images"
+		},
+		"reports.table.actions" : {
+			"DE" :  "Aktionen",
+			"EN" : "Actions"
+		},
 		//report
 		"report.name" : {
 			"DE" :  "Projektname",
@@ -171,6 +191,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"report.delete.text" : {
 			"DE" :  "Report wird unwideruflich gelöscht!",
 			"EN" : "Report will be deleted permanent!"
+		},
+		"report.copyof" : {
+			"DE" :  "Dies ist eine Kopie.",
+			"EN" : "This is a copy."
 		},
 		//general
 		"back" : {
