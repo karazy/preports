@@ -12,6 +12,7 @@ var allowCrossDomain = function(req, res, next) {
 
 //define usages
 app.configure(function() {
+	app.use(express.static(__dirname + '/app')); 
 	app.use(express.bodyParser({ 
 		keepExtensions: true
 		// uploadDir: '~/Pictures/nodejs' 
