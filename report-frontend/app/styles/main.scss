@@ -3,7 +3,8 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import 'sass-bootstrap/lib/bootstrap';
 
 $global-border-radius: 3px;
-$header-color: #4A6E09;
+$primary-color: #000;
+$secondary-color: #4A6E09;
 
 .browsehappy {
     margin: 0.2em 0;
@@ -17,57 +18,44 @@ body {
     padding-bottom: 20px;
 }
 
-/* Everything but the jumbotron gets side spacing for mobile first views */
-.header,
-.marketing,
-.footer {
-    padding-left: 15px;
-    padding-right: 15px;
+.preports-logo {
+    display: inline-block;
+    /*color: $primary-color;*/
+
+/*    &:after {
+        content: "R";        
+    }
+
+    &:before {
+        content:"\24B6";
+          display: inline-block;
+          -webkit-transform: rotate(30deg);
+          -moz-transform: rotate(30deg);
+          -o-transform: rotate(30deg);
+          -ms-transform: rotate(30deg);
+          transform: rotate(30deg);
+
+        -moz-transform: scale(-1, 1);
+        -webkit-transform: scale(-1, 1);
+        -o-transform: scale(-1, 1);
+        -ms-transform: scale(-1, 1);
+        transform: scale(-1, 1);
+    }*/
+
+    .p {
+        -moz-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -ms-transform: scaleX(-1);
+        transform: scaleX(-1);
+        display: inline-block;
+    }
+
+    .r {
+        display: inline-block;
+    }
 }
 
-/* Custom page header */
-.header {
-    border-bottom: 1px solid #e5e5e5;
-}
-
-/* Make the masthead heading the same height as the navigation */
-.header h3 {
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 40px;
-    padding-bottom: 19px;
-}
-
-/* Custom page footer */
-.footer {
-    padding-top: 19px;
-    color: #777;
-    border-top: 1px solid #e5e5e5;
-}
-
-.container-narrow > hr {
-    margin: 30px 0;
-}
-
-/* Main marketing message and sign up button */
-.jumbotron {
-    text-align: center;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.jumbotron .btn {
-    font-size: 21px;
-    padding: 14px 24px;
-}
-
-/* Supporting marketing content */
-.marketing {
-    margin: 40px 0;
-}
-
-.marketing p + h4 {
-    margin-top: 28px;
-}
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
@@ -93,16 +81,17 @@ body {
 }
 
 .navbar-brand {
-    color: $header-color;
+    color: $secondary-color;
 }
 
 .loading-indicator {
-  height: 32px;
-  width: 32px;
+  height: 16px;
+  width: 16px;
   background-image: url('../images/ajax-loader.gif');
   background-size: auto;
   background-repeat: no-repeat;
-  margin: 5px;
+  margin: 0 5px 0 5px;
+  display: inline-block;
 }
 
 .simple-property-editor {
@@ -162,7 +151,7 @@ body {
     }
 
     .section-header {
-        color: $header-color;
+        color: $secondary-color;
         font-size: 14px;
     }
 }
@@ -176,7 +165,9 @@ body {
 
     img {
         max-width: 100%; 
-        align: center;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
     .image-delete-button {
         /*display: none;*/
@@ -197,4 +188,34 @@ body {
 .file-drop-over {
     background-color: gray;
     color: white;
+}
+
+.about-wrapper {
+    .credits {
+        a {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        img {
+            max-width: 200px;
+        }
+    }
+
+    .bs-booticon-lg {
+        width: 144px;
+        height: 144px;
+        font-size: 108px;
+        line-height: 140px;
+    }
+
+    .bs-booticon {
+        display: block;
+        font-weight: 500;
+        color: #fff;
+        background-color: #563d7c;
+        border-radius: 15%;
+        cursor: default;
+        text-align: center;
+    }
 }

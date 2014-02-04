@@ -7,12 +7,16 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>        
-        <a class="navbar-brand" href="#"><img src="../images/bisnode.png"/><div style="display: inline-block; vertical-align: bottom; height: 47px;line-height: 47px; margin-left: 15px;">PReports | projects at a glance</div style="vertical-align: bottom;"></a>        
+        <a class="navbar-brand" href="#">
+          <!-- <img src="../images/bisnode.png"/> -->
+          <div><div class="preports-logo"><div class="p">P</div><div class="r">R</div></div>eports&reg; | projects at a glance</div style="vertical-align: bottom;">
+        </a>          
       </div>
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">     
-      <div class="navbar-right">
-        <a type="button" href="#/about" class="btn btn-default navbar-btn"><i class="glyphicon glyphicon-info-sign"></i> About</a>
+        <div class="navbar-right">
+          <div class="loading-indicator" ng-show="ajaxLoading"></div>     
+          <a type="button" href="#/about" class="btn btn-default navbar-btn"><i class="glyphicon glyphicon-info-sign"></i> About</a>
+        </div>
       </div>
-    </div>
   </div>
 </nav>

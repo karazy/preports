@@ -46,15 +46,7 @@ exports.getAll = function(req, res) {
 		};
 
 	getReportsCollection(callback);
-	
 
-	
-	//debugObject(req.query, 'search query');
-	//debugObject(searchParams, 'search params');
-
-	// res.send([{name:'report1'}, {name:'report2'}, {name:'report3'}]);
-	//  this.db= new Db('preports', new Server('localhost', 3000, {auto_reconnect: true}, {}));
- // this.db.open(function(){});
 	 function callback(error, col) {
 	 	if(searchYear) {
 			searchParams.year = parseInt(req.query.year);
@@ -70,7 +62,7 @@ exports.getAll = function(req, res) {
 	 		return;
 	 	}
 
-	 	debugObject(searchParams, 'getAll: searchParams');
+	 	// debugObject(searchParams, 'getAll: searchParams');
 	 	
 	 	res.setHeader('Content-Type', 'application/json');
 	 	res.status(200);
@@ -175,13 +167,27 @@ exports.createReport = function(req, res) {
 			return;
 		}
 
-		debugObject(req.body, 'Insert new report')
-		reports.insert(req.body, function(err, result) {
+		debugObject(req.body, 'Insert new report');
+
+		//This is a copy report. Assign new image ids.
+		if(reportToSave.copyOf && reportToSave.images) {
+			console.log('createReport: create a copy');
+
+			for (var i = 0; i < reportToSave.images.length; i++) {
+				//set a new object Id
+				//Reusing the old id didn't work. Maybe mongodb creates an index. Sherlock investigate!
+				reportToSave.images[i]._id = new ObjectID();
+				console.log('createReport: copied report! Assigning new id to image ' + reportToSave.images[i]._id);
+			};
+		}
+
+		reports.insert(reportToSave, function(err, result) {
 			if(err) {
 				res.send(500);
 			} else {
-				//this is a copied report. Copy the images.
+				
 				if(reportToSave.copyOf && reportToSave.images) {
+					//This is a copy report. Copy the images to new folder.
 					copyReportImages(reportToSave.copyOf, result[0]._id, function(err) {
 						if(err) {
 							console.log('createReport: failed to copy images for ' + result[0]._id);
@@ -258,16 +264,29 @@ exports.deleteReport = function(req, res) {
 		//delete all images files
 		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, report) {
 			if(report && report.images) {
+				var imgPath = pathHelper.join(getImageUploadPath(), _id+''),
+					imgFullPath;
+
         		for (var h = 0; h < report.images.length; h++) {
     				imgToDelete = report.images[h];
-    				fs.unlink(imgToDelete.path, function(err) {
+    				imgFullPath = pathHelper.join(imgPath,  imgToDelete.filename+'');	
+
+    				fs.unlink(imgFullPath, function(err) {
 						if(!err) {
-							console.log('deleteReport: deleting image at ' + imgToDelete.path);				
+							console.log('deleteReport: deleting image ' + imgFullPath);				
 						} else {
-							console.log('deleteReport: failed deleting image at ' + imgToDelete.path);
+							console.log('deleteReport: failed deleting image ' + imgFullPath);
 						}
 					});
         		}
+
+        		fs.rmdir(imgPath, function(err) {
+						if(!err) {
+							console.log('deleteReport: deleting image dir ' + imgPath);											
+						} else {
+							console.log('deleteReport: failed deleting image dir ' + imgPath + ' Err: ' + err);
+						}
+				});
         	}
 		});
 		//each operates on the cursor but report object was always null.
@@ -302,7 +321,7 @@ exports.uploadImage = function(req, res) {
 	var _id = req.params.id,
 		filename,		
 		newAbsFilename,
-		userHome =  getUserHome(),
+		uploadPath =  getImageUploadPath(),
 		pathDelim = pathHelper.sep,
 		image;
 
@@ -324,15 +343,15 @@ exports.uploadImage = function(req, res) {
 	}
 
 	//TODO read folder from a config file
-	newAbsFilename = pathHelper.join(userHome,'nodejs', 'preports', _id, filename);
+	newAbsFilename = pathHelper.join(uploadPath, _id, filename);
 
 	console.log('uploadImage: Trying to move ' + req.files.image.path + ' to ' + newAbsFilename);
 
 	try {
-		fs.readdirSync(pathHelper.join(userHome,'nodejs', 'preports', _id));
+		fs.readdirSync(pathHelper.join(uploadPath, _id));
 	} catch(err) {
 		console.log('uploadImage: creating upload directory');
-		fs.mkdirSync(pathHelper.join(userHome,'nodejs', 'preports', _id));
+		fs.mkdirsSync(pathHelper.join(uploadPath, _id));
 	}
 
 	mv(req.files.image.path, newAbsFilename, function(err) {
@@ -402,8 +421,9 @@ exports.getImage = function(req, res) {
 		//console.log('getImage: trying to load image ' + imgId);
 
 		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : ObjectID.createFromHexString(imgId)},
-			 { images: { $elemMatch: { '_id': ObjectID.createFromHexString(imgId) } } } , function(err, item) {
-			
+			{ images: { $elemMatch: { '_id': ObjectID.createFromHexString(imgId) } } } ,
+			  function(err, item) {
+			//elemMatch is used to filter retrieved array
 			if(err) {
 				console.log(err);
 				res.send(500);
@@ -416,8 +436,8 @@ exports.getImage = function(req, res) {
 				return;
 			}
 
-			// console.log('getImage: found Image ' + item);			
-			debugObject(item.images[0], 'getImage: image loaded ' + imgId);	
+			console.log('getImage: images ' + item.images.length);			
+			debugObject(item.images[0], 'getImage: image loaded');	
 
 			readAndSendFile(item.images[0]);
 			            
@@ -466,7 +486,7 @@ exports.deleteImage = function(req, res) {
 			}
 
 			// console.log('getImage: found Image ' + item);
-			debugObject(item.images[0], 'Load image metadata');			
+			// debugObject(item.images[0], 'Load image metadata');			
 
 			deleteFile(reports, item.images[0]);
 			            
@@ -475,7 +495,8 @@ exports.deleteImage = function(req, res) {
 
 	function deleteFile(col, img) {
 		var imgId,
-			path;
+			path,
+			uploadPath = getImageUploadPath();
 
 		if(!img) {
 			res.send(500, 'No image found');
@@ -488,7 +509,7 @@ exports.deleteImage = function(req, res) {
 		}
 
 		imgId = img._id;
-		imgPath = img.path;
+		imgPath = pathHelper.join(uploadPath, _id, img.filename);
 
 		// '_id': ObjectID.createFromHexString(_id), 'images._id' : ObjectID.createFromHexString(imgId)
 		col.update( {}, 
@@ -508,7 +529,7 @@ exports.deleteImage = function(req, res) {
 				fs.unlink(imgPath, function(err) {
 					if(err) {
 						console.log('deleteImage: file already deleted? ' + err);
-						//continue nevertheless also the file may still exist						
+						//continue nevertheless also the file may still exist					
 					}
 					res.send(200);
 				});
@@ -549,25 +570,9 @@ exports.getReportImages = function(req, res) {
 		}
 
 		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, report) {
-			console.log('IMAGE DELETE BLABLA ' + report);
-			debugObject(report, 'IMAGE DELETE BLABLA');
+			debugObject(report.images, 'getReportImages: report.images');
 			res.send(200, report.images);
 		});
-
-		// 	).each(function(report) {	
-		// 	console.log('IMAGE DELETE BLABLA ' + report);
-		// 	debugObject(report, 'IMAGE DELETE BLABLA');
-		// 	if(report && report.images) {
-  //       		for (var h = 0; h < report.images.length; h++) {
-  //   	// 			imgToDelete = report.images[h];
-  //   	// 			fs.unlink(imgToDelete.path, function(err) {
-		// 			// 	if(err) {
-		// 			// 		console.log('deleteReport: deleting image at ' + imgToDelete.path);				
-		// 			// 	}
-		// 			// });
-  //       		}
-  //       	}
-		// });
 	}	
 }
 
@@ -579,16 +584,17 @@ exports.getReportImages = function(req, res) {
 function copyReportImages(srcDirId, destDirId, callback) {
 	var srcDir, 
 		destDir,
-		userHome =  getUserHome();	
+		uploadPath = getImageUploadPath();
 
-	srcDir = pathHelper.join(userHome, 'nodejs','preports', srcDirId+'');
-	destDir = pathHelper.join(userHome, 'nodejs','preports', destDirId+'');
+	//convert srcDir/destDir to string. otherwise pathHelper throws an error
+	srcDir = pathHelper.join(uploadPath, srcDirId+''); 
+	destDir = pathHelper.join(uploadPath, destDirId+'');
 
 	try {
-		fs.readdirSync(pathHelper.join(userHome,'nodejs', 'preports', destDirId+''));
+		fs.readdirSync(destDir);
 	} catch(err) {
 		console.log('uploadImage: creating upload directory ' + destDir);
-		fs.mkdirSync(pathHelper.join(userHome,'nodejs', 'preports', destDirId+''));
+		fs.mkdirsSync(destDir);
 	}
 
 	console.log('copyReportImages: copy from ' + srcDir + ' to ' + destDir);
@@ -636,11 +642,13 @@ debugObject = function(obj, title) {
 	}
 }
 
-
+/**
+* Returns the upload path for images.
+*/
 function getImageUploadPath() {
 	var userHome = getUserHome();
 
-	return pathHelper.join(userHome, 'nodejs', 'preports');
+	return pathHelper.join(userHome, '.preports');
 }
 
 function getUserHome() {
