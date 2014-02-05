@@ -1,7 +1,7 @@
 <div ng-show="currentReport._id">
 	<div class="row">
 		<div class="col-md-12">
-			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="back">back</span></a>
+			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="reports">Reports</span></a>
 			<a href="#/reports/{{currentReport.copyOf}}" ng-show="currentReport.copyOf" class="pull-right"><i class="glyphicon glyphicon-download"></i> <span l="report.copyof">This is a copy.</span></a>		
 		</div>
 	</div>
@@ -280,7 +280,7 @@
 		</div>
 	</div>
 </div>
-<div ng-hide="currentReport._id">
+<div ng-show="reportNotFound">
 	<div class="row">
 		<div class="col-md-12">
 			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="back">back</span></a>

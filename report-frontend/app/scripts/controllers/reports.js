@@ -19,6 +19,9 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	$scope.projectNames = [];
 
+  	//show 404 message
+     $scope.reportNotFound = false;
+
     //Report Structure
 
     /*
@@ -72,10 +75,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         $log.log('loadReport: No Id provided.');
         return;
       }
+      //show 404 message
+      $scope.reportNotFound = false;
 
       $scope.currentReport = Report.get({'id':id}, function() {      	
       	setupFileUpload();
-      }, errorHandler);
+      }, function(httpResponse) {
+      	$scope.reportNotFound = true;
+      	errorHandler(httpResponse);
+      });
 
     }
 
