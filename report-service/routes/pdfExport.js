@@ -25,15 +25,16 @@ exports.generatePdf = function(req, res) {
 
 
 function generatePdf(report) {
-	var doc = new PDFDocument(),
+	var doc = new PDFDocument({
+			size: 'A4',
+			layout: 'portrait'
+		}),
 		path;
 
 	path = pathHelper.join(getDocTmpPath(), report._id + '', report._id + '.pdf');
 
-	doc.addPage({
-		size: 'A4',
-		layout: 'portrait'
-	});
+	doc.fontSize('20');
+	doc.font('Times-Roman').text(report.name, 100, 100);
 
 	doc.write(path);
 }
