@@ -62,6 +62,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		$scope.reports = Report.query({
   			'year': $scope.search.year,
   			'calweek' : $scope.search.calweek
+  		}, function() {
+  			$('.copy-button').tooltip();
   		});
   	}
 
@@ -305,6 +307,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     } else {
       $scope.loadReports();
       loadProjectNames();
+      $scope.$watch('reports', function() {
+      	$('.copy-button').tooltip();	
+      })
+      
     }
   
   }

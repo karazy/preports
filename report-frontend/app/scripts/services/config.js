@@ -13,6 +13,7 @@ angular.module('PReports.services').provider('config', function() {
 	*/
 	self.config_ = {
 		'serviceUrl' : 'http://127.0.0.1:3000',
+		// 'serviceUrl' : '',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {
 			'EUR': '$1,$2 €',
