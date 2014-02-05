@@ -90,6 +90,10 @@ exports.getById = function(req, res) {
 
 }
 
+exports.findReport = function(id, callback) {
+	findReport(id, callback);
+}
+
 function findReport(id, callback) {
 
 	if(!id) {
@@ -653,8 +657,4 @@ function getImageUploadPath() {
 
 function getUserHome() {
   return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-}
-
-function getPathDelimiter() {
-	return process.env[(process.platform == 'win32') ? "\\" : '/'];
 }

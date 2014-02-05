@@ -1,5 +1,6 @@
 var express = require('express'),
-	reports = require('./routes/reports');
+	reports = require('./routes/reports'),
+	pdfExport = require('./routes/pdfExport');;
 
 var app = express();
 
@@ -41,6 +42,7 @@ app.get('/reports', reports.getAll);
 app.get('/reports/names', reports.getProjectNames);
 app.get('/reports/:id', reports.getById);
 app.get('/reports/:id/images', reports.getReportImages);
+app.get('/reports/:id/pdf', pdfExport.generatePdf);
 app.post('/reports', reports.createReport);
 app.put('/reports/:id', reports.updateReport);
 app.post('/reports/:id/images', reports.uploadImage);
