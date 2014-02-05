@@ -7,13 +7,16 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
-module.exports = function (grunt) {
+module.exports = function (grunt) {  
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
+
+  //https://github.com/erickrdch/grunt-string-replace used for replacing text in files
+  grunt.loadNpmTasks('grunt-string-replace');
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -349,6 +352,51 @@ module.exports = function (grunt) {
         configFile: 'karma.conf.js',
         singleRun: true
       }
+    },
+
+    'string-replace': {
+      dist: {
+        files: {
+          'app/scripts/services/' : 'config.js' // includes files in dir
+          // 'path/to/directory/': 'path/to/source/**', // includes files in dir and subdirs
+          // 'path/to/project-<%= pkg.version %>/': 'path/to/source/**', // variables in destination
+          // 'path/to/directory/': ['path/to/sources/*.js', 'path/to/more/*.js'], // include JS files in two diff dirs
+          // 'path/to/filename.ext': 'path/to/source.ext'
+        },
+        options: {
+          replacements: [{
+            pattern: '{serviceUrl}',
+            replacement: ''
+          }]
+        }
+      },
+      server: {
+        files: {
+          'app/scripts/services/' : 'config.js' // includes files in dir
+          // 'path/to/directory/': 'path/to/source/**', // includes files in dir and subdirs
+          // 'path/to/project-<%= pkg.version %>/': 'path/to/source/**', // variables in destination
+          // 'path/to/directory/': ['path/to/sources/*.js', 'path/to/more/*.js'], // include JS files in two diff dirs
+          // 'path/to/filename.ext': 'path/to/source.ext'
+        },
+        options: {
+          replacements: [{
+            pattern: '{serviceUrl}',
+            replacement: 'http://127.0.0.1:3000'
+          }]
+        }
+      }
+      // inline: {
+      //   options: {
+      //     replacements: [
+      //       // place files inline example
+      //       {
+      //           pattern: '<script src='js/async.min.js'></script>',
+      //           replacement: '<script><%= grunt.file.read('path/to/source/js/async.min.js') %></script>'
+      //       }
+      //     ]
+      //   },
+      //   files: {...}
+      // }
     }
   });
 
@@ -363,6 +411,7 @@ module.exports = function (grunt) {
       'bower-install',
       'concurrent:server',
       'autoprefixer',
+      'string-replace',
       'connect:livereload',
       'watch'
     ]);
@@ -387,6 +436,7 @@ module.exports = function (grunt) {
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
+    'string-replace',
     'concat',
     'ngmin',
     'copy:dist',

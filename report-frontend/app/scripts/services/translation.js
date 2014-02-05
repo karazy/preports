@@ -15,8 +15,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Image upload failed."
 		},
 		"error.404" : {
-			"DE" : "Eine Ressource konnte nicht geladen werden.",
-			"EN" : "Resource not available."
+			"DE" : "404 Eine Ressource konnte nicht geladen werden.",
+			"EN" : "404 Resource not available."
 		},
 		"error.403" : {
 			"DE" : "Ungültige Zugangsdaten oder keine Zugriffsrechte.",
