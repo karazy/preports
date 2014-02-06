@@ -180,7 +180,7 @@ exports.createReport = function(req, res) {
 			for (var i = 0; i < reportToSave.images.length; i++) {
 				//set a new object Id
 				//Reusing the old id didn't work. Maybe mongodb creates an index. Sherlock investigate!
-				reportToSave.images[i]._id = new ObjectID();
+				reportToSave.images[i]._id = (new ObjectID()).toString();
 				console.log('createReport: copied report! Assigning new id to image ' + reportToSave.images[i]._id);
 			};
 		}
@@ -386,7 +386,7 @@ exports.uploadImage = function(req, res) {
 				image = {
 					'filename': filename,					
 					'name': req.files.image.name,
-					'_id': new ObjectID()
+					'_id': (new ObjectID()).toString()
 				};
 
 				//debugObject(image, 'uploadImage: add image metadata to currentReport ' + report._id);
@@ -424,8 +424,8 @@ exports.getImage = function(req, res) {
 
 		//console.log('getImage: trying to load image ' + imgId);
 
-		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : ObjectID.createFromHexString(imgId)},
-			{ images: { $elemMatch: { '_id': ObjectID.createFromHexString(imgId) } } } ,
+		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : imgId},
+			{ images: { $elemMatch: { '_id': imgId } } } ,
 			  function(err, item) {
 			//elemMatch is used to filter retrieved array
 			if(err) {
