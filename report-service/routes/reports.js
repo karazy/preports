@@ -476,8 +476,8 @@ exports.deleteImage = function(req, res) {
 			return;
 		}
 
-		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : ObjectID.createFromHexString(imgId)},
-			 { images: { $elemMatch: { '_id': ObjectID.createFromHexString(imgId) } } } , function(err, item) {
+		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : imgId},
+			 { images: { $elemMatch: { '_id': imgId } } } , function(err, item) {
 			if(err) {
 				console.log(err);
 				res.send(500);

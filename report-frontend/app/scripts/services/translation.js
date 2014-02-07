@@ -97,16 +97,20 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Enter start date"
 		},
 		"report.golive.title" : {
-			"DE" :  "Golive",
-			"EN" : "Golive"
+			"DE" :  "Go live",
+			"EN" : "Go live"
 		},
 		"report.golive.ph" : {
-			"DE" :  "Golive eingeben",
-			"EN" : "Enter golive"
+			"DE" :  "Go live eingeben",
+			"EN" : "Enter go live"
 		},
 		"report.year" : {
 			"DE" :  "Jahr",
 			"EN" : "Year"
+		},
+		"report.week" : {
+			"DE" :  "Woche",
+			"EN" : "Week"
 		},
 		"report.leaddevelopers.title" : {
 			"DE" :  "Lead developers",
