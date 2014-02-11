@@ -10,7 +10,7 @@
   ],
   "author": {
     "name": "Fred Reifschneider",
-    "email": "fred reifschneider@bisnode.com",
+    "email": "fred.reifschneider@bisnode.com",
     "url":  "http://www.bisnode.com/"
   },
   "homepage": "http://www.openshift.com/",
@@ -33,7 +33,6 @@
   },
   "devDependencies": {},
   "bundleDependencies": [],
-
   "private": true,
   "main": "app.js"
 }
