@@ -7,7 +7,8 @@ var mongo = require('mongodb'),
         Connection,
         Server,
         ObjectID,
-        db;
+        db,
+        uploadDir;
 
 Db = mongo.Db;
 Connection = mongo.Connection;
@@ -16,19 +17,21 @@ BSON = mongo.BSON;
 ObjectID = mongo.ObjectID;
 MongoClient = mongo.MongoClient;
 
-exports.connect = function(connectUrl) {
+connect = function(connectUrl) {
 
-    console.log("mongo connection url: " + connectUrl);
-//connect to db new way
     MongoClient.connect(connectUrl, function(err, _db) {
-
         test.equal(null, err);
         test.ok(_db !== null);
         console.log("Connected to 'project report' database");
         db = _db;
-
-
     });
+};
+
+exports.setup = function (connectionUrl, uploadDirectory) {
+    console.log("connecting to db: " + connectionUrl);
+    connect(connectionUrl);
+    console.log("directory for upload: " + uploadDirectory);
+    uploadDir = uploadDirectory;    
 };
 
 exports.getAll = function(req, res) {
@@ -660,6 +663,10 @@ function getImageUploadPath() {
     return pathHelper.join(userHome, '.preports');
 }
 
-function getUserHome() {
-    return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+function getUserHome() { 
+    if( typeof uploadDir === "undefined") {
+        return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+    } else {
+        return uploadDir;
+    }
 }
