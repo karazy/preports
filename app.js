@@ -14,12 +14,11 @@ var App = function() {
     
     self.dbHost = process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost";
     self.dbPort = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017;
-    
+        
     if (typeof self.ipaddr === "undefined") {
-        console.warn('No OPENSHIFT_NODEJS_IP environment variable');
-
+        console.warn('No OPENSHIFT_NODEJS_IP environment variable'); 
         self.ipaddr = "localhost";
-    };
+    }; 
 
     var allowCrossDomain = function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
@@ -45,9 +44,9 @@ var App = function() {
         if(typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
             reports.connect("mongodb://"+self.dbHost+":"+self.dbPort+"/preports");
         } else {
-            console.log("logon with user: " + OPENSHIFT_MONGODB_DB_USERNAME);
-            reports.connect("mongodb://"+OPENSHIFT_MONGODB_DB_USERNAME+":"
-                    +OPENSHIFT_MONGODB_DB_PASSWORD+"@"
+            console.log("logon with user: " +  process.env.OPENSHIFT_MONGODB_DB_USERNAME);
+            reports.connect("mongodb://"+process.env.OPENSHIFT_MONGODB_DB_USERNAME+":"
+                    +process.env.OPENSHIFT_MONGODB_DB_PASSWORD+"@"
                     +self.dbHost+":"+self.dbPort+"/preports");
         }
     });
