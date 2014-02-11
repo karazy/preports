@@ -41,8 +41,15 @@ var App = function() {
         }));
         self.app.use(express.methodOverride());
         self.app.use(allowCrossDomain);
-        self.app.use(self.app.router);
-        reports.connect("mongodb://"+self.dbHost+":"+self.dbPort+"/preports");
+        self.app.use(self.app.router);        
+        if(typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
+            reports.connect("mongodb://"+self.dbHost+":"+self.dbPort+"/preports");
+        } else {
+            console.log("logon with user: " + OPENSHIFT_MONGODB_DB_USERNAME);
+            reports.connect("mongodb://"+OPENSHIFT_MONGODB_DB_USERNAME+":"
+                    +OPENSHIFT_MONGODB_DB_PASSWORD+"@"
+                    +self.dbHost+":"+self.dbPort+"/preports");
+        }
     });
 
 
