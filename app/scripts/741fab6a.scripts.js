@@ -1,6 +1,6 @@
 "use strict";
-//var host = "http://localhost:8080"; 
-var host = "http://preports-grund.paas.pironet-ndh.com";
+//var host = "http://localhost:8080" || "http://preports-grund.paas.pironet-ndh.com";
+var host = location.protocol + "//" + location.host;
 var PReports = PReports || {};
 angular.module("PReports.resources", []), angular.module("PReports.directives", []), angular.module("PReports.services", []), PReports = angular.module("PReports", ["ngCookies", "ngResource", "ngSanitize", "ngRoute", "PReports.resources", "PReports.directives", "PReports.services", "PReports.translations", "PReports.filters", "angularFileUpload", "ui.bootstrap"]).config(["$routeProvider", function(a) {
         a.when("/reports", {templateUrl: "views/reports.html", controller: "PReports.ReportCtrl"}).when("/reports/:reportId", {templateUrl: "views/reports_detail.html", controller: "PReports.ReportCtrl"}).when("/about", {templateUrl: "views/about.html"}).otherwise({redirectTo: "/reports"})
