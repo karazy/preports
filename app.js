@@ -2,6 +2,7 @@ var express = require('express');
 var reports = require('./routes/reports');
 var pdfExport = require('./routes/pdfExport');
 
+var app = express();
 
 var App = function() {
 
@@ -11,15 +12,16 @@ var App = function() {
     // Setup
     self.ipaddr = process.env.OPENSHIFT_NODEJS_IP;
     self.port = parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 8080;
-    
+
     self.dbHost = process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost";
     self.dbPort = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017;
-    
-        
+
+
     if (typeof self.ipaddr === "undefined") {
-        console.warn('No OPENSHIFT_NODEJS_IP environment variable'); 
+        console.warn('No OPENSHIFT_NODEJS_IP environment variable');
         self.ipaddr = "localhost";
-    }; 
+    }
+    ;
 
     var allowCrossDomain = function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
@@ -41,22 +43,22 @@ var App = function() {
         }));
         self.app.use(express.methodOverride());
         self.app.use(allowCrossDomain);
-        self.app.use(self.app.router);   
-        
-        if(typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
-            self.dbConnect = "mongodb://"+self.dbHost+":"+self.dbPort+"/preports";
-            
+        self.app.use(self.app.router);
+
+        if (typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
+            self.dbConnect = "mongodb://" + self.dbHost + ":" + self.dbPort + "/preports";
+
         } else {
-            console.log("logon with user: " +  process.env.OPENSHIFT_MONGODB_DB_USERNAME);
-            self.dbConnect = "mongodb://"+process.env.OPENSHIFT_MONGODB_DB_USERNAME+":"
-                    +process.env.OPENSHIFT_MONGODB_DB_PASSWORD+"@"
-                    +self.dbHost+":"+self.dbPort+"/preports";
-        }        
+            console.log("logon with user: " + process.env.OPENSHIFT_MONGODB_DB_USERNAME);
+            self.dbConnect = "mongodb://" + process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":"
+                    + process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@"
+                    + self.dbHost + ":" + self.dbPort + "/preports";
+        }
         reports.setup(self.dbConnect, process.env.OPENSHIFT_DATA_DIR);
     });
 
 
-//define routes
+    //define routes
     self.app.get('/', function(req, res) {
         console.log('Displaying options');
         res.status(200);

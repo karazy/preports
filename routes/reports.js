@@ -21,17 +21,17 @@ connect = function(connectUrl) {
 
     MongoClient.connect(connectUrl, function(err, _db) {
         test.equal(null, err);
-        test.ok(_db !== null);
+        test.ok(_db != null);
         console.log("Connected to 'project report' database");
         db = _db;
     });
 };
 
-exports.setup = function (connectionUrl, uploadDirectory) {
+exports.setup = function(connectionUrl, uploadDirectory) {
     console.log("connecting to db: " + connectionUrl);
     connect(connectionUrl);
     console.log("directory for upload: " + uploadDirectory);
-    uploadDir = uploadDirectory;    
+    uploadDir = uploadDirectory;
 };
 
 exports.getAll = function(req, res) {
@@ -126,7 +126,7 @@ function findReport(id, callback) {
                 return;
             }
             // debugObject(item, 'findReport: report');
-            callback(200, item);
+            callback(200, item)
         });
     }
 }
@@ -175,6 +175,7 @@ exports.createReport = function(req, res) {
         var _report;
 
         if (error) {
+            console.log(error);
             res.send(404);
             return;
         }
@@ -188,7 +189,7 @@ exports.createReport = function(req, res) {
             for (var i = 0; i < reportToSave.images.length; i++) {
                 //set a new object Id
                 //Reusing the old id didn't work. Maybe mongodb creates an index. Sherlock investigate!
-                reportToSave.images[i]._id = new ObjectID();
+                reportToSave.images[i]._id = (new ObjectID()).toString();
                 console.log('createReport: copied report! Assigning new id to image ' + reportToSave.images[i]._id);
             }
             ;
@@ -196,6 +197,7 @@ exports.createReport = function(req, res) {
 
         reports.insert(reportToSave, function(err, result) {
             if (err) {
+                console.log(err);
                 res.send(500);
             } else {
 
@@ -395,7 +397,7 @@ exports.uploadImage = function(req, res) {
                 image = {
                     'filename': filename,
                     'name': req.files.image.name,
-                    '_id': new ObjectID()
+                    '_id': (new ObjectID()).toString()
                 };
 
                 //debugObject(image, 'uploadImage: add image metadata to currentReport ' + report._id);
@@ -433,8 +435,8 @@ exports.getImage = function(req, res) {
 
         //console.log('getImage: trying to load image ' + imgId);
 
-        reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id': ObjectID.createFromHexString(imgId)},
-        {images: {$elemMatch: {'_id': ObjectID.createFromHexString(imgId)}}},
+        reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id': imgId},
+        {images: {$elemMatch: {'_id': imgId}}},
         function(err, item) {
             //elemMatch is used to filter retrieved array
             if (err) {
@@ -485,8 +487,8 @@ exports.deleteImage = function(req, res) {
             return;
         }
 
-        reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id': ObjectID.createFromHexString(imgId)},
-        {images: {$elemMatch: {'_id': ObjectID.createFromHexString(imgId)}}}, function(err, item) {
+        reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id': imgId},
+        {images: {$elemMatch: {'_id': imgId}}}, function(err, item) {
             if (err) {
                 console.log(err);
                 res.send(500);
@@ -565,7 +567,7 @@ exports.getProjectNames = function(req, res) {
             res.send(200, values);
         });
     }
-}
+};
 
 exports.getReportImages = function(req, res) {
     var _id = req.params.id;
@@ -617,7 +619,7 @@ function copyReportImages(srcDirId, destDirId, callback) {
         }
         callback(err);
     });
-}
+};
 
 getReportsCollection = function(callback) {
     db.collection('reports', function(error, reports_collection) {
@@ -632,8 +634,8 @@ getReportsCollection = function(callback) {
         } else {
             callback(null, reports_collection);
         }
-    });
-}
+    });   
+};
 
 
 debugObject = function(obj, title) {
@@ -652,7 +654,7 @@ debugObject = function(obj, title) {
     } catch (e) {
         console.error('RepV.util.Helper.debugObject: failed to debug object ' + e);
     }
-}
+};
 
 /**
  * Returns the upload path for images.
@@ -663,9 +665,9 @@ function getImageUploadPath() {
     return pathHelper.join(userHome, '.preports');
 }
 
-function getUserHome() { 
-    if( typeof uploadDir === "undefined") {
-        return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+function getUserHome() {
+    if (typeof uploadDir === "undefined") {
+        return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
     } else {
         return uploadDir;
     }
