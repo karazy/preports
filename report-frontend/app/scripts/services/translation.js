@@ -116,7 +116,7 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Lead developers",
 			"EN" : "Lead developers"
 		},
-		"report.projectManagers.title" : {
+		"report.projectmanagers.title" : {
 			"DE" :  "Projektmanager",
 			"EN" : "Project manager"
 		},
@@ -143,6 +143,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"report.milestones.end" : {
 			"DE" :  "Meilenstein Ende",
 			"EN" : "Milestone end"
+		},
+		"report.milestones.name" : {
+			"DE" :  "Name",
+			"EN" : "Name"
 		},
 		"report.lastweektasks" : {
 			"DE" :  "Aufgaben letzte Woche",
