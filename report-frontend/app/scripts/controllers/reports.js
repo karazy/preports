@@ -120,11 +120,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			return;
   		}
 
-  		reportToDelete.$delete(function() {
-        //TODO check view context. remove report in overview or jump back to overview
-        $location.path('/');  
-      }, errorHandler);
-  		
+  		reportToDelete.$delete(angular.noop, errorHandler);
+      
+  		if($location.path() == '/reports') {
+          angular.forEach($scope.reports, function(r, index) {
+            if(reportToDelete._id == r._id) {
+              $scope.reports.splice(index, 1);
+              //exit loop
+              return false;
+            }
+          });
+        } else {
+          $location.path('/');
+        }
   	}
 
     function saveReport(report) {
