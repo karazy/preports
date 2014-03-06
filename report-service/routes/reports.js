@@ -17,16 +17,23 @@ ObjectID = mongo.ObjectID;
 MongoClient = mongo.MongoClient; 
 
 
-//connect to db new way
- MongoClient.connect("mongodb://127.0.0.1:27017/preports", function(err, _db) {
-  
-  test.equal(null, err);
-  test.ok(_db != null);
-  console.log("Connected to 'project report' database");
-  db = _db;
+connect = function(connectUrl) {
 
+    MongoClient.connect(connectUrl, function(err, _db) {
+        test.equal(null, err); 
+        test.ok(_db != null);
+        console.log("Connected to 'project report' database");
+        db = _db;
+         
+    });
+};
 
-});
+exports.setup = function(connectionUrl, uploadDirectory) {
+    console.log("connecting to db: " + connectionUrl);
+    connect(connectionUrl);
+    console.log("directory for upload: " + uploadDirectory);
+    uploadDir = uploadDirectory;
+};
 
 exports.getAll = function(req, res) {
 	var results,
