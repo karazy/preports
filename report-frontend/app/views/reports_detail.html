@@ -1,6 +1,6 @@
 <div ng-show="currentReport._id">
 	<div class="row">
-		<div class="col-md-12 no-print">
+		<div class="col-md-12 hidden-print">
 			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="reports">Reports</span></a>
 			<a href="#/reports/{{currentReport.copyOf}}" ng-show="currentReport.copyOf" class="pull-right"><i class="glyphicon glyphicon-download"></i> <span l="report.copyof">This is a copy.</span></a>		
 		</div>
@@ -11,8 +11,7 @@
 				<h1 ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}">				
 					{{currentReport.name}}
 				</h1>
-			</div>
-			
+			</div>			
 		</div>
 		<div class="col-md-4">
 			<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport()" dialog-confirm-button="delete" dialog-class="alert-danger">
@@ -190,7 +189,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row section">
+	<div class="row section images-section">
 		<div class="col-md-12">
 		<p l="report.images" class="section-header">Architecture diagrams</p>	
 	<!-- 	<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
