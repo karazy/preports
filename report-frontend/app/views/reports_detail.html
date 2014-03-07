@@ -1,6 +1,6 @@
 <div ng-show="currentReport._id">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12 no-print">
 			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="reports">Reports</span></a>
 			<a href="#/reports/{{currentReport.copyOf}}" ng-show="currentReport.copyOf" class="pull-right"><i class="glyphicon glyphicon-download"></i> <span l="report.copyof">This is a copy.</span></a>		
 		</div>
@@ -208,7 +208,7 @@
 				</div>
 			</div>
 			<!-- Define complete report as drop area for files. -->
-			<div class="row" style="margin-bottom: 10px">
+			<div class="row file-area" style="margin-bottom: 10px">
 				<div class="col-md-5">
 					<div ng-file-drop ng-file-over="file-drop-over" class="file-drop">
 						<span l="file.dropzone">Drop images</span>

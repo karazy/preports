@@ -220,3 +220,18 @@ body {
         text-align: center;
     }
 }
+
+
+@media print {
+  .file-area {
+    display: none !important;
+  }
+
+  button {
+    display: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
