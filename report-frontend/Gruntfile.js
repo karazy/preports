@@ -380,7 +380,7 @@ module.exports = function (grunt) {
           replacements: [
             {
               pattern: '{serviceUrl}',
-              replacement: 'http://127.0.0.1'
+              replacement: '127.0.0.1'
             },
             {
               pattern: '{servicePort}',
@@ -415,7 +415,7 @@ module.exports = function (grunt) {
       'bower-install',
       'concurrent:server',
       'autoprefixer',
-      'string-replace',
+      'string-replace:server',
       'connect:livereload',
       'watch'
     ]);
@@ -440,7 +440,7 @@ module.exports = function (grunt) {
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    'string-replace',
+    'string-replace:dist',
     'concat',
     'ngmin',
     'copy:dist',

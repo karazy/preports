@@ -12,7 +12,7 @@ var App = function() {
 
     // Setup
     self.ipaddr = process.env.OPENSHIFT_NODEJS_IP;
-    self.port = parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 3000;
+    self.port = parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 8080;
 
     self.dbHost = process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost";
     self.dbPort = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017;
