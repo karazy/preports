@@ -12,11 +12,23 @@
           <div><div class="preports-logo"><div class="p">P</div><div class="r">R</div></div>eports&reg; | projects at a glance</div style="vertical-align: bottom;">
         </a>          
       </div>
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">     
-        <div class="navbar-right">
-          <div class="loading-indicator" ng-show="ajaxLoading"></div>     
-          <a type="button" href="#/about" class="btn btn-default navbar-btn"><i class="glyphicon glyphicon-info-sign"></i> About</a>
-        </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">  
+         <ul class="nav navbar-nav navbar-right">
+          <li>
+            <div class="loading-indicator" style="margin-top: 8px; margin-bottom: 8px;" ng-show="ajaxLoading"></div>  
+          </li>               
+          <li>
+            <div class="form-group navbar-btn" style="margin-right: 5px;">
+              <select class="form-control" ng-model="user.language" ng-change="setUserLanguage()">
+                <option value="DE">Deutsch</option>
+                <option value="EN">English</option>
+              </select>
+           </div>
+        </li>
+          <li>
+            <a href="#/about"><i class="glyphicon glyphicon-info-sign"></i> About</a>
+          </li>
+        </ul>
       </div>
   </div>
 </nav>

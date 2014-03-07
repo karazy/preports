@@ -12,12 +12,24 @@ angular.module('PReports.services').factory('language', ['$log', 'translation', 
 	*
 	*/
 	function getBrowserLang() {
-		var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
-		$log.info('browser language: '+userLang);
-		if(userLang === 'undefined'|| userLang.length == 0) {
-			//use default language
-			userLang = "DE";
+		var userLang = (navigator.language) ? navigator.language : navigator.userLanguage,
+			_lang,
+			languageKey = "com.bisnode.preports.user.language";
+
+		//use user pref if set
+		if(window.localStorage) {
+			_lang = window.localStorage.getItem(languageKey);
 		}
+
+		if(_lang) {
+			return _lang;	
+		} else {
+			if(userLang === 'undefined'|| userLang.length == 0) {
+				//use default language
+				userLang = "DE";
+			}	
+		}
+
 		return userLang.substring(0,2).toUpperCase();
 	}
 
@@ -37,7 +49,13 @@ angular.module('PReports.services').factory('language', ['$log', 'translation', 
 		* Return Browser language.
 		*/
 		get: function() {
-					return getBrowserLang();
+			return getBrowserLang();
+		},
+		/**
+		* 
+		*/
+		set: function(lang) {
+			browserLang = lang;
 		},
 		/**
 		* @name Cloobster.services.lang#translate

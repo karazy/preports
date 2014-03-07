@@ -26,7 +26,7 @@
 
     <!-- Add your site or application content here -->
 
-    <div ng-include="'views/nav.html'"></div>
+    <div ng-include="'views/nav.html'" ng-controller="PReports.NavigationCtrl"></div>
     <div class="container">
       <!-- Error alert -->
       <div class="row-fluid ng-cloak" ng-show="error">
@@ -73,6 +73,7 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/reports.js"></script>
+        <script src="scripts/controllers/navigation.js"></script>
         <script src="scripts/resources/genericResource.js"></script>
         <script src="scripts/resources/reports.js"></script>
         <script src="scripts/services/translation.js"></script>
