@@ -253,7 +253,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			return;
   		}
 
-    	$http.delete(config.serviceUrl + '/reports/' + $scope.currentReport._id + '/images/' + image._id).
+    	$http.delete(config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id + '/images/' + image._id).
       	success(function(data, status, headers, config) {
     			angular.forEach($scope.currentReport.images, function(object, index) {
     				if(object._id  == image._id) {
@@ -267,7 +267,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     function setupFileUpload() {
      var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,                          // to automatically update the html. Default: $rootScope
-            url: 'http://127.0.0.1:3000/reports/' + $scope.currentReport._id + '/images',
+            url: config.getCombinedServiceUrl() + $scope.currentReport._id + '/images',
             alias: 'image',
             removeAfterUpload: true,
             autoUpload: false,
@@ -311,7 +311,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
  	}
 
  	function loadProjectNames() {
- 		$http.get($scope.config.serviceUrl + '/reports/names').success(function(data, status, headers, config) {
+ 		$http.get($scope.config.getCombinedServiceUrl() + '/reports/names').success(function(data, status, headers, config) {
  			$scope.projectNames = data;
  		}).error(errorHandler);
  	}

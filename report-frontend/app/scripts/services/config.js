@@ -12,7 +12,8 @@ angular.module('PReports.services').provider('config', function() {
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : 'http://127.0.0.1:3000',
+		'serviceUrl' : 'http://127.0.0.1',
+		'servicePort' : '3000',
 		// 'serviceUrl' : '',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {
@@ -29,6 +30,7 @@ angular.module('PReports.services').provider('config', function() {
 	*/
 	self.setConfig = function (config) {
 		self.config_['serviceUrl'] = config['serviceUrl'];
+		self.config_['servicePort'] = config['servicePort'];
 		self.config_['priceRegExp'] = config['priceRegExp'];
 		self.config_['currencyFormats'] = config['currencyFormats'];
 	};
@@ -37,9 +39,33 @@ angular.module('PReports.services').provider('config', function() {
 		self.config_['serviceUrl'] = serviceUrl;
 	};
 
+	self.setservicePort = function(servicePort) {
+		self.config_['servicePort'] = servicePort;
+	};
+
 	self.setPriceRegExp = function(value) {
 		self.config_['priceRegExp'] = value;
 	};
+
+	/**
+	* Returns combined url based on serviceUrl and servicePort.
+	* If nothing is configured, will return location.host.
+	* @return 
+	*  The REST service url.
+	*
+	*/
+	self.config_['getCombinedServiceUrl'] = function() {
+		if(!self.config_['serviceUrl']) {
+			//if no url was specified, use caller url
+			return location.protocol + "//" + location.host;
+		}
+
+		if(!self.config_['servicePort']) {
+			return self.config_['serviceUrl'];
+		}
+
+		return self.config_['serviceUrl'] + ':' + self.config_['servicePort'];
+	}
 
 	/**
 	*	If called with one argument, override the currency formats with the specified map.

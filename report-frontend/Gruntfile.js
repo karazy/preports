@@ -357,32 +357,36 @@ module.exports = function (grunt) {
     'string-replace': {
       dist: {
         files: {
-          'app/scripts/services/' : 'config.js' // includes files in dir
-          // 'path/to/directory/': 'path/to/source/**', // includes files in dir and subdirs
-          // 'path/to/project-<%= pkg.version %>/': 'path/to/source/**', // variables in destination
-          // 'path/to/directory/': ['path/to/sources/*.js', 'path/to/more/*.js'], // include JS files in two diff dirs
-          // 'path/to/filename.ext': 'path/to/source.ext'
+          'app/scripts/services/' : 'config.js' //copy config js nito services folder
         },
         options: {
-          replacements: [{
-            pattern: '{serviceUrl}',
-            replacement: ''
-          }]
+          replacements: [
+            {
+              pattern: '{serviceUrl}',
+              replacement: ''
+            },
+            {
+              pattern: '{servicePort}',
+              replacement: ''
+            }
+          ]
         }
       },
       server: {
         files: {
-          'app/scripts/services/' : 'config.js' // includes files in dir
-          // 'path/to/directory/': 'path/to/source/**', // includes files in dir and subdirs
-          // 'path/to/project-<%= pkg.version %>/': 'path/to/source/**', // variables in destination
-          // 'path/to/directory/': ['path/to/sources/*.js', 'path/to/more/*.js'], // include JS files in two diff dirs
-          // 'path/to/filename.ext': 'path/to/source.ext'
+          'app/scripts/services/' : 'config.js' //copy config js nito services folder
         },
         options: {
-          replacements: [{
-            pattern: '{serviceUrl}',
-            replacement: 'http://127.0.0.1:3000'
-          }]
+          replacements: [
+            {
+              pattern: '{serviceUrl}',
+              replacement: 'http://127.0.0.1'
+            },
+            {
+              pattern: '{servicePort}',
+              replacement: '3000'
+            }
+          ]
         }
       }
       // inline: {

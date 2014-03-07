@@ -1,7 +1,7 @@
 angular.module('PReports.resources').factory('genericResource',['$resource','config', 'errorHandler', function($resource, config, handleError) {
 
 	function ResourceFactory(url, paramDefaults, actions) {
-		var _resource = $resource(config['serviceUrl'] + url, paramDefaults, actions);
+		var _resource = $resource(config.getCombinedServiceUrl() + url, paramDefaults, actions);
 
 		_resource.prototype.saving = false;
 
