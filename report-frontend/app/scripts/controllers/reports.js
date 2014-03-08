@@ -267,7 +267,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     function setupFileUpload() {
      var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,                          // to automatically update the html. Default: $rootScope
-            url: config.getCombinedServiceUrl() + $scope.currentReport._id + '/images',
+            url: config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id + '/images',
             alias: 'image',
             removeAfterUpload: true,
             autoUpload: false,

@@ -201,8 +201,8 @@
 				<div class="col-md-12">
 					<div ng-repeat="i in currentReport.images" class="report-image section-row">
 						<button class="btn btn-primary btn-sm btn-warning image-delete-button"><i class="glyphicon glyphicon-trash" ng-click="deleteReportImage(i);"></i></button>
-						<img ng-src="{{config.serviceUrl}}/reports/{{currentReport._id}}/images/{{i._id}}" alt="{{i.name}}"/><br/>
-						<a href="{{config.serviceUrl}}/reports/{{currentReport._id}}/images/{{i._id}}" target="_blank">
+						<img ng-src="{{config.getCombinedServiceUrl()}}/reports/{{currentReport._id}}/images/{{i._id}}" alt="{{i.name}}"/><br/>
+						<a href="{{config.getCombinedServiceUrl()}}/reports/{{currentReport._id}}/images/{{i._id}}" target="_blank">
 							{{i.name}}
 						</a>
 					</div>
