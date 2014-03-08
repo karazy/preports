@@ -109,8 +109,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Year"
 		},
 		"report.week" : {
-			"DE" :  "Woche",
-			"EN" : "Week"
+			"DE" :  "Report KW",
+			"EN" : "Report cal week"
 		},
 		"report.leaddevelopers.title" : {
 			"DE" :  "Lead developers",
