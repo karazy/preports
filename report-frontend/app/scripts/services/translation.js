@@ -217,8 +217,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Report will be deleted permanent!"
 		},
 		"report.copyof" : {
-			"DE" :  "Dies ist eine Kopie.",
-			"EN" : "This is a copy."
+			"DE" :  "Dies ist eine Kopie",
+			"EN" : "This is a copy"
 		},
 		//general
 		"back" : {
@@ -248,6 +248,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"or" : {
 			"DE" :  "oder",
 			"EN" : "or"
+		},
+		"all" : {
+			"DE" :  "alle",
+			"EN" : "all"
 		},
 		"file.dropzone" : {
 			"DE" :  "Bilder hierher ziehen",

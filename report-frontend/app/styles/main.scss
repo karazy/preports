@@ -221,6 +221,10 @@ body {
     }
 }
 
+table td {
+  cursor: pointer;
+}
+
 
 @media print {
   .file-area, .muted, .simple-property-placeholder, button {

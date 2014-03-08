@@ -87,6 +87,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     }
 
+    $scope.showReport = function(id, event) {
+      if(!id || !event) {
+        return;
+      }
+
+      if(event.target.tagName != "TD") {
+        //user clicked action button or link, so do nothing!
+        return;
+      }
+
+      $location.path('reports/' + id);
+    }
+
   	$scope.createNewReport = function() {
   		var newReport = {},
           date = new Date();
