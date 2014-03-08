@@ -6,11 +6,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     $scope.currentReport = null;
 
-  	$scope.search = {
-  		year: 2014
-  	};
+  	$rootScope.search = $rootScope.search || {};
 
-    $scope.search.calweek = getWeek(new Date());
+    $rootScope.search.year = ($rootScope.search.hasOwnProperty('year')) ? $rootScope.search.year : (new Date()).getFullYear();
+    $rootScope.search.calweek = ($rootScope.search.hasOwnProperty('calweek')) ? $rootScope.search.calweek : getWeek(new Date());
+    $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
   	
   	$scope.calWeeks = [
   	];
@@ -63,11 +63,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	$scope.loadReports = function() {
   		console.log('loadReports');
   		$scope.reports = Report.query({
-  			'year': $scope.search.year,
-  			'calweek' : $scope.search.calweek
+  			'year': $rootScope.search.year,
+  			'calweek' : $rootScope.search.calweek
   		}, function() {
   			$('.copy-button').tooltip();
-  		});
+  		}, errorHandler);
   	}
 
     $scope.loadReport =  function(id) {

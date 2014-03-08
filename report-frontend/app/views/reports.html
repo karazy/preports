@@ -21,9 +21,9 @@
 				  <span class="input-group-addon">
 				  	<i class="glyphicon glyphicon-search"></i>
 				  </span>
-				  <input type="text" class="form-control" l="search" l-attribute="placeholder" placeholder="search" ng-model="reportQuickSearch.name">
+				  <input type="text" class="form-control" l="search" l-attribute="placeholder" placeholder="search" ng-model="search.name">
 				  <span class="input-group-btn">
-				  	<button class="btn btn-default" type="button" ng-click="reportQuickSearch.name = null;"><i class="glyphicon glyphicon-remove"></i></button>
+				  	<button class="btn btn-default" type="button" ng-click="search.name = null;"><i class="glyphicon glyphicon-remove"></i></button>
 				  </span>
 				</div>
 
@@ -61,7 +61,7 @@
 			<th l="reports.table.actions">Actions</th>
 		</thead>
 		<tbody>
-			<tr ng-repeat="r in reports | filter:reportQuickSearch.name | orderBy:['year','week']">
+			<tr ng-repeat="r in reports | filter:search.name | orderBy:['year','week']">
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>
