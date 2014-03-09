@@ -20,7 +20,7 @@ PReports = angular.module('PReports', [
   'PReports.filters',
   'angularFileUpload',
   'ui.bootstrap'
-]).config(function ($routeProvider) {
+]).config(['$routeProvider', function ($routeProvider) {
     $routeProvider
       .when('/reports', {
         templateUrl: 'views/reports.html',
@@ -36,5 +36,7 @@ PReports = angular.module('PReports', [
       .otherwise({
         redirectTo: '/reports'
       });
+  }]).run(function($rootScope, config) {
+      $rootScope.version = config.version;
   });
 

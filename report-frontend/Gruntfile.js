@@ -24,8 +24,12 @@ module.exports = function (grunt) {
     // Project settings
     yeoman: {
       // configurable paths
-      app: require('./bower.json').appPath || 'app',
+      app: require('./bower.json').appPath || 'app',      
       dist: '../report-service/app'
+    },
+
+    pkg: {
+      version: require('./package.json').version,
     },
 
     // Watches files for changes and runs tasks based on the changed files
@@ -385,6 +389,10 @@ module.exports = function (grunt) {
             {
               pattern: '{servicePort}',
               replacement: '3000'
+            },
+            {
+              pattern: '{version}',
+              replacement: '<%= pkg.version %>'
             }
           ]
         }
