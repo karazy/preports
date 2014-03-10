@@ -372,6 +372,10 @@ module.exports = function (grunt) {
             {
               pattern: '{servicePort}',
               replacement: ''
+            },
+            {
+              pattern: '{version}',
+              replacement: '<%= pkg.version %>'
             }
           ]
         }

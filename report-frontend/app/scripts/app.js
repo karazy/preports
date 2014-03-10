@@ -36,7 +36,7 @@ PReports = angular.module('PReports', [
       .otherwise({
         redirectTo: '/reports'
       });
-  }]).run(function($rootScope, config) {
-      $rootScope.version = config.version;
-  });
+  }]).run(['$rootScope', 'config', function($rootScope, config) {
+        $rootScope.version = config.version;
+    }]);
 
