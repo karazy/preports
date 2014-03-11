@@ -277,6 +277,16 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		  }).error(errorHandler);
     }
 
+    $scope.printReport = function() {
+      
+      if(!$scope.currentReport) {
+        console.log('printReport: no current report');
+        return;
+      }
+
+      window.print();
+    }
+
     function setupFileUpload() {
      var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,                          // to automatically update the html. Default: $rootScope
