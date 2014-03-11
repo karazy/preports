@@ -663,5 +663,9 @@ function getImageUploadPath() {
 }
 
 function getUserHome() {
-  return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+  if (typeof uploadDir === "undefined") {
+        return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+    } else {
+        return uploadDir;
+    }
 }
