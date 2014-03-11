@@ -1,5 +1,6 @@
 var express = require('express');
 var reports = require('./routes/reports');
+var crucible = require('./routes/crucible');
 var pdfExport = require('./routes/pdfExport');
 
 var app = express();
@@ -11,7 +12,7 @@ var App = function() {
 
     // Setup
     self.ipaddr = process.env.OPENSHIFT_NODEJS_IP;
-    self.port = parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 8080;
+    self.port = parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 3000;
 
     self.dbHost = process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost";
     self.dbPort = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017;
@@ -83,6 +84,7 @@ var App = function() {
     self.app.get('/reports/:id/images/:imgId', reports.getImage);
     self.app.delete('/reports/:id/images/:imgId', reports.deleteImage);
     self.app.delete('/reports/:id', reports.deleteReport);
+    self.app.get('/crucible/:id', crucible.getCrucible);
 
 //starting the nodejs server with express
     self.startServer = function() {
