@@ -227,6 +227,12 @@ table td {
 
 
 @media print {
+
+  @page {
+    size: landscape;
+    margins: 3cm;
+  }
+
   .file-area, .muted, .simple-property-placeholder, button {
     display: none !important;
   }
@@ -284,5 +290,10 @@ table td {
    .col-md-1 {
     width: 8.333333333333332%;
    }
+
+   body {
+    padding: 0px;
+    margin: 0px;
+  }
 
 }
