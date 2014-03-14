@@ -25,7 +25,7 @@ module.exports = function (grunt) {
     yeoman: {
       // configurable paths
       app: require('./bower.json').appPath || 'app',      
-      dist: '../report-service/app'
+      dist: '../app'
     },
 
     pkg: {
@@ -382,7 +382,7 @@ module.exports = function (grunt) {
       },
       server: {
         files: {
-          'app/scripts/services/' : 'config.js' //copy config js nito services folder
+          'app/scripts/services/' : 'config.js' //copy config js into services folder
         },
         options: {
           replacements: [

@@ -16,3 +16,9 @@ Based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ####v0.0.1
 - Initial version
+
+
+
+The OpenShift `nodejs` cartridge documentation can be found at:
+
+https://github.com/openshift/origin-server/tree/master/cartridges/openshift-origin-cartridge-nodejs/README.md
