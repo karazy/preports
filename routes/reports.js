@@ -133,7 +133,8 @@ function findReport(id, callback) {
 }
 
 function persistReportChanges(report, callback) {
-	var _id = report._id;
+	var _id = report._id,
+		lastModified = (new Date()).getTime();
 
 	debugObject(report, 'persistReportChanges: report');
 	delete report._id;
@@ -145,6 +146,8 @@ function persistReportChanges(report, callback) {
 			callback(500);
 			return;
 		}
+
+		report.lastModified = lastModified;
 
 		//_id is already an object ID so no conversion
 		reports.update({'_id':_id}, report, function(err) {
@@ -162,7 +165,8 @@ function persistReportChanges(report, callback) {
 }
 
 exports.createReport = function(req, res) {
-	var	 reportToSave = req.body;
+	var	 reportToSave = req.body,
+		creationDate = (new Date()).getTime();
 
 	if(!req.body) {
 		return;		
@@ -179,6 +183,10 @@ exports.createReport = function(req, res) {
 		}
 
 		debugObject(req.body, 'Insert new report');
+
+		//set creation date
+		reportToSave.createdOn = creationDate;
+		reportToSave.lastModified = creationDate;
 
 		//This is a copy report. Assign new image ids.
 		if(reportToSave.copyOf && reportToSave.images) {
@@ -216,7 +224,8 @@ exports.createReport = function(req, res) {
 
 exports.updateReport = function(req, res) {
 	var _id = req.params.id,
-		docToUpdate = req.body;
+		docToUpdate = req.body,
+		lastModified = (new Date()).getTime();;
 
 	if(!_id) {
 		console.log('updateReport: no id given');
@@ -239,6 +248,8 @@ exports.updateReport = function(req, res) {
 			res.send(500);
 			return;
 		}
+
+		docToUpdate.lastModified = lastModified;
 
 		reports.update({'_id': ObjectID.createFromHexString(_id)}, docToUpdate, function(err, numberOfUpdatedDocs) {
 			if(err) {
