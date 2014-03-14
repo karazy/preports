@@ -7,6 +7,11 @@ Based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ###Release Notes
 
+####v0.2.1
+- fixed bug in search
+- removed some required fields
+- visual tweaks
+
 ####v0.2.0
 - Language switch (German, English)
 - Print CSS for reports
