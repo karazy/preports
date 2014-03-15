@@ -226,6 +226,9 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"report.createdon" : {
 			"DE" :  "Erzeugt am"
 		},
+		"report.killing.msg" : {
+			"DE" :  "Lösche Report {{reportToDelete.name}} in "
+		},
 		//general
 		"back" : {
 			"DE" :  "zurück",

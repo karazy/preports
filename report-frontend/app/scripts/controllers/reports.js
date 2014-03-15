@@ -1,6 +1,8 @@
 'use strict';
 
-PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler, $rootScope, language) {
+PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler, $rootScope, language, $timeout, $interval) {
+
+    var REPORT_DELETE_TIMEOUT = 5000;
 
     /**
     * Size of the command queue that holds undo events.
@@ -182,27 +184,53 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	}
 
   	$scope.deleteReport = function(report) {
-      var reportToDelete = report || $scope.currentReport;
+      $scope.reportToDelete = report || $scope.currentReport;
 
-  		if(!reportToDelete) {
+  		if(!$scope.reportToDelete) {
   			console.log('deleteReport: no report to delete');
   			return;
   		}
 
-  		reportToDelete.$delete(angular.noop, errorHandler);
-      
-  		if($location.path() == '/reports') {
-          angular.forEach($scope.reports, function(r, index) {
-            if(reportToDelete._id == r._id) {
-              $scope.reports.splice(index, 1);
-              //exit loop
-              return false;
-            }
-          });
+      $scope.remainingSecondsBeforeDoomsday = Math.round(REPORT_DELETE_TIMEOUT/1000);
+      $scope.deleteTimer = true;      
+
+      $scope.doomsdayInterval = $interval(countDown, 1000, $scope.remainingSecondsBeforeDoomsday + 1);
+
+      function killTheReport() {      
+        $scope.reportToDelete.$delete(function() {
+          $scope.reportToDelete = null;
+          if($location.path() == '/reports') {
+            angular.forEach($scope.reports, function(r, index) {
+              if($scope.reportToDelete._id == r._id) {
+                $scope.reports.splice(index, 1);
+                //exit loop
+                return false;
+              }
+            });
+          } else {
+            $location.path('/');
+          }
+        }, errorHandler);        
+      }     
+
+      function countDown() {
+        if($scope.remainingSecondsBeforeDoomsday > 0) {
+          $scope.remainingSecondsBeforeDoomsday = $scope.remainingSecondsBeforeDoomsday - 1;  
         } else {
-          $location.path('/');
-        }
+          $scope.deleteTimer = false;
+          killTheReport();
+        }  
+      }  		
   	}
+
+     $scope.delayDoomsday = function() {
+      $scope.deleteTimer = false;
+
+      if($scope.doomsdayInterval) {        
+        $interval.cancel($scope.doomsdayInterval);
+        $scope.doomsdayInterval = null;  
+      }        
+    }
 
     function saveReport(report) {
       var resource;
@@ -550,4 +578,4 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   
   }
 
-PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader', 'config', 'errorHandler', '$rootScope', 'language'];
+PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader', 'config', 'errorHandler', '$rootScope', 'language', '$timeout', '$interval'];

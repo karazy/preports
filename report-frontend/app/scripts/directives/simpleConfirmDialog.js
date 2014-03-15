@@ -1,4 +1,4 @@
-angular.module('PReports.directives').directive('simpleConfirmDialog', ['language', '$log', function(langService, $log) {
+angular.module('PReports.directives').directive('simpleConfirmDialog', ['language', '$log', '$timeout', function(langService, $log, $timeout) {
 	var //directive configuration
 		config = {
 		restrict: 'A',
@@ -51,10 +51,7 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 		        	scope.confirm = function () {		        		
 						dialog.modal('hide');						
 		        		//TODO workaround. screen stays masked when switching view       		
-		        		window.setTimeout(function() {
-		        			scope.dialogOnConfirm();
-		        		}, 200);        		
-		        		
+		        		$timeout(scope.dialogOnConfirm, 150);		        		
 		        	}
 
 		        	

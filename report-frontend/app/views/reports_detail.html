@@ -1,4 +1,9 @@
 <div ng-show="currentReport._id">
+	<div class="alert alert-danger" ng-show="deleteTimer">
+		<h4><span l="report.killing.msg">Deleting report {{reportToDelete.name}} in </span>{{remainingSecondsBeforeDoomsday}}</h4>
+		<br/>
+		<button ng-click="delayDoomsday()" class="btn btn-warning" l="cancel">Cancel</button>
+	</div>
 	<div class="row">
 		<div class="col-md-12 hidden-print">
 			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="reports">Reports</span></a>
@@ -19,7 +24,8 @@
 				<button type="button" class="btn btn-info" ng-click="removeAndUndoLastCommand();" style="margin-top: 20px;" ng-disabled="commands.length == 0"><i class="icon-undo"></i> x {{commands.length}}</button>
 				<button type="button" class="btn btn-info" ng-click="printReport();" style="margin-top: 20px;"><i class="glyphicon glyphicon-print"></i></button>
 				<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport()" dialog-confirm-button="delete" dialog-class="alert-danger">
-					<button type="button" class="btn btn-danger" style="margin-top: 20px;"><i class="glyphicon glyphicon-trash"></i></button>
+					<button type="button" class="btn btn-danger" style="margin-top: 20px;"><i class="glyphicon glyphicon-trash" ></i></button>
+					<!-- ng-click="deleteReport()" -->
 				</span>	
 			</div>		
 		</div>
