@@ -38,7 +38,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					 	'<div class="control-group" ng-class="getFieldInputClass(simplePropertyForm.simpleProperty.$invalid)">'+
 					 		'<div class="controls">'+
 					 			createFormInput(attrs)+
-					 			'<i class="icon-remove icon-black" ng-click="clearInput()"></i>'+
+					 			'<i class="glyphicon glyphicon-remove" ng-click="clearInput()"></i>'+
 								'<div class="help-inline text-danger" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.required">'+ l('propertyeditor.error.required') +'</span>'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.number">'+ l('propertyeditor.error.number') +'</span>'+
@@ -67,7 +67,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					 	'<div class="control-group" ng-class="getFieldInputClass(simplePropertyForm.simpleProperty.$invalid)">'+
 					 		'<div class="controls">'+
 					 			createFormInput(attrs)+
-					 			'<i class="icon-remove icon-black" ng-click="clearInput()"></i>'+
+					 			'<i class="glyphicon glyphicon-remove" ng-click="clearInput()"></i>'+
 								'<div class="help-inline text-danger" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.required">'+ l('propertyeditor.error.required') +'</span>'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.number">'+ l('propertyeditor.error.number') +'</span>'+
@@ -359,7 +359,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			html = '<div class="control-group"'+
 			 		'<div class="controls">'+
 			 			createFormInput(attrs, index)+
-			 			'<i class="icon-remove icon-black" ng-click="clearInput(' + index + ')"></i>'+
+			 			'<i class="glyphicon glyphicon-remove" ng-click="clearInput(' + index + ')"></i>'+
 			 			//no validation
 			 			//currently no validations for translations
 						// '<div class="help-inline" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+
