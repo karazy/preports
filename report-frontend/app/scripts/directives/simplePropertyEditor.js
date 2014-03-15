@@ -141,6 +141,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 
 		        			if(hasEditorEntity) {
 		        				// Set default language property
+		        				scope.prevValue = scope.editorEntity[scope.editorField];
 		        				scope.editorEntity[scope.editorField] = scope.editorValue;
 		        				angular.forEach(scope.editorEntity.translations, function(translation, key){
 		        					// Set value of the field in the translation object
@@ -152,7 +153,13 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 		        			}		     
 		        			// angular.forEach
 		        			// Wrap this in a timeout, because the model change is not immediate.
-			        		$timeout(scope.editorOnSave);
+			        		$timeout(function() {
+			        			scope.editorOnSave({
+			        				modifiedProperty: scope.editorField, 
+			        				prevValue: scope.prevValue,
+			        				modifiedEntity: scope.editorEntity
+			        			});
+			        		});
 			        		// dialog.modal('toggle');
 
 			        		mask.hide();

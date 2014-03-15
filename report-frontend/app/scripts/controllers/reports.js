@@ -2,6 +2,11 @@
 
 PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler, $rootScope, language) {
 
+    /**
+    * Size of the command queue that holds undo events.
+    */
+    $scope.COMMAND_QUEUE_SIZE = 20;
+
   	$scope.reports = [];
 
     $scope.currentReport = null;
@@ -12,8 +17,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     $rootScope.search.calweek = ($rootScope.search.hasOwnProperty('calweek')) ? $rootScope.search.calweek : getWeek(new Date());
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
   	
-  	$scope.calWeeks = [
-  	];
+  	$scope.calWeeks = [];
 
   	$scope.config = config;
 
@@ -21,6 +25,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	//show 404 message
      $scope.reportNotFound = false;
+
+     /**
+     * List of executed commands during report editing
+     */
+     $scope.commands = [];
+
 
     //Report Structure
 
@@ -85,6 +95,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       	errorHandler(httpResponse);
       });
 
+      //Watch changes for year and week because ng-change on select doesn't provide old value
+      $scope.$watch("currentReport.year", function(newVal, oldVal) {
+        if(newVal && newVal != oldVal) {
+
+        }
+      });
+
+      $scope.$watch("currentReport.week", function(newVal, oldVal) {
+        if(newVal && newVal != oldVal) {
+
+        }
+      });
+
     }
 
     $scope.showReport = function(id, event) {
@@ -113,16 +136,45 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       saveReport(newReport);
   	}
 
-  	$scope.updateReport = function() {
+    /**
+    * Update $scope.currentReport by persisting changes.
+    * @param {String} modifiedProperty
+    *   Property that has been modified.
+    * @param {String} prevValue
+    *   Previous value used for undo.
+    *
+    */
+  	$scope.updateReport = function(modifiedProperty, prevValue, modifiedEntity) {
+      var updateCommand = {
+        mP: modifiedProperty,
+        pV: prevValue
+      };
+
   		if(!$scope.currentReport) {
   			console.log('updateReport: no current report');
   			return;
   		}
-  		//always convert to int before saving
-  		$scope.currentReport.year = parseInt($scope.currentReport.year);
-  		$scope.currentReport.week = parseInt($scope.currentReport.week);
+  		
+      //always convert to int before saving
+      convertYearAndWeekToInt($scope.currentReport);
 
-  		$scope.currentReport.$update();
+      updateCommand.execute = function() {
+        $scope.currentReport.$update();  
+      }
+
+      //only add update command when a modified property exists
+      if(updateCommand.mP) {
+        updateCommand.undo = function() {
+          if(modifiedEntity) {
+            modifiedEntity[updateCommand.mP] = updateCommand.pV;
+          } else {
+            $scope.currentReport[updateCommand.mP] = updateCommand.pV;  
+          }
+          $scope.currentReport.$update();
+        }
+      }      
+
+      storeAndExecute(updateCommand);
   	}
 
   	$scope.deleteReport = function(report) {
@@ -180,7 +232,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         return Math.ceil((((date - onejan) / 86400000) + onejan.getDay() + 1) / 7);
     }
 
+    /**
+    * Add a new milestone to currentReport.
+    */
     $scope.addMilestone = function() {
+      var updateCommand = {};
+
     	if(!$scope.currentReport) {
   			console.log('addMilestone: no current report');
   			return;
@@ -190,14 +247,32 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			$scope.currentReport.milestones = [];
   		}
 
-  		$scope.currentReport.milestones.push({
-  			name: 'New milestone'
-  		});
+      convertYearAndWeekToInt($scope.currentReport);
 
-  		$scope.updateReport();
+      updateCommand.execute = function() {
+        $scope.currentReport.milestones.push({
+          name: 'New milestone'
+        });
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.milestones.pop();
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
     }
 
+    /**
+    * Remove milestone from currentReport.
+    * @param {Integer} index
+    *   Index of milestone to remove in currentReport.milestones.
+    */
     $scope.removeMilestone = function(index) {
+      var updateCommand = {},
+          milestoneToRemove;
+
     	if(!$scope.currentReport) {
   			console.log('addMilestone: no current report');
   			return;
@@ -211,9 +286,22 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		if(!$scope.currentReport.milestones || $scope.currentReport.milestones.length == 0 || !$scope.currentReport.milestones[index]) {
   			return;
   		}
+  		
 
-  		$scope.currentReport.milestones.splice(index, 1);
-  		$scope.updateReport();
+      convertYearAndWeekToInt($scope.currentReport);
+
+      updateCommand.execute = function() {
+        milestoneToRemove = $scope.currentReport.milestones[index];
+        $scope.currentReport.milestones.splice(index, 1);
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.milestones.splice(index, 0, milestoneToRemove);
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
 
     }
 
@@ -333,14 +421,91 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     	saveReport(reportToCopy);
  	}
 
+  /**
+  * Stores command in queue and executes it.
+  * @param {Function} command
+  */
+  function storeAndExecute(command) {
+    var undoFn = true;
+
+    if(!command) {
+      $log.log('storeAndExecute: no command given');
+      return;
+    }
+
+    if(typeof command != 'object') {
+      $log.log('storeAndExecute: command is not an object');
+      return; 
+    }
+
+    if(!command.hasOwnProperty('execute') || typeof command.execute != 'function') {
+      $log.log('storeAndExecute: no execute method found or not a function');
+      return; 
+    }
+
+    if(!command.hasOwnProperty('undo') || typeof command.undo != 'function') {
+      $log.log('storeAndExecute: no undo method found or not a function. Command not added to queue.');
+      undoFn = false;
+    }
+
+    if(undoFn) {
+      if($scope.commands.length == $scope.COMMAND_QUEUE_SIZE) {
+        //only store last $scope.COMMAND_QUEUE_SIZE commands
+        $scope.commands = $scope.commands.slice(1);
+        $scope.commands.push(command);
+      } else {
+        $scope.commands.push(command);  
+      }  
+    }
+
+    try {
+      command.execute();
+    } catch(e) {
+      $log.log('storeAndExecute: failed to execute command. ' + e);
+      $scope.commands.pop(command);
+      alert('commmand execution failed!');
+    }
+    
+  }
+
+  /**
+  * Undo last action by executing undo on latest command.
+  * Afterwards remove the command from array.
+  */
+  $scope.removeAndUndoLastCommand = function() {
+      var commandToUndo;
+
+      if($scope.commands.length > 0) {
+        commandToUndo = $scope.commands.pop();
+        commandToUndo.undo();  
+      } else {
+        $log.log('removeAndUndoLastCommand: no commands in queue');
+      }
+      
+  }
+
  	function loadProjectNames() {
  		$http.get($scope.config.getCombinedServiceUrl() + '/reports/names').success(function(data, status, headers, config) {
  			$scope.projectNames = data;
  		}).error(errorHandler);
  	}
 
+  /**
+  * Converts year and week of a report to Int.
+  */
+  function convertYearAndWeekToInt(report) {
+    if(!report) {
+      console.log('convertCalAndWeekToInt: no report given');
+      return;
+    }
+
+      //always convert to int before saving
+      report.year = parseInt(report.year);
+      report.week = parseInt(report.week);
+  }
+
   	
-    //initially load reports or report entity
+    //initially load reports or report entity based on url
     if($routeParams.reportId) {
       $scope.loadReport($routeParams.reportId);
     } else {

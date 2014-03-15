@@ -282,6 +282,9 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"error.title" : {
 			"DE" :  "Ein Fehler ist aufgetreten",
 			"EN" : "An error occured"
+		},
+		"undo" : {
+			"DE" :  "Rückgängig"
 		}
 	};
 
