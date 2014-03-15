@@ -220,6 +220,12 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Dies ist eine Kopie",
 			"EN" : "This is a copy"
 		},
+		"report.lastmodified" : {
+			"DE" :  "Zuletzt geändert"
+		},
+		"report.createdon" : {
+			"DE" :  "Erzeugt am"
+		},
 		//general
 		"back" : {
 			"DE" :  "zurück",

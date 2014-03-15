@@ -286,8 +286,8 @@
 </div>
 <div class="row section hidden-print">
 	<div class="col-md-12">
-		<span ng-show="currentReport.createdOn">Creation date: {{currentReport.createdOn | date:'yyyy-MM-dd HH:mm:ss'}} |</span>
-		<span ng-show="currentReport.lastModified"> Last modified: {{currentReport.lastModified | date:'yyyy-MM-dd HH:mm:ss'}} </span>
+		<span ng-show="currentReport.createdOn"><span l="report.createdon">Creation date</span>: {{currentReport.createdOn | date:'yyyy-MM-dd HH:mm:ss'}} |</span>
+		<span ng-show="currentReport.lastModified"> <span l="report.lastmodified">Last modified</span>: {{currentReport.lastModified | date:'yyyy-MM-dd HH:mm:ss'}} </span>
 	</div>
 </div>
 <div ng-show="reportNotFound">
