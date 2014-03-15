@@ -145,8 +145,8 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 		        				scope.editorEntity[scope.editorField] = scope.editorValue;
 		        				angular.forEach(scope.editorEntity.translations, function(translation, key){
 		        					// Set value of the field in the translation object
-  										translation[scope.editorField] = scope.editorTranslations[key];
-										});
+									translation[scope.editorField] = scope.editorTranslations[key];
+								});
 		        			}
 		        			else {
 		        				scope.editorProperty = scope.editorValue;
@@ -156,8 +156,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			        		$timeout(function() {
 			        			scope.editorOnSave({
 			        				modifiedProperty: scope.editorField, 
-			        				prevValue: scope.prevValue,
-			        				modifiedEntity: scope.editorEntity
+			        				prevValue: scope.prevValue
 			        			});
 			        		});
 			        		// dialog.modal('toggle');

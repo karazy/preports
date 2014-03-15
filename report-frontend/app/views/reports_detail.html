@@ -16,7 +16,7 @@
 		<!-- <i class="glyphicon glyphicon-arrow-left"></i>  -->
 		<div class="col-md-6">
 			<div class="btn-toolbar pull-right" role="toolbar">
-				<button type="button" class="btn btn-info" ng-click="removeAndUndoLastCommand();" style="margin-top: 20px;" ng-disabled="commands.length == 0"><span l="undo">Undo</span> x {{commands.length}}</button>
+				<button type="button" class="btn btn-info" ng-click="removeAndUndoLastCommand();" style="margin-top: 20px;" ng-disabled="commands.length == 0"><i class="icon-undo"></i> x {{commands.length}}</button>
 				<button type="button" class="btn btn-info" ng-click="printReport();" style="margin-top: 20px;"><i class="glyphicon glyphicon-print"></i></button>
 				<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport()" dialog-confirm-button="delete" dialog-class="alert-danger">
 					<button type="button" class="btn btn-danger" style="margin-top: 20px;"><i class="glyphicon glyphicon-trash"></i></button>
@@ -91,12 +91,12 @@
 			<div ng-repeat="m in currentReport.milestones" style="margin-bottom: 10px;">
 				<div class="row section-row">
 					<div class="col-md-4">	
-						<div simple-property-editor editor-title="report.milestones" editor-on-save="updateReport(modifiedProperty, prevValue, modifiedEntity);" editor-placeholder="report.milestones.ph" editor-required editor-field="name" editor-entity="currentReport.milestones[$index]" editor-type="textfield">
+						<div simple-property-editor editor-title="report.milestones" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="report.milestones.ph" editor-required editor-field="name" editor-entity="currentReport.milestones[$index]" editor-type="textfield">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">{{m.name}}</p>
 						</div>
 					</div>
 					<div class="col-md-3">
-						<div simple-property-editor editor-title="report.milestones.start" editor-on-save="updateReport();" editor-placeholder="start" editor-field="start" editor-entity="currentReport.milestones[$index]" editor-type="textfield">
+						<div simple-property-editor editor-title="report.milestones.start" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="start" editor-field="start" editor-entity="currentReport.milestones[$index]" editor-type="textfield">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">
 								<span l="start" ng-hide="currentReport.milestones[$index].start" class="simple-property-placeholder" >Start</span>
 								{{m.start}}
@@ -104,7 +104,7 @@
 						</div>
 					</div>
 					<div class="col-md-3">
-						<div simple-property-editor editor-title="report.milestones.end" editor-on-save="updateReport();" editor-placeholder="end" editor-field="end" editor-entity="currentReport.milestones[$index]" editor-type="textfield">
+						<div simple-property-editor editor-title="report.milestones.end" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="end" editor-field="end" editor-entity="currentReport.milestones[$index]" editor-type="textfield">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">
 								<span l="end" ng-hide="currentReport.milestones[$index].end" class="simple-property-placeholder" >Start</span>
 								{{m.end}}
@@ -167,12 +167,12 @@
 			<div ng-repeat="cr in currentReport.codeReviews" style="margin-bottom: 10px;">
 				<div class="row section-row">
 					<div class="col-md-5">	
-						<div simple-property-editor editor-title="report.codereviews.reviewer" editor-on-save="updateReport();" editor-placeholder="report.codereviews.reviewer.ph" editor-required editor-field="authors" editor-entity="currentReport.codeReviews[$index]" editor-type="textfield">
+						<div simple-property-editor editor-title="report.codereviews.reviewer" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'codeReviews');" editor-placeholder="report.codereviews.reviewer.ph" editor-required editor-field="authors" editor-entity="currentReport.codeReviews[$index]" editor-type="textfield">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">{{cr.authors}}</p>
 						</div>
 					</div>
 					<div class="col-md-5">
-						<div simple-property-editor editor-title="report.codereviews.topic" editor-on-save="updateReport();" editor-placeholder="report.codereviews.topic.ph" editor-required editor-field="underReview" editor-entity="currentReport.codeReviews[$index]" editor-type="textfield">
+						<div simple-property-editor editor-title="report.codereviews.topic" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'codeReviews');" editor-placeholder="report.codereviews.topic.ph" editor-required editor-field="underReview" editor-entity="currentReport.codeReviews[$index]" editor-type="textfield">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">
 								<span l="report.codereviews.topic.ph" ng-hide="currentReport.codeReviews[$index].underReview" class="simple-property-placeholder" >Enter topic</span>
 								{{cr.underReview}}
@@ -185,7 +185,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<div simple-property-editor editor-title="report.codereviews.content" editor-on-save="updateReport();" editor-placeholder="report.codereviews.content.ph" editor-required editor-field="results" editor-entity="currentReport.codeReviews[$index]" editor-type="textarea">
+						<div simple-property-editor editor-title="report.codereviews.content" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'codeReviews');" editor-placeholder="report.codereviews.content.ph" editor-required editor-field="results" editor-entity="currentReport.codeReviews[$index]" editor-type="textarea">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">
 								<span l="report.codereviews.content.ph" ng-hide="currentReport.codeReviews[$index].results" class="simple-property-placeholder" >Enter results</span>
 								<span ng-bind-html="currentReport.codeReviews[$index].results | breakFilter"></span>

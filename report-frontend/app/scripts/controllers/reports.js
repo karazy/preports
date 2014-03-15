@@ -142,12 +142,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     *   Property that has been modified.
     * @param {String} prevValue
     *   Previous value used for undo.
-    *
+    * TODO document all param
     */
-  	$scope.updateReport = function(modifiedProperty, prevValue, modifiedEntity) {
+  	$scope.updateReport = function(modifiedProperty, prevValue, isArray, index, arrayName) {
       var updateCommand = {
         mP: modifiedProperty,
-        pV: prevValue
+        pV: prevValue,
+        iA: isArray,
+        i: index,
+        aN: arrayName
       };
 
   		if(!$scope.currentReport) {
@@ -165,8 +168,9 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       //only add update command when a modified property exists
       if(updateCommand.mP) {
         updateCommand.undo = function() {
-          if(modifiedEntity) {
-            modifiedEntity[updateCommand.mP] = updateCommand.pV;
+          if(isArray && typeof index == 'number' && arrayName) {
+            $scope.currentReport[arrayName][index][updateCommand.mP] = updateCommand.pV;
+            // modifiedEntity[updateCommand.mP] = updateCommand.pV;
           } else {
             $scope.currentReport[updateCommand.mP] = updateCommand.pV;  
           }
@@ -307,6 +311,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
 
     $scope.addCodeReview = function() {
+      var updateCommand = {};
+
     	if(!$scope.currentReport) {
   			console.log('addCodeReview: no current report');
   			return;
@@ -316,14 +322,27 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			$scope.currentReport.codeReviews = [];
   		}
 
-  		$scope.currentReport.codeReviews.push({
-  			authors: 'Add authors',
-  		});
+      convertYearAndWeekToInt($scope.currentReport);
 
-  		$scope.updateReport();
+      updateCommand.execute = function() {
+        $scope.currentReport.codeReviews.push({
+          authors: 'Add authors',
+        });
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.codeReviews.pop();
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
     }
 
     $scope.removeCodeReview = function(index) {
+      var updateCommand = {},
+          codeReviewToRemove;
+
     	if(!$scope.currentReport) {
   			console.log('removeCodeReview: no current report');
   			return;
@@ -338,9 +357,20 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			return;
   		}
 
-  		$scope.currentReport.codeReviews.splice(index, 1);
-  		$scope.updateReport();
+      convertYearAndWeekToInt($scope.currentReport);
 
+      updateCommand.execute = function() {
+        codeReviewToRemove = $scope.currentReport.codeReviews[index];
+        $scope.currentReport.codeReviews.splice(index, 1);
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.codeReviews.splice(index, 0, codeReviewToRemove);
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
     }
 
     $scope.deleteReportImage = function(image) {
@@ -424,6 +454,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   /**
   * Stores command in queue and executes it.
   * @param {Function} command
+  *   Object with execute and undo function.
   */
   function storeAndExecute(command) {
     var undoFn = true;

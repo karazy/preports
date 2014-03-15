@@ -7,6 +7,36 @@ $primary-color: #000;
 $secondary-color: #FF8300;
 /*#4A6E09;*/
 
+/* Additional icons from IcoMoon */
+@font-face {
+  font-family: 'preports-icons';
+  src:url('fonts/preports-icons.eot?95ji2l');
+  src:url('fonts/preports-icons.eot?#iefix95ji2l') format('embedded-opentype'),
+    url('fonts/preports-icons.woff?95ji2l') format('woff'),
+    url('fonts/preports-icons.ttf?95ji2l') format('truetype'),
+    url('fonts/preports-icons.svg?95ji2l#preports-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'preports-icons';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-undo:before {
+  content: "\e600";
+}
+
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
