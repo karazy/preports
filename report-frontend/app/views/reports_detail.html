@@ -120,7 +120,7 @@
 						</div>
 					</div>
 					<div class="col-md-2">
-						<button class="btn btn-warning btn-sm pull-right" ng-click="removeMilestone($index);"><i class="glyphicon glyphicon-minus"></i></button>
+						<button class="btn btn-warning btn-xs pull-right" ng-click="removeMilestone($index);"><i class="glyphicon glyphicon-minus"></i></button>
 					</div>
 				</div>
 			</div>
@@ -191,7 +191,7 @@
 						</div>
 					</div>				
 					<div class="col-md-2">
-						<button class="btn btn-warning btn-sm pull-right" ng-click="removeCodeReview($index);"><i class="glyphicon glyphicon-minus"></i></button>
+						<button class="btn btn-warning btn-xs pull-right" ng-click="removeCodeReview($index);"><i class="glyphicon glyphicon-minus"></i></button>
 					</div>
 				</div>
 				<div class="row">
@@ -233,7 +233,7 @@
 						</div>
 					</div>				
 					<div class="col-md-2">
-						<button class="btn btn-warning btn-sm pull-right" ng-click="removeSystem($index);"><i class="glyphicon glyphicon-minus"></i></button>
+						<button class="btn btn-warning btn-xs pull-right" ng-click="removeSystem($index);"><i class="glyphicon glyphicon-minus"></i></button>
 					</div>
 				</div>
 				<div class="row">
@@ -296,7 +296,7 @@
 	                    <th ng-show="uploader.isHTML5">Size</th>
 	                    <th ng-show="uploader.isHTML5">Progress</th>
 	                    <th>Status</th>
-	                    <th>Actions</th>
+	                    <!-- <th>Actions</th> -->
 	                </tr>
 	            </thead>
 	            <tbody>
@@ -313,7 +313,7 @@
 	                        <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
 	                        <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
 	                    </td>
-	                    <td nowrap>
+	                  <!--   <td nowrap>
 	                        <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
 	                            <span class="glyphicon glyphicon-upload"></span> Upload
 	                        </button>
@@ -323,7 +323,7 @@
 	                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
 	                            <span class="glyphicon glyphicon-trash"></span> Remove
 	                        </button>
-	                    </td>
+	                    </td> -->
 	                </tr>
 	            </tbody>
 	        </table>
