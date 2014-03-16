@@ -529,9 +529,18 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
             ]
         });
 
+     uploader.bind('complete', function( event, xhr, item, response ) {
+        $log.log(response);
+        if(!$scope.currentReport.images) {
+          $scope.currentReport.images = [];
+        }
+
+        $scope.currentReport.images.push(response);
+     });
+
      	uploader.bind('completeall', function (event, items) {
       		//reload report
-            $scope.loadReport($scope.currentReport._id);
+            // $scope.loadReport($scope.currentReport._id);
         });
 
         uploader.bind('error', function( event, xhr, item, response) {

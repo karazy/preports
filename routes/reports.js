@@ -397,7 +397,7 @@ exports.uploadImage = function(req, res) {
 			return;
 		} else {
 			console.log('uploadImage: successfully moved image');
-			//wait for file being moved to prevent file not shown because
+			//TODO wait for file being moved to prevent file not shown because
 			//request returns before moving is finished
 			saveImageMetaData();
 		}		
@@ -429,7 +429,7 @@ exports.uploadImage = function(req, res) {
 						res.send(500);
 						res.end();
 					} else {
-						res.send(200, report);
+						res.send(200, image);
 						res.end();
 					}
 				});
