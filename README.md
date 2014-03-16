@@ -7,6 +7,13 @@ Based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ###Release Notes
 
+####v0.3
+- Added undo functionality for report editing (works not on selects and image upload!)
+- Added created on and last modified information
+- Added delete countdown
+- Added copy button in report detail
+- Bugfixes
+
 ####v0.2.1
 - fixed bug in search
 - removed some required fields

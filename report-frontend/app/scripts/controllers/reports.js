@@ -570,9 +570,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     } else {
       $scope.loadReports();
       loadProjectNames();
-      $scope.$watch('reports', function() {
-      	$('.copy-button').tooltip();	
-      })
+      //Enable tooltip watch on copy buttons
+      // $scope.$watch('reports', function() {
+      // 	$('.copy-button').tooltip();	
+      // });
       
     }
   

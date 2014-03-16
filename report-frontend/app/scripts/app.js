@@ -38,5 +38,5 @@ PReports = angular.module('PReports', [
       });
   }]).run(['$rootScope', 'config', function($rootScope, config) {
         $rootScope.version = config.version;
-    }]);
+}]);
 

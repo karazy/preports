@@ -75,6 +75,7 @@ var App = function() {
 //Reports CRUD API
     self.app.get('/reports', reports.getAll);
     self.app.get('/reports/names', reports.getProjectNames);
+    self.app.get('/reports/count', reports.getReportsCount);
     self.app.get('/reports/:id', reports.getById);
     self.app.get('/reports/:id/images', reports.getReportImages);
     self.app.get('/reports/:id/pdf', pdfExport.generatePdf);

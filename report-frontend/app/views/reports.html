@@ -64,7 +64,7 @@
 				<td>{{r.year}}</td>
 				<td>{{r.images.length}}</td>
 				<td>
-					<button class="btn btn-primary btn-xs copy-button" ng-click="copyReport(r);"  tooltip="copy"><i class="glyphicon glyphicon-download"></i></button>
+					<button class="btn btn-primary btn-xs copy-button" ng-click="copyReport(r);"><i class="icon-copy"></i></button>
 					<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport(r)" dialog-confirm-button="delete" dialog-class="alert-danger">
 						<button type="button" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></button>
 					</span>	

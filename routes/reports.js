@@ -66,6 +66,7 @@ exports.getAll = function(req, res) {
 		}
 	 	if(error) {
 	 		res.send(404);
+	 		res.end();
 	 		return;
 	 	}
 
@@ -77,6 +78,7 @@ exports.getAll = function(req, res) {
 	 	//exlclude {'images' : 0} and alter copy logic
 	 	col.find(searchParams).toArray(function(err, items) {
             res.send(items);
+            res.end();
         });
 	 
  	} 	
@@ -93,6 +95,7 @@ exports.getById = function(req, res) {
 
 	findReport(_id, function(status, report) {
 		res.send(status, report);
+		res.end();
 	});
 
 }
@@ -127,7 +130,7 @@ function findReport(id, callback) {
 				return;
 			}
 			// debugObject(item, 'findReport: report');
-            callback(200, item)
+            callback(200, item);
         });
 	}
 }
@@ -179,6 +182,7 @@ exports.createReport = function(req, res) {
 
 		if(error) {
 			res.send(404);
+			res.end();
 			return;
 		}
 
@@ -203,6 +207,7 @@ exports.createReport = function(req, res) {
 		reports.insert(reportToSave, function(err, result) {
 			if(err) {
 				res.send(500);
+				res.end();
 			} else {
 				
 				if(reportToSave.copyOf && reportToSave.images) {
@@ -215,6 +220,7 @@ exports.createReport = function(req, res) {
 				}
 				//result is an array
 				res.send(200, result[0]);
+				res.end();
 			}
 
 		});
@@ -230,12 +236,14 @@ exports.updateReport = function(req, res) {
 	if(!_id) {
 		console.log('updateReport: no id given');
 		res.send(500);
+		res.end();
 		return;
 	}
 
 	if(!docToUpdate) {
 		console.log('updateReport: no report given');
 		res.send(500);
+		res.end();
 		return;
 	}
 
@@ -246,6 +254,7 @@ exports.updateReport = function(req, res) {
 	function callback(error, reports) {
 		if(error) {
 			res.send(500);
+			res.end();
 			return;
 		}
 
@@ -255,6 +264,7 @@ exports.updateReport = function(req, res) {
 			if(err) {
 				console.log(err);
 				res.status(500);
+				res.end();
 				return;
 			}
 
@@ -262,6 +272,7 @@ exports.updateReport = function(req, res) {
 
 			console.log('Updated ' + numberOfUpdatedDocs + ' records');
 			res.send(200, docToUpdate);
+			res.end();
         });
 	}
 }
@@ -275,12 +286,11 @@ exports.deleteReport = function(req, res) {
 	
 	getReportsCollection(callback);
 
-	//TODO delete images!
-
 	function callback(error, reports) {
 		var imgToDelete;
 		if(error) {
 			res.send(500);
+			res.end();
 			return;
 		}
 		//delete all images files
@@ -331,10 +341,12 @@ exports.deleteReport = function(req, res) {
 			if(err) {
 				console.log(err);
 				res.status(500);
+				res.end();
 				return;
 			}
 			console.log('Deleted report ' + _id);
 			res.send(200);
+			res.end();
         });
 	}
 }
@@ -351,6 +363,7 @@ exports.uploadImage = function(req, res) {
 	if(!req.files || !req.files.image) {
 		console.log('uploadImage: no image received');
 		res.send(500);
+		res.end();
 		return;
 	}
 
@@ -380,6 +393,7 @@ exports.uploadImage = function(req, res) {
 		if(err) {
 			console.log('uploadImage: failed to move image ' + err);
 			res.send(500);
+			res.end();
 			return;
 		} else {
 			console.log('uploadImage: successfully moved image');
@@ -413,12 +427,15 @@ exports.uploadImage = function(req, res) {
 				persistReportChanges(report, function(status, updatedReport) {
 					if(status == 500) {
 						res.send(500);
+						res.end();
 					} else {
 						res.send(200, report);
+						res.end();
 					}
 				});
 			} else {
 				res.send(status);
+				res.end();
 			}
 		});
 	}
@@ -449,12 +466,14 @@ exports.getImage = function(req, res) {
 			if(err) {
 				console.log(err);
 				res.send(500);
+				res.end();
 				return;
 			}
 
 			if(!item) {
 				console.log('getImage: image not found. _id ' + _id + ' imgId ' + imgId);
 				res.send(404);
+				res.end();
 				return;
 			}
 
@@ -499,11 +518,13 @@ exports.deleteImage = function(req, res) {
 			if(err) {
 				console.log(err);
 				res.send(500);
+				res.end();
 				return;
 			}
 
 			if(!item) {
 				res.send(404);
+				res.end();
 				return;
 			}
 
@@ -522,11 +543,13 @@ exports.deleteImage = function(req, res) {
 
 		if(!img) {
 			res.send(500, 'No image found');
+			res.end();
 			return;
 		}
 
 		if(!img._id) {
 			res.send(500, 'Image has no Id');
+			res.end();
 			return;
 		}
 
@@ -554,6 +577,7 @@ exports.deleteImage = function(req, res) {
 						//continue nevertheless also the file may still exist					
 					}
 					res.send(200);
+					res.end();
 				});
 				
 	        });		
@@ -569,10 +593,12 @@ exports.getProjectNames = function(req, res) {
 		col.distinct('name', function(err, values) {
 			if(err) {
 				res.send(500, err);
+				res.end();
 				return;
 			}
 
 			res.send(200, values);
+			res.end();
 		});
 	}
 }
@@ -588,14 +614,43 @@ exports.getReportImages = function(req, res) {
 	function loadImageMetaData(err, reports) {
 		if(err) {
 			res.send(500, err);
+			res.end();
 			return;
 		}
 
 		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, report) {
 			debugObject(report.images, 'getReportImages: report.images');
 			res.send(200, report.images);
+			res.end();
 		});
 	}	
+}
+
+/**
+* Returns total count of all reports.
+*
+*/
+exports.getReportsCount = function(req, res) {
+	console.log('getReportsCount');
+
+	getReportsCollection(countReports);
+
+	function countReports(err, reports) {
+		if(err) {
+			res.send(500, err);
+			res.end();
+			return;
+		}
+
+		console.log('getReportsCount: counting');
+		reports.count(function(err, count) {
+			console.log('getReportsCount: counted ' + count);
+			//send as string otherwise interpreted as status
+		    res.send(200, count +'');
+		    res.end();
+		    return;
+		});
+	}
 }
 
 /**
