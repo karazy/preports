@@ -14,7 +14,7 @@ angular.module('PReports.services').provider('config', function() {
 	self.config_ = {
 		'serviceUrl' : 'http://127.0.0.1',
 		'servicePort' : '3000',
-		'version' : '0.2.1',
+		'version' : '0.3.0',
 		// 'serviceUrl' : '',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {

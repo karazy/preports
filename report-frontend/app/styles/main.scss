@@ -9,11 +9,11 @@ $secondary-color: #FF8300;
 /* Additional icons from IcoMoon */
 @font-face {
   font-family: 'preports-icons';
-  src:url('fonts/preports-icons.eot?95ji2l');
-  src:url('fonts/preports-icons.eot?#iefix95ji2l') format('embedded-opentype'),
-    url('fonts/preports-icons.woff?95ji2l') format('woff'),
-    url('fonts/preports-icons.ttf?95ji2l') format('truetype'),
-    url('fonts/preports-icons.svg?95ji2l#preports-icons') format('svg');
+  src:url('../fonts/preports-icons.eot?95ji2l');
+  src:url('../fonts/preports-icons.eot?#iefix95ji2l') format('embedded-opentype'),
+    url('../fonts/preports-icons.woff?95ji2l') format('woff'),
+    url('../fonts/preports-icons.ttf?95ji2l') format('truetype'),
+    url('../fonts/preports-icons.svg?95ji2l#preports-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
