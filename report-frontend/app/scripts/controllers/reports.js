@@ -337,7 +337,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     }
 
-
+    /**
+    * Adds a new code review to currentReport.codeReviews.
+    *
+    */
     $scope.addCodeReview = function() {
       var updateCommand = {};
 
@@ -367,6 +370,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       storeAndExecute(updateCommand);
     }
 
+    /**
+    * Removes a code review from currentReport.
+    * @param {Integer} index
+    *   Index of code review to remove.
+    */
     $scope.removeCodeReview = function(index) {
       var updateCommand = {},
           codeReviewToRemove;
@@ -395,6 +403,78 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
       updateCommand.undo = function() {
         $scope.currentReport.codeReviews.splice(index, 0, codeReviewToRemove);
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
+    }
+
+    /**
+    * Adds a system (DEV, QA ...) currentReport.systems.
+    *
+    */
+    $scope.addSystem = function() {
+      var updateCommand = {};
+
+      if(!$scope.currentReport) {
+        console.log('addSystem: no current report');
+        return;
+      }
+
+      if(!$scope.currentReport.systems) {
+        $scope.currentReport.systems = [];
+      }
+
+      convertYearAndWeekToInt($scope.currentReport);
+
+      updateCommand.execute = function() {
+        $scope.currentReport.systems.push({
+        });
+
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.systems.pop();
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
+    }
+
+    /**
+    * Removes a system from currentReport.
+    * @param {Integer} index
+    *   Index of system to remove.
+    */
+    $scope.removeSystem = function(index) {
+      var updateCommand = {},
+          systemToRemove;
+
+      if(!$scope.currentReport) {
+        console.log('removeSystem: no current report');
+        return;
+      }
+
+      if(!index && index !== 0) {
+        console.log('removeSystem: no index given');
+        return;
+      }
+
+      if(!$scope.currentReport.systems || $scope.currentReport.systems.length == 0 || !$scope.currentReport.systems[index]) {
+        return;
+      }
+
+      convertYearAndWeekToInt($scope.currentReport);
+
+      updateCommand.execute = function() {
+        systemToRemove = $scope.currentReport.systems[index];
+        $scope.currentReport.systems.splice(index, 1);
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.systems.splice(index, 0, systemToRemove);
         $scope.currentReport.$update();
       }
 

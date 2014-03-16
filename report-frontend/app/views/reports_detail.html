@@ -88,6 +88,7 @@
 			</div>		
 		</div>
 	</div>
+	<!-- Milestones -->
 	<div class="row section">
 		<div class="col-md-12">
 			<div style="margin-bottom: 10px;">			
@@ -125,6 +126,7 @@
 			</div>
 		</div>
 	</div>
+	<!-- Tasks -->
 	<div class="row section">
 		<div class="col-md-6">
 			<p l="report.lastweektasks" class="section-header">Last week tasks</p>
@@ -145,6 +147,7 @@
 			</div>
 		</div>
 	</div>
+	<!-- Additional information -->
 	<div class="row section">
 		<div class="col-md-6">
 			<p l="report.potentials" class="section-header">Identified potentials</p>
@@ -165,6 +168,7 @@
 			</div>		
 		</div>
 	</div>
+	<!-- Code reviews -->
 	<div class="row section">
 		<div class="col-md-12">
 			<div style="margin-bottom: 10px;">			
@@ -203,6 +207,49 @@
 			</div>
 		</div>
 	</div>
+	<!-- Systems -->
+	<div class="row section">
+		<div class="col-md-12">
+			<div style="margin-bottom: 10px;">			
+				<button class="btn btn-primary btn-sm pull-right" ng-click="addSystem();"><i class="glyphicon glyphicon-plus"></i></button>
+				<p l="report.systems" class="section-header">Systems</p>			
+			</div>
+			<div ng-repeat="record in currentReport.systems" style="margin-bottom: 10px;">
+				<div class="row section-row">
+					<div class="col-md-5">	
+						<div simple-property-editor editor-title="report.systems.name" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'systems');" editor-placeholder="report.systems.name.ph" editor-required editor-field="name" editor-entity="currentReport.systems[$index]" editor-type="textfield">
+							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">
+								<span l="report.systems.name.ph" ng-hide="currentReport.systems[$index].name" class="simple-property-placeholder" >Enter name</span>
+								{{record.name}}
+							</p>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div simple-property-editor editor-title="report.systems.url" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'systems');" editor-placeholder="report.systems.url.ph" editor-required editor-field="url" editor-entity="currentReport.systems[$index]" editor-type="textfield">
+							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">
+								<span l="report.systems.url.ph" ng-hide="currentReport.systems[$index].url" class="simple-property-placeholder" >Enter url</span>
+								{{record.url}}
+							</p>
+						</div>
+					</div>				
+					<div class="col-md-2">
+						<button class="btn btn-warning btn-sm pull-right" ng-click="removeSystem($index);"><i class="glyphicon glyphicon-minus"></i></button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div simple-property-editor editor-title="report.systems.remarks" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'systems');" editor-placeholder="report.systems.remarks.ph" editor-required editor-field="remarks" editor-entity="currentReport.systems[$index]" editor-type="textarea">
+							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving()}" class="section-content">
+								<span l="report.systems.remarks.ph" ng-hide="currentReport.systems[$index].remarks" class="simple-property-placeholder">Enter remarks</span>
+								<span ng-bind-html="currentReport.systems[$index].remarks | breakFilter"></span>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Images -->
 	<div class="row section images-section">
 		<div class="col-md-12">
 		<p l="report.images" class="section-header">Architecture diagrams</p>	
