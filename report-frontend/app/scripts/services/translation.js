@@ -221,8 +221,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Url"
 		},
 		"report.systems.url.ph" : {
-			"DE" :  "Url eintragen",
-			"EN" : "Enter url"
+			"DE" :  "Url eintragen (http://)",
+			"EN" : "Enter url (http://)"
 		},
 		"report.systems.remarks" : {
 			"DE" :  "Bemerkungen",
