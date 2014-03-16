@@ -642,6 +642,8 @@ exports.getReportsCount = function(req, res) {
 			return;
 		}
 
+		//TODO as soon as this is used often create an index and look out for performance issues
+
 		console.log('getReportsCount: counting');
 		reports.count(function(err, count) {
 			console.log('getReportsCount: counted ' + count);
