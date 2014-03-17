@@ -38,8 +38,8 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					 	'<div class="control-group" ng-class="getFieldInputClass(simplePropertyForm.simpleProperty.$invalid)">'+
 					 		'<div class="controls">'+
 					 			createFormInput(attrs)+
-					 			'<i class="icon-remove icon-black" ng-click="clearInput()"></i>'+
-								'<div class="help-inline" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+
+					 			'<i class="glyphicon glyphicon-remove" ng-click="clearInput()"></i>'+
+								'<div class="help-inline text-danger" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.required">'+ l('propertyeditor.error.required') +'</span>'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.number">'+ l('propertyeditor.error.number') +'</span>'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.pattern" l="{{editorPatternText}}">No valid value.</span>'+
@@ -67,8 +67,8 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					 	'<div class="control-group" ng-class="getFieldInputClass(simplePropertyForm.simpleProperty.$invalid)">'+
 					 		'<div class="controls">'+
 					 			createFormInput(attrs)+
-					 			'<i class="icon-remove icon-black" ng-click="clearInput()"></i>'+
-								'<div class="help-inline" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+
+					 			'<i class="glyphicon glyphicon-remove" ng-click="clearInput()"></i>'+
+								'<div class="help-inline text-danger" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.required">'+ l('propertyeditor.error.required') +'</span>'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.number">'+ l('propertyeditor.error.number') +'</span>'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.pattern" l="{{editorPatternText}}">No valid value.</span>'+
@@ -141,18 +141,24 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 
 		        			if(hasEditorEntity) {
 		        				// Set default language property
+		        				scope.prevValue = scope.editorEntity[scope.editorField];
 		        				scope.editorEntity[scope.editorField] = scope.editorValue;
 		        				angular.forEach(scope.editorEntity.translations, function(translation, key){
 		        					// Set value of the field in the translation object
-  										translation[scope.editorField] = scope.editorTranslations[key];
-										});
+									translation[scope.editorField] = scope.editorTranslations[key];
+								});
 		        			}
 		        			else {
 		        				scope.editorProperty = scope.editorValue;
 		        			}		     
 		        			// angular.forEach
 		        			// Wrap this in a timeout, because the model change is not immediate.
-			        		$timeout(scope.editorOnSave);
+			        		$timeout(function() {
+			        			scope.editorOnSave({
+			        				modifiedProperty: scope.editorField, 
+			        				prevValue: scope.prevValue
+			        			});
+			        		});
 			        		// dialog.modal('toggle');
 
 			        		mask.hide();
@@ -353,7 +359,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			html = '<div class="control-group"'+
 			 		'<div class="controls">'+
 			 			createFormInput(attrs, index)+
-			 			'<i class="icon-remove icon-black" ng-click="clearInput(' + index + ')"></i>'+
+			 			'<i class="glyphicon glyphicon-remove" ng-click="clearInput(' + index + ')"></i>'+
 			 			//no validation
 			 			//currently no validations for translations
 						// '<div class="help-inline" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+

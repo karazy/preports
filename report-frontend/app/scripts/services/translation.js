@@ -204,6 +204,34 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Ergenisse eintragen",
 			"EN" : "Enter results"
 		},
+		"report.systems" : {
+			"DE" :  "Systeme",
+			"EN" : "Systems"
+		},
+		"report.systems.name" : {
+			"DE" :  "Systemname",
+			"EN" : "System name"
+		},		
+		"report.systems.name.ph" : {
+			"DE" :  "Systemname eintragen",
+			"EN" : "Enter system name"
+		},
+		"report.systems.url" : {
+			"DE" :  "Url",
+			"EN" : "Url"
+		},
+		"report.systems.url.ph" : {
+			"DE" :  "Url eintragen (http://)",
+			"EN" : "Enter url (http://)"
+		},
+		"report.systems.remarks" : {
+			"DE" :  "Bemerkungen",
+			"EN" : "Remarks"
+		},
+		"report.systems.remarks.ph" : {
+			"DE" :  "Bemerkungen eintragen",
+			"EN" : "Enter remarks"
+		},
 		"report.images" : {
 			"DE" :  "Architektur-Diagramme",
 			"EN" : "Architecture diagrams"
@@ -219,6 +247,15 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"report.copyof" : {
 			"DE" :  "Dies ist eine Kopie",
 			"EN" : "This is a copy"
+		},
+		"report.lastmodified" : {
+			"DE" :  "Zuletzt geändert"
+		},
+		"report.createdon" : {
+			"DE" :  "Erzeugt am"
+		},
+		"report.killing.msg" : {
+			"DE" :  "Lösche Report {{reportToDelete.name}} in "
 		},
 		//general
 		"back" : {
@@ -276,6 +313,9 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"error.title" : {
 			"DE" :  "Ein Fehler ist aufgetreten",
 			"EN" : "An error occured"
+		},
+		"undo" : {
+			"DE" :  "Rückgängig"
 		}
 	};
 

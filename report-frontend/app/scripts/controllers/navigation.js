@@ -1,6 +1,6 @@
 'use strict';
 
-PReports.NavigationCtrl =  function ($scope, $route, language) {
+PReports.NavigationCtrl =  function ($scope, $route, language, config, $location, $http, $log, $rootScope) {
 
 	var languageKey = "com.bisnode.preports.user.language";
 
@@ -31,7 +31,25 @@ PReports.NavigationCtrl =  function ($scope, $route, language) {
 		}
 	}
 
+	/**
+	* Get the total report count.
+	*
+	*/
+	function getReportsCount() {
+ 		$http.get(config.getCombinedServiceUrl() + '/reports/count').success(function(data, status, headers, config) {
+ 			$rootScope.reportsCount = data;
+ 		}).error(function() {
+ 			//fail silently since this is currently not an important function
+ 			$log.log('getReportsCount: failed to get reports count');
+ 		});
+ 	}
+
 	readUserLanguage();
+
+	if($location.path() == '/about') {
+		getReportsCount();
+	}
 }
 
-PReports.NavigationCtrl.$inject = ['$scope', '$route', 'language'];
+PReports.NavigationCtrl.$inject = ['$scope', '$route', 'language', 'config', '$location', '$http', '$log', '$rootScope'];
+

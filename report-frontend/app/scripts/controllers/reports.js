@@ -1,6 +1,13 @@
 'use strict';
 
-PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler, $rootScope, language) {
+PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler, $rootScope, language, $timeout, $interval) {
+
+    var REPORT_DELETE_TIMEOUT = 5000;
+
+    /**
+    * Size of the command queue that holds undo events.
+    */
+    $scope.COMMAND_QUEUE_SIZE = 20;
 
   	$scope.reports = [];
 
@@ -12,8 +19,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     $rootScope.search.calweek = ($rootScope.search.hasOwnProperty('calweek')) ? $rootScope.search.calweek : getWeek(new Date());
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
   	
-  	$scope.calWeeks = [
-  	];
+  	$scope.calWeeks = [];
 
   	$scope.config = config;
 
@@ -21,6 +27,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	//show 404 message
      $scope.reportNotFound = false;
+
+     /**
+     * List of executed commands during report editing
+     */
+     $scope.commands = [];
+
 
     //Report Structure
 
@@ -85,6 +97,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       	errorHandler(httpResponse);
       });
 
+      //Watch changes for year and week because ng-change on select doesn't provide old value
+      $scope.$watch("currentReport.year", function(newVal, oldVal) {
+        if(newVal && newVal != oldVal) {
+
+        }
+      });
+
+      $scope.$watch("currentReport.week", function(newVal, oldVal) {
+        if(newVal && newVal != oldVal) {
+
+        }
+      });
+
     }
 
     $scope.showReport = function(id, event) {
@@ -113,40 +138,99 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       saveReport(newReport);
   	}
 
-  	$scope.updateReport = function() {
+    /**
+    * Update $scope.currentReport by persisting changes.
+    * @param {String} modifiedProperty
+    *   Property that has been modified.
+    * @param {String} prevValue
+    *   Previous value used for undo.
+    * TODO document all param
+    */
+  	$scope.updateReport = function(modifiedProperty, prevValue, isArray, index, arrayName) {
+      var updateCommand = {
+        mP: modifiedProperty,
+        pV: prevValue,
+        iA: isArray,
+        i: index,
+        aN: arrayName
+      };
+
   		if(!$scope.currentReport) {
   			console.log('updateReport: no current report');
   			return;
   		}
-  		//always convert to int before saving
-  		$scope.currentReport.year = parseInt($scope.currentReport.year);
-  		$scope.currentReport.week = parseInt($scope.currentReport.week);
+  		
+      //always convert to int before saving
+      convertYearAndWeekToInt($scope.currentReport);
 
-  		$scope.currentReport.$update();
+      updateCommand.execute = function() {
+        $scope.currentReport.$update();  
+      }
+
+      //only add update command when a modified property exists
+      if(updateCommand.mP) {
+        updateCommand.undo = function() {
+          if(isArray && typeof index == 'number' && arrayName) {
+            $scope.currentReport[arrayName][index][updateCommand.mP] = updateCommand.pV;
+            // modifiedEntity[updateCommand.mP] = updateCommand.pV;
+          } else {
+            $scope.currentReport[updateCommand.mP] = updateCommand.pV;  
+          }
+          $scope.currentReport.$update();
+        }
+      }      
+
+      storeAndExecute(updateCommand);
   	}
 
   	$scope.deleteReport = function(report) {
-      var reportToDelete = report || $scope.currentReport;
+      $scope.reportToDelete = report || $scope.currentReport;
 
-  		if(!reportToDelete) {
+  		if(!$scope.reportToDelete) {
   			console.log('deleteReport: no report to delete');
   			return;
   		}
 
-  		reportToDelete.$delete(angular.noop, errorHandler);
-      
-  		if($location.path() == '/reports') {
-          angular.forEach($scope.reports, function(r, index) {
-            if(reportToDelete._id == r._id) {
-              $scope.reports.splice(index, 1);
-              //exit loop
-              return false;
-            }
-          });
+      $scope.remainingSecondsBeforeDoomsday = Math.round(REPORT_DELETE_TIMEOUT/1000);
+      $scope.deleteTimer = true;      
+
+      $scope.doomsdayInterval = $interval(countDown, 1000, $scope.remainingSecondsBeforeDoomsday + 1);
+
+      function killTheReport() {      
+        $scope.reportToDelete.$delete(function() {
+          $scope.reportToDelete = null;
+          if($location.path() == '/reports') {
+            angular.forEach($scope.reports, function(r, index) {
+              if($scope.reportToDelete._id == r._id) {
+                $scope.reports.splice(index, 1);
+                //exit loop
+                return false;
+              }
+            });
+          } else {
+            $location.path('/');
+          }
+        }, errorHandler);        
+      }     
+
+      function countDown() {
+        if($scope.remainingSecondsBeforeDoomsday > 0) {
+          $scope.remainingSecondsBeforeDoomsday = $scope.remainingSecondsBeforeDoomsday - 1;  
         } else {
-          $location.path('/');
-        }
+          $scope.deleteTimer = false;
+          killTheReport();
+        }  
+      }  		
   	}
+
+     $scope.delayDoomsday = function() {
+      $scope.deleteTimer = false;
+
+      if($scope.doomsdayInterval) {        
+        $interval.cancel($scope.doomsdayInterval);
+        $scope.doomsdayInterval = null;  
+      }        
+    }
 
     function saveReport(report) {
       var resource;
@@ -180,7 +264,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         return Math.ceil((((date - onejan) / 86400000) + onejan.getDay() + 1) / 7);
     }
 
+    /**
+    * Add a new milestone to currentReport.
+    */
     $scope.addMilestone = function() {
+      var updateCommand = {};
+
     	if(!$scope.currentReport) {
   			console.log('addMilestone: no current report');
   			return;
@@ -190,14 +279,32 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			$scope.currentReport.milestones = [];
   		}
 
-  		$scope.currentReport.milestones.push({
-  			name: 'New milestone'
-  		});
+      convertYearAndWeekToInt($scope.currentReport);
 
-  		$scope.updateReport();
+      updateCommand.execute = function() {
+        $scope.currentReport.milestones.push({
+          name: 'New milestone'
+        });
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.milestones.pop();
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
     }
 
+    /**
+    * Remove milestone from currentReport.
+    * @param {Integer} index
+    *   Index of milestone to remove in currentReport.milestones.
+    */
     $scope.removeMilestone = function(index) {
+      var updateCommand = {},
+          milestoneToRemove;
+
     	if(!$scope.currentReport) {
   			console.log('addMilestone: no current report');
   			return;
@@ -211,14 +318,32 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		if(!$scope.currentReport.milestones || $scope.currentReport.milestones.length == 0 || !$scope.currentReport.milestones[index]) {
   			return;
   		}
+  		
 
-  		$scope.currentReport.milestones.splice(index, 1);
-  		$scope.updateReport();
+      convertYearAndWeekToInt($scope.currentReport);
+
+      updateCommand.execute = function() {
+        milestoneToRemove = $scope.currentReport.milestones[index];
+        $scope.currentReport.milestones.splice(index, 1);
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.milestones.splice(index, 0, milestoneToRemove);
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
 
     }
 
-
+    /**
+    * Adds a new code review to currentReport.codeReviews.
+    *
+    */
     $scope.addCodeReview = function() {
+      var updateCommand = {};
+
     	if(!$scope.currentReport) {
   			console.log('addCodeReview: no current report');
   			return;
@@ -228,14 +353,32 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			$scope.currentReport.codeReviews = [];
   		}
 
-  		$scope.currentReport.codeReviews.push({
-  			authors: 'Add authors',
-  		});
+      convertYearAndWeekToInt($scope.currentReport);
 
-  		$scope.updateReport();
+      updateCommand.execute = function() {
+        $scope.currentReport.codeReviews.push({
+          authors: 'Add authors',
+        });
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.codeReviews.pop();
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
     }
 
+    /**
+    * Removes a code review from currentReport.
+    * @param {Integer} index
+    *   Index of code review to remove.
+    */
     $scope.removeCodeReview = function(index) {
+      var updateCommand = {},
+          codeReviewToRemove;
+
     	if(!$scope.currentReport) {
   			console.log('removeCodeReview: no current report');
   			return;
@@ -250,9 +393,92 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			return;
   		}
 
-  		$scope.currentReport.codeReviews.splice(index, 1);
-  		$scope.updateReport();
+      convertYearAndWeekToInt($scope.currentReport);
 
+      updateCommand.execute = function() {
+        codeReviewToRemove = $scope.currentReport.codeReviews[index];
+        $scope.currentReport.codeReviews.splice(index, 1);
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.codeReviews.splice(index, 0, codeReviewToRemove);
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
+    }
+
+    /**
+    * Adds a system (DEV, QA ...) currentReport.systems.
+    *
+    */
+    $scope.addSystem = function() {
+      var updateCommand = {};
+
+      if(!$scope.currentReport) {
+        console.log('addSystem: no current report');
+        return;
+      }
+
+      if(!$scope.currentReport.systems) {
+        $scope.currentReport.systems = [];
+      }
+
+      convertYearAndWeekToInt($scope.currentReport);
+
+      updateCommand.execute = function() {
+        $scope.currentReport.systems.push({
+        });
+
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.systems.pop();
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
+    }
+
+    /**
+    * Removes a system from currentReport.
+    * @param {Integer} index
+    *   Index of system to remove.
+    */
+    $scope.removeSystem = function(index) {
+      var updateCommand = {},
+          systemToRemove;
+
+      if(!$scope.currentReport) {
+        console.log('removeSystem: no current report');
+        return;
+      }
+
+      if(!index && index !== 0) {
+        console.log('removeSystem: no index given');
+        return;
+      }
+
+      if(!$scope.currentReport.systems || $scope.currentReport.systems.length == 0 || !$scope.currentReport.systems[index]) {
+        return;
+      }
+
+      convertYearAndWeekToInt($scope.currentReport);
+
+      updateCommand.execute = function() {
+        systemToRemove = $scope.currentReport.systems[index];
+        $scope.currentReport.systems.splice(index, 1);
+        $scope.currentReport.$update();
+      }
+
+      updateCommand.undo = function() {
+        $scope.currentReport.systems.splice(index, 0, systemToRemove);
+        $scope.currentReport.$update();
+      }
+
+      storeAndExecute(updateCommand);
     }
 
     $scope.deleteReportImage = function(image) {
@@ -277,6 +503,16 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		  }).error(errorHandler);
     }
 
+    $scope.printReport = function() {
+      
+      if(!$scope.currentReport) {
+        console.log('printReport: no current report');
+        return;
+      }
+
+      window.print();
+    }
+
     function setupFileUpload() {
      var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,                          // to automatically update the html. Default: $rootScope
@@ -293,9 +529,18 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
             ]
         });
 
+     uploader.bind('complete', function( event, xhr, item, response ) {
+        $log.log(response);
+        if(!$scope.currentReport.images) {
+          $scope.currentReport.images = [];
+        }
+
+        $scope.currentReport.images.push(response);
+     });
+
      	uploader.bind('completeall', function (event, items) {
       		//reload report
-            $scope.loadReport($scope.currentReport._id);
+            // $scope.loadReport($scope.currentReport._id);
         });
 
         uploader.bind('error', function( event, xhr, item, response) {
@@ -323,25 +568,104 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     	saveReport(reportToCopy);
  	}
 
+  /**
+  * Stores command in queue and executes it.
+  * @param {Function} command
+  *   Object with execute and undo function.
+  */
+  function storeAndExecute(command) {
+    var undoFn = true;
+
+    if(!command) {
+      $log.log('storeAndExecute: no command given');
+      return;
+    }
+
+    if(typeof command != 'object') {
+      $log.log('storeAndExecute: command is not an object');
+      return; 
+    }
+
+    if(!command.hasOwnProperty('execute') || typeof command.execute != 'function') {
+      $log.log('storeAndExecute: no execute method found or not a function');
+      return; 
+    }
+
+    if(!command.hasOwnProperty('undo') || typeof command.undo != 'function') {
+      $log.log('storeAndExecute: no undo method found or not a function. Command not added to queue.');
+      undoFn = false;
+    }
+
+    if(undoFn) {
+      if($scope.commands.length == $scope.COMMAND_QUEUE_SIZE) {
+        //only store last $scope.COMMAND_QUEUE_SIZE commands
+        $scope.commands = $scope.commands.slice(1);
+        $scope.commands.push(command);
+      } else {
+        $scope.commands.push(command);  
+      }  
+    }
+
+    try {
+      command.execute();
+    } catch(e) {
+      $log.log('storeAndExecute: failed to execute command. ' + e);
+      $scope.commands.pop(command);
+      alert('commmand execution failed!');
+    }
+    
+  }
+
+  /**
+  * Undo last action by executing undo on latest command.
+  * Afterwards remove the command from array.
+  */
+  $scope.removeAndUndoLastCommand = function() {
+      var commandToUndo;
+
+      if($scope.commands.length > 0) {
+        commandToUndo = $scope.commands.pop();
+        commandToUndo.undo();  
+      } else {
+        $log.log('removeAndUndoLastCommand: no commands in queue');
+      }
+      
+  }
+
  	function loadProjectNames() {
  		$http.get($scope.config.getCombinedServiceUrl() + '/reports/names').success(function(data, status, headers, config) {
  			$scope.projectNames = data;
  		}).error(errorHandler);
  	}
 
+  /**
+  * Converts year and week of a report to Int.
+  */
+  function convertYearAndWeekToInt(report) {
+    if(!report) {
+      console.log('convertCalAndWeekToInt: no report given');
+      return;
+    }
+
+      //always convert to int before saving
+      report.year = parseInt(report.year);
+      report.week = parseInt(report.week);
+  }
+
   	
-    //initially load reports or report entity
+    //initially load reports or report entity based on url
     if($routeParams.reportId) {
       $scope.loadReport($routeParams.reportId);
     } else {
       $scope.loadReports();
       loadProjectNames();
-      $scope.$watch('reports', function() {
-      	$('.copy-button').tooltip();	
-      })
+      //Enable tooltip watch on copy buttons
+      // $scope.$watch('reports', function() {
+      // 	$('.copy-button').tooltip();	
+      // });
       
     }
   
   }
 
-PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader', 'config', 'errorHandler', '$rootScope', 'language'];
+PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader', 'config', 'errorHandler', '$rootScope', 'language', '$timeout', '$interval'];
