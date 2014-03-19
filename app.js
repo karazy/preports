@@ -1,7 +1,10 @@
+var http = require('http');
 var express = require('express');
 var reports = require('./routes/reports');
 var crucible = require('./routes/crucible');
 var pdfExport = require('./routes/pdfExport');
+var WebSocketServer = require('ws').Server;
+
 
 var app = express();
 
@@ -60,7 +63,7 @@ var App = function() {
 
 
     //define routes
-    self.app.get('/', function(req, res) {
+    self.app.get('/rest', function(req, res) {
         console.log('Displaying options');
         res.status(200);
         res.send('<h1>Reports CRUD API</h1>' +
@@ -89,9 +92,28 @@ var App = function() {
 
 //starting the nodejs server with express
     self.startServer = function() {
-        self.app.listen(self.port, self.ipaddr, function() {
+        self.server = http.createServer(self.app);
+
+        // self.server.listen.apply(server, arguments);
+
+        self.server.listen(self.port, self.ipaddr, function() {
             console.log('%s: Node server started on %s:%d ...', Date(Date.now()), self.ipaddr, self.port);
         });
+
+        //WS Test
+        var wss = new WebSocketServer({server: self.server});
+        wss.on('connection', function(ws) {
+          var id = setInterval(function() {
+            ws.send(JSON.stringify(process.memoryUsage()), function() { /* ignore errors */ });
+            
+          }, 500);
+          console.log('started client interval');
+          ws.on('close', function() {
+            console.log('stopping client interval');
+            clearInterval(id);
+          });
+        });
+
     };
 
     // Destructors

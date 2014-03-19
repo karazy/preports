@@ -74,6 +74,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	$scope.loadReports = function() {
   		console.log('loadReports');
+      //set url to query params
+      if($rootScope.search.calweek) {
+        $location.search('calweek', $rootScope.search.calweek);
+      }
+
+      if($rootScope.search.year) {
+        $location.search('year', $rootScope.search.year);  
+      }
+      
   		$scope.reports = Report.query({
   			'year': $rootScope.search.year,
   			'calweek' : $rootScope.search.calweek
@@ -657,6 +666,16 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     if($routeParams.reportId) {
       $scope.loadReport($routeParams.reportId);
     } else {
+      var queryParams = $location.search();
+      if(queryParams) {
+        if(queryParams.calweek) {
+          $rootScope.search.calweek = parseInt(queryParams.calweek);
+        }
+        if(queryParams.year) {
+          $rootScope.search.year = queryParams.year;
+        }
+      }
+
       $scope.loadReports();
       loadProjectNames();
       //Enable tooltip watch on copy buttons

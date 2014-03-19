@@ -49,6 +49,11 @@ PReports.NavigationCtrl =  function ($scope, $route, language, config, $location
 	if($location.path() == '/about') {
 		getReportsCount();
 	}
+
+	var ws = new WebSocket('ws://127.0.0.1:' + config.servicePort);
+	ws.onmessage = function (event) {
+    	//console.log('New WS message: ' + event.data);
+    };
 }
 
 PReports.NavigationCtrl.$inject = ['$scope', '$route', 'language', 'config', '$location', '$http', '$log', '$rootScope'];
