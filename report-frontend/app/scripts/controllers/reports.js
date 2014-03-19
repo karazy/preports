@@ -75,12 +75,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	$scope.loadReports = function() {
   		console.log('loadReports');
       //set url to query params
+      //set it to empty object
+      $location.$$search = {};
+
       if($rootScope.search.calweek) {
         $location.search('calweek', $rootScope.search.calweek);
       }
 
       if($rootScope.search.year) {
         $location.search('year', $rootScope.search.year);  
+      }
+
+      if($rootScope.search.name) {
+        $location.search('name', $rootScope.search.name);  
       }
       
   		$scope.reports = Report.query({
@@ -670,7 +677,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       if(queryParams) {
         if(queryParams.calweek) {
           $rootScope.search.calweek = parseInt(queryParams.calweek);
-        }
+        } else {}
         if(queryParams.year) {
           $rootScope.search.year = queryParams.year;
         }
