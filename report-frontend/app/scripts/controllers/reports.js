@@ -14,7 +14,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     $scope.currentReport = null;
 
   	$rootScope.search = $rootScope.search || {};
-
+    //initialize global search parameters if they don't exist on $rootScope
     $rootScope.search.year = ($rootScope.search.hasOwnProperty('year')) ? $rootScope.search.year : (new Date()).getFullYear();
     $rootScope.search.calweek = ($rootScope.search.hasOwnProperty('calweek')) ? $rootScope.search.calweek : getWeek(new Date());
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
@@ -74,21 +74,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	$scope.loadReports = function() {
   		console.log('loadReports');
-      //set url to query params
-      //set it to empty object
-      $location.$$search = {};
-
-      if($rootScope.search.calweek) {
-        $location.search('calweek', $rootScope.search.calweek);
-      }
-
-      if($rootScope.search.year) {
-        $location.search('year', $rootScope.search.year);  
-      }
-
-      if($rootScope.search.name) {
-        $location.search('name', $rootScope.search.name);  
-      }
+      $scope.setSearchAsQueryParams();
       
   		$scope.reports = Report.query({
   			'year': $rootScope.search.year,
@@ -126,6 +112,52 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         }
       });
 
+    }
+
+    /**
+    * Uses search parameters (if exist) and adds them 
+    * as query parameters to current url.
+    */
+    $scope.setSearchAsQueryParams = function() {
+      //set url to query params
+      //set it to empty object
+      $location.$$search = {};
+
+      if($rootScope.search.calweek) {
+        $location.search('calweek', $rootScope.search.calweek);
+      }
+
+      if($rootScope.search.year) {
+        $location.search('year', $rootScope.search.year);  
+      }
+
+      if($rootScope.search.name) {
+        $location.search('name', $rootScope.search.name);  
+      }
+    }
+
+    /**
+    * Uses query params from url and adds them to 
+    * $rootScope.search object
+    */
+    function setQueryParamsAsSearch() {
+      var queryParams = $location.search();
+      if(queryParams) {
+        if(queryParams.calweek) {
+          $rootScope.search.calweek = parseInt(queryParams.calweek);
+        }
+        if(queryParams.year) {
+          $rootScope.search.year = queryParams.year;
+        }
+        if(queryParams.name) {
+          $rootScope.search.name = queryParams.name;
+        }
+      }
+    }
+
+    function resetQueryParams() {
+      $location.$$search = {};
+      $location.url($location.path());
     }
 
     $scope.showReport = function(id, event) {
@@ -671,24 +703,18 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	
     //initially load reports or report entity based on url
     if($routeParams.reportId) {
+      resetQueryParams();
       $scope.loadReport($routeParams.reportId);
     } else {
-      var queryParams = $location.search();
-      if(queryParams) {
-        if(queryParams.calweek) {
-          $rootScope.search.calweek = parseInt(queryParams.calweek);
-        } else {}
-        if(queryParams.year) {
-          $rootScope.search.year = queryParams.year;
-        }
-      }
-
+      setQueryParamsAsSearch();
       $scope.loadReports();
       loadProjectNames();
       //Enable tooltip watch on copy buttons
-      // $scope.$watch('reports', function() {
-      // 	$('.copy-button').tooltip();	
-      // });
+      $rootScope.$watch('search.name', function() {
+      	if($rootScope.search.name) {
+            $location.search('name', $rootScope.search.name);  
+          }
+      });
       
     }
   
