@@ -710,9 +710,9 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       $scope.loadReports();
       loadProjectNames();
       //Enable tooltip watch on copy buttons
-      $rootScope.$watch('search.name', function() {
-      	if($rootScope.search.name) {
-            $location.search('name', $rootScope.search.name);  
+      $scope.$watch('search.name', function(name) {
+      	if(name) {
+            $location.search('name', name);  
           }
       });
       
