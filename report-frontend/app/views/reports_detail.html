@@ -54,7 +54,7 @@
 	<div class="row section">
 		<div class="col-md-4">
 			<p l="report.year" class="section-header">Year</p>
-			<select ng-model="currentReport.year" ng-change="updateReport('year', prevValue);"  class="form-control hidden-print"  style="width: 100px;">
+			<select ng-model="currentReport.year" ng-change="updateReport();"  class="form-control hidden-print"  style="width: 100px;">
 				<option value="2014">2014</option>
 				<option value="2015">2015</option>
 				<option value="2016">2016</option>
@@ -64,7 +64,7 @@
 		</div>
 		<div class="col-md-4">
 			<p l="report.week" class="section-header">Calendar week</p>
-			<select ng-model="currentReport.week" ng-change="updateReport('week', prevValue);" ng-options="c.week as c.week for c in calWeeks"  class="form-control hidden-print" style="width: 100px;">
+			<select ng-model="currentReport.week" ng-change="updateReport();" ng-options="c.week as c.week for c in calWeeks"  class="form-control hidden-print" style="width: 100px;">
 			</select>
 			<p class="visible-print">{{currentReport.week}}</p>
 		</div>

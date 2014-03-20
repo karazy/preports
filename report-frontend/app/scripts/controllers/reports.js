@@ -97,20 +97,6 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       	errorHandler(httpResponse);
       });
 
-      //Watch changes for year and week because ng-change on select doesn't provide old value
-      //TODO remove?!?!
-      $scope.$watch("currentReport.year", function(newVal, oldVal) {
-        if(newVal && newVal != oldVal) {
-
-        }
-      });
-
-      $scope.$watch("currentReport.week", function(newVal, oldVal) {
-        if(newVal && newVal != oldVal) {
-
-        }
-      });
-
     }
 
     /**
