@@ -1,7 +1,6 @@
 var express = require('express');
 var reports = require('./routes/reports');
 var crucible = require('./routes/crucible');
-var pdfExport = require('./routes/pdfExport');
 
 var app = express();
 
@@ -75,7 +74,6 @@ var App = function() {
     self.app.get('/reports/count', reports.getReportsCount);
     self.app.get('/reports/:id', reports.getById);
     self.app.get('/reports/:id/images', reports.getReportImages);
-    self.app.get('/reports/:id/pdf', pdfExport.generatePdf);
     self.app.post('/reports', reports.createReport);
     self.app.put('/reports/:id', reports.updateReport);
     self.app.post('/reports/:id/images', reports.uploadImage);
