@@ -56,6 +56,18 @@ exports.getAll = function(req, res) {
 	        ]				
 		};
 
+	if(req.accepts('text/plain')) {
+		exports.getProjectNames(req, res);
+		return;
+	}
+
+	//support json and hal+json type, otherwise return not acceptable
+	if(!req.accepts('application/json') && !req.accepts('application/hal+json')) {
+		res.status(406);
+		res.end();
+		return;
+	}
+
 	getReportsCollection(callback);
 
 	 function callback(error, col) {
@@ -85,6 +97,7 @@ exports.getAll = function(req, res) {
 	 			addReportLinks(report);
 	 		});
 
+	 		res.set('Content-Type', req.get('Accept'));
             res.send(items);
             res.end();
         });
@@ -646,6 +659,10 @@ exports.deleteImage = function(req, res) {
 	}
 }
 
+/**
+* @deprecated
+* For backwards compatibility. Please use /reports with content-type text/plain
+*/
 exports.getProjectNames = function(req, res) {
 
 	getReportsCollection(getDistinctProjectNames);
@@ -657,6 +674,8 @@ exports.getProjectNames = function(req, res) {
 				res.end();
 				return;
 			}
+
+			res.set('Content-Type', 'text/plain');
 
 			res.send(200, values);
 			res.end();
