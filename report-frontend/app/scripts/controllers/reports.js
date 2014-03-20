@@ -79,9 +79,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		$scope.reports = Report.query({
   			'year': $rootScope.search.year,
   			'calweek' : $rootScope.search.calweek
-  		}, function() {
-  			$('.copy-button').tooltip();
-  		}, errorHandler);
+  		}, angular.noop, errorHandler);
   	}
 
     $scope.loadReport =  function(id) {
@@ -100,6 +98,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       });
 
       //Watch changes for year and week because ng-change on select doesn't provide old value
+      //TODO remove?!?!
       $scope.$watch("currentReport.year", function(newVal, oldVal) {
         if(newVal && newVal != oldVal) {
 
@@ -613,6 +612,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     	reportToCopy.name = reportToCopy.name +'_copy';
 
+      if(reportToCopy.week < 52) {
+        reportToCopy.week =  reportToCopy.week + 1;
+      } else {
+        reportToCopy.week = 1;
+        reportToCopy.year++;
+      }
+      
+
+
     	saveReport(reportToCopy);
  	}
 
@@ -681,7 +689,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   }
 
  	function loadProjectNames() {
- 		$http.get($scope.config.getCombinedServiceUrl() + '/reports/names').success(function(data, status, headers, config) {
+ 		$http.get($scope.config.getCombinedServiceUrl() + '/reports', {
+      headers: {
+        'Accept' : 'text/plain'
+      }
+    }).success(function(data, status, headers, config) {
  			$scope.projectNames = data;
  		}).error(errorHandler);
  	}

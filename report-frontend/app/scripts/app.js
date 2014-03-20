@@ -20,7 +20,7 @@ PReports = angular.module('PReports', [
   'PReports.filters',
   'angularFileUpload',
   'ui.bootstrap'
-]).config(['$routeProvider', function ($routeProvider) {
+]).config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
     $routeProvider
       .when('/reports', {
         templateUrl: 'views/reports.html',
@@ -36,6 +36,8 @@ PReports = angular.module('PReports', [
       .otherwise({
         redirectTo: '/reports'
       });
+
+      $httpProvider.defaults.headers.common['Accept'] = 'application/json, application/hal+json';
   }]).run(['$rootScope', 'config', function($rootScope, config) {
         $rootScope.version = config.version;
 }]);

@@ -2,9 +2,7 @@ var http = require('http');
 var express = require('express');
 var reports = require('./routes/reports');
 var crucible = require('./routes/crucible');
-var pdfExport = require('./routes/pdfExport');
 var WebSocketServer = require('ws').Server;
-
 
 var app = express();
 
@@ -40,7 +38,7 @@ var App = function() {
 
 //define usages
     self.app.configure(function() {
-        self.app.use(express.static(__dirname + '/app'));
+        self.app.use('/app', express.static(__dirname + '/app'));
         self.app.use(express.bodyParser({
             keepExtensions: true
                     // uploadDir: '~/Pictures/nodejs' 
@@ -66,12 +64,9 @@ var App = function() {
     self.app.get('/rest', function(req, res) {
         console.log('Displaying options');
         res.status(200);
-        res.send('<h1>Reports CRUD API</h1>' +
-                '<p><a href="/reports">GET /reports Get all reports</a></p>' +
-                '<p>GET /reports/:id Get report via id</p>' +
-                '<p>POST /reports Create new report</p>' +
-                '<p>PUT /repors/:id Update or eplace report</p>' +
-                '<p>DELETE /reports/:id Delete report by id</p>'
+        res.send('<h1>preports</h1>' +
+                '<p><a href="/reports">/reports</a></p>' +
+                '<p><a href="/app">preports frontend -> relocated</a></p>'
                 );
     });
 
@@ -81,7 +76,6 @@ var App = function() {
     self.app.get('/reports/count', reports.getReportsCount);
     self.app.get('/reports/:id', reports.getById);
     self.app.get('/reports/:id/images', reports.getReportImages);
-    self.app.get('/reports/:id/pdf', pdfExport.generatePdf);
     self.app.post('/reports', reports.createReport);
     self.app.put('/reports/:id', reports.updateReport);
     self.app.post('/reports/:id/images', reports.uploadImage);
