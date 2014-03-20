@@ -190,6 +190,12 @@ function addReportLinks(report) {
 
 function addReportImageLinks(image, reportId) {
 	if(!image) {
+		console.log('addReportImageLinks: no image given');
+		return;
+	}
+
+	if(!reportId) {
+		console.log('addReportImageLinks: no reportId given');
 		return;
 	}
 
@@ -494,6 +500,8 @@ exports.uploadImage = function(req, res) {
 					'name': req.files.image.name,
 					'_id': (new ObjectID()).toString()
 				};
+
+				addReportImageLinks(image, report._id);
 
 				//debugObject(image, 'uploadImage: add image metadata to currentReport ' + report._id);
 				report.images.push(image);
