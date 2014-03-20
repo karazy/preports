@@ -35,6 +35,10 @@ exports.setup = function(connectionUrl, uploadDirectory) {
     uploadDir = uploadDirectory;
 };
 
+/**
+* Get all reports.
+*
+*/
 exports.getAll = function(req, res) {
 	var results,
 		searchYear = req.query.year,
@@ -61,9 +65,8 @@ exports.getAll = function(req, res) {
 
 		if(searchWeek) {
 			searchParams.week = parseInt(req.query.calweek);
-
-
 		}
+
 	 	if(error) {
 	 		res.send(404);
 	 		res.end();
@@ -74,9 +77,14 @@ exports.getAll = function(req, res) {
 	 	
 	 	res.setHeader('Content-Type', 'application/json');
 	 	res.status(200);
-	 	//include images needed for making copies. As alternative
+	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic
 	 	col.find(searchParams).toArray(function(err, items) {
+	 		
+	 		items.forEach(function(report) {
+	 			addReportLinks(report);
+	 		});
+
             res.send(items);
             res.end();
         });
@@ -138,8 +146,7 @@ function findReport(id, callback) {
 }
 
 /**
-*
-*
+* Adds hypermedia links for API navigation to the report.
 */
 function addReportLinks(report) {
 	if(!report) {
@@ -150,12 +157,43 @@ function addReportLinks(report) {
 		report._links = {};	
 	}
 	
-	report._links.self = { 
-		"href": "/reports/" + report._id
-	};
+	report._links = {
+		'self' : { 
+			'href': '/reports/' + report._id
+		},
+		'collection' : {
+			'href' : '/reports'
+		}
+	}
+	//if a report has images, add self links to them as well
+	if(report.images) {
+		report.images.forEach(function(image) {
+			addReportImageLinks(image, report._id);
+		});
+	}
 
 	return report;
+}
 
+function addReportImageLinks(image, reportId) {
+	if(!image) {
+		return;
+	}
+
+	if(!image._links) {
+		image._links = {};	
+	}
+
+	image._links = {
+		'self' : { 
+			'href': '/reports/' + reportId + '/images/' + image._id
+		},
+		'collection' : {
+			'href' : '/reports/' + reportId + '/images'
+		}	
+	}
+
+	return image;
 }
 
 function persistReportChanges(report, callback) {
@@ -643,6 +681,10 @@ exports.getReportImages = function(req, res) {
 
 		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, report) {
 			debugObject(report.images, 'getReportImages: report.images');
+			report.images.forEach(function(image) {
+				addReportImageLinks(image, report._id);
+			});
+
 			res.send(200, report.images);
 			res.end();
 		});

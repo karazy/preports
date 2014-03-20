@@ -77,9 +77,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   		$scope.reports = Report.query({
   			'year': $rootScope.search.year,
   			'calweek' : $rootScope.search.calweek
-  		}, function() {
-  			$('.copy-button').tooltip();
-  		}, errorHandler);
+  		}, angular.noop, errorHandler);
   	}
 
     $scope.loadReport =  function(id) {
