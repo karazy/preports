@@ -564,6 +564,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     	reportToCopy.name = reportToCopy.name +'_copy';
 
+      if(reportToCopy.week < 52) {
+        reportToCopy.week =  reportToCopy.week + 1;
+      } else {
+        reportToCopy.week = 1;
+        reportToCopy.year++;
+      }
+      
+
+
     	saveReport(reportToCopy);
  	}
 
