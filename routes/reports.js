@@ -129,10 +129,33 @@ function findReport(id, callback) {
 				callback(404);
 				return;
 			}
+
+			addReportLinks(item);
 			// debugObject(item, 'findReport: report');
             callback(200, item);
         });
 	}
+}
+
+/**
+*
+*
+*/
+function addReportLinks(report) {
+	if(!report) {
+		return;
+	}
+
+	if(!report._links) {
+		report._links = {};	
+	}
+	
+	report._links.self = { 
+		"href": "/reports/" + report._id
+	};
+
+	return report;
+
 }
 
 function persistReportChanges(report, callback) {
