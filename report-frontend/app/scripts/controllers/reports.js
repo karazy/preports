@@ -72,15 +72,49 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	};
 
 
-  	$scope.loadReports = function() {
+  	$scope.loadReports = function(direction) {
+      var page,
+          limit;
   		console.log('loadReports');
+
+      // if($scope.reportsWrapper._links) {
+      //   if(direction== 'next' && $scope.reportsWrapper._links.next) {
+
+      //   } else if(direction == 'prev' && $scope.reportsWrapper._links.prev) {
+
+      //   }
+      // }
       
-  		$scope.reports = Report.query({
+      
+  		$scope.reportsWrapper = Report.query({
   			'year': $rootScope.search.year,
   			'calweek' : $rootScope.search.calweek,
         'name' : $rootScope.search.name
-  		}, angular.noop, errorHandler);
+  		},{
+        url: '/testing'
+      },
+      function(value) {
+        //20140321 wrapper is new!
+        //html operates directly on $scope.reports
+        //TODO refactor using the new structure
+        $scope.reports = $scope.reportsWrapper.reports;
+      }, errorHandler);
   	}
+
+    function setupWatchForSearch() {
+      var tempFilterText = '',
+          filterTextTimeout;
+
+      $rootScope.$watch('search.name', function (val) {
+          if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
+
+          tempFilterText = val;
+          filterTextTimeout = $timeout(function() {
+              $scope.filterText = tempFilterText;
+              $scope.loadReports();
+          }, 250);
+      });
+    }
 
     $scope.loadReport =  function(id) {
       if(!id) {
@@ -708,18 +742,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     } else {
       $scope.loadReports();
       loadProjectNames();
-
-       var tempFilterText = '',
-        filterTextTimeout;
-      $rootScope.$watch('search.name', function (val) {
-          if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
-
-          tempFilterText = val;
-          filterTextTimeout = $timeout(function() {
-              $scope.filterText = tempFilterText;
-              $scope.loadReports();
-          }, 250); // delay 250 ms
-      });
+      setupWatchForSearch();
     }
   
   }

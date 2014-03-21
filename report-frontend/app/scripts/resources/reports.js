@@ -7,7 +7,8 @@ angular.module('PReports.resources').factory('Report',['genericResource', functi
         'id': '@_id'
       },
       {
-      	'update': {method: 'PUT'}
+      	'update': {method: 'PUT'},
+      	'query': {method: 'GET', isArray: false}
       }
     );
  

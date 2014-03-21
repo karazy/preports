@@ -43,6 +43,8 @@ exports.getAll = function(req, res) {
 	var results,
 		searchYear = req.query.year,
 		searchWeek = req.query.calweek,
+		limit = req.query.limit || 2,
+		page = req.query.page || 0,
 		searchParams = {
 			$or: [
 				{ week: { $type: 16 } },
@@ -56,7 +58,7 @@ exports.getAll = function(req, res) {
 	        ]				
 		};
 
-	debugObject(req.query, 'getAll: query params');
+	debugObject(req.query, 'getAll: query params');	
 
 	if(req.accepts('text/plain')) {
 		exports.getProjectNames(req, res);
@@ -85,6 +87,9 @@ exports.getAll = function(req, res) {
 			searchParams.name = RegExp(".*" + req.query.name +".*", 'i');
 		}
 
+		limit = parseInt(limit);
+		page = parseInt(page);
+
 	 	if(error) {
 	 		res.send(404);
 	 		res.end();
@@ -95,21 +100,72 @@ exports.getAll = function(req, res) {
 	 	
 	 	res.setHeader('Content-Type', 'application/json');
 	 	res.status(200);
+
+	 	/*
+
+// go to page current+N
+db.collection.find({_id: {$gt: current_id}}).
+              skip(N * page_size).
+              limit(page_size).
+              sort({_id: 1});
+
+// go to page current-N
+db.collection.find({_id: {$lt: current_id}}).
+              skip((N-1)*page_size).
+              limit(page_size).
+              sort({_id: 1});
+	 	*/
+
 	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic
-	 	col.find(searchParams).toArray(function(err, items) {
-	 		
-	 		items.forEach(function(report) {
-	 			addReportLinks(report);
-	 		});
+	 	col.find(searchParams)
+	 		.skip(page * limit)
+	 		.limit(limit)
+	 		.toArray(function(err, items) {	 		
+		 		items.forEach(function(report) {
+		 			addReportLinks(report);
+		 		});
 
-	 		res.set('Content-Type', req.get('Accept'));
-            res.send(items);
-            res.end();
-        });
-	 
+		 		res.set('Content-Type', req.get('Accept'));
+	            res.send(addMetaInformationToReportsCollection(items, page, limit));
+	            res.end();
+        });	 
  	} 	
 }
+
+function addMetaInformationToReportsCollection(reports, page, limit) {
+	var wrapper = {};
+
+	if(!reports) {
+		console.log('addMetaInformationToReportsCollection: no reports given')
+		return;
+	}
+
+	wrapper.reports = reports;
+
+	wrapper._links = {
+		self : {
+			href: '/reports'
+		},
+		totalCount: reports.length
+	}
+
+	if(page > 0) {
+		wrapper._links['prev'] = {
+			href: '/reports?page=' + (page-1) + '&limit=' + limit 
+		}
+	}
+
+	if(true) {
+		wrapper._links['next'] = {
+			href: '/reports?page=' + (page+1) + '&limit=' + limit 
+		}
+	}
+
+	return wrapper;
+}
+
+
 
 exports.getById = function(req, res) {
 	var _id = req.params.id;

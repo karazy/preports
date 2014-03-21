@@ -316,6 +316,12 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		},
 		"undo" : {
 			"DE" :  "Rückgängig"
+		},
+		"next" : {
+			"DE" : "Nächste"
+		},
+		"prev" : {
+			"DE" : "Vorherige"
 		}
 	};
 
