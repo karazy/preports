@@ -708,6 +708,18 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     } else {
       $scope.loadReports();
       loadProjectNames();
+
+       var tempFilterText = '',
+        filterTextTimeout;
+      $rootScope.$watch('search.name', function (val) {
+          if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
+
+          tempFilterText = val;
+          filterTextTimeout = $timeout(function() {
+              $scope.filterText = tempFilterText;
+              $scope.loadReports();
+          }, 250); // delay 250 ms
+      });
     }
   
   }
