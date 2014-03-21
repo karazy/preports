@@ -56,6 +56,8 @@ exports.getAll = function(req, res) {
 	        ]				
 		};
 
+	debugObject(req.query, 'getAll: query params');
+
 	if(req.accepts('text/plain')) {
 		exports.getProjectNames(req, res);
 		return;
@@ -77,6 +79,10 @@ exports.getAll = function(req, res) {
 
 		if(searchWeek) {
 			searchParams.week = parseInt(req.query.calweek);
+		}
+
+		if(req.query.name) {
+			searchParams.name = RegExp(".*" + req.query.name +".*", 'i');
 		}
 
 	 	if(error) {

@@ -74,11 +74,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	$scope.loadReports = function() {
   		console.log('loadReports');
-      $scope.setSearchAsQueryParams();
       
   		$scope.reports = Report.query({
   			'year': $rootScope.search.year,
-  			'calweek' : $rootScope.search.calweek
+  			'calweek' : $rootScope.search.calweek,
+        'name' : $rootScope.search.name
   		}, angular.noop, errorHandler);
   	}
 
@@ -140,6 +140,9 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       }
     }
 
+    /**
+    * Delete query params in URL.
+    */
     function resetQueryParams() {
       $location.$$search = {};
       $location.url($location.path());
@@ -701,19 +704,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	
     //initially load reports or report entity based on url
     if($routeParams.reportId) {
-      resetQueryParams();
       $scope.loadReport($routeParams.reportId);
     } else {
-      setQueryParamsAsSearch();
       $scope.loadReports();
       loadProjectNames();
-      //Enable tooltip watch on copy buttons
-      $scope.$watch('search.name', function(name) {
-      	if(name) {
-            $location.search('name', name);  
-          }
-      });
-      
     }
   
   }

@@ -58,7 +58,8 @@
 			<th l="reports.table.actions">Actions</th>
 		</thead>
 		<tbody>
-			<tr ng-repeat="r in reports | filter:{name: search.name} | orderBy:['year','week', 'name']" ng-click="showReport(r._id, $event)">
+			<!-- | filter:{name: search.name} -->
+			<tr ng-repeat="r in reports | orderBy:['year','week', 'name']" ng-click="showReport(r._id, $event)">
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>
