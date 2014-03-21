@@ -77,22 +77,27 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           limit;
   		console.log('loadReports');
 
-      // if($scope.reportsWrapper._links) {
-      //   if(direction== 'next' && $scope.reportsWrapper._links.next) {
-
-      //   } else if(direction == 'prev' && $scope.reportsWrapper._links.prev) {
-
-      //   }
-      // }
-      
-      
+      if($scope.reportsWrapper && $scope.reportsWrapper._links) {
+        if(direction== 'next' && $scope.reportsWrapper._links.next) {
+          $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.next.href).success(function(wrapper) {
+            $scope.reportsWrapper = wrapper;
+            $scope.reports = wrapper.reports;
+          }).error(errorHandler);
+          return;
+        } else if(direction == 'prev' && $scope.reportsWrapper._links.prev) {
+          $scope.reportsWrapper = $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.prev.href).success(function(wrapper) {
+            $scope.reportsWrapper = wrapper;
+            $scope.reports = wrapper.reports;
+          }).error(errorHandler);
+          return;
+        }
+      }
+       
   		$scope.reportsWrapper = Report.query({
   			'year': $rootScope.search.year,
   			'calweek' : $rootScope.search.calweek,
         'name' : $rootScope.search.name
-  		},{
-        url: '/testing'
-      },
+  		},
       function(value) {
         //20140321 wrapper is new!
         //html operates directly on $scope.reports

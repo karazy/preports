@@ -2,6 +2,7 @@ var mongo = require('mongodb'),
 	test = require('assert'),
 	fs = require('fs-extra'),
 	mv = require('mv'),
+	queryString = require('querystring'),
 	pathHelper = require('path'),
 	Db,
 	Connection,
@@ -125,15 +126,17 @@ db.collection.find({_id: {$lt: current_id}}).
 		 		items.forEach(function(report) {
 		 			addReportLinks(report);
 		 		});
-
 		 		res.set('Content-Type', req.get('Accept'));
-	            res.send(addMetaInformationToReportsCollection(items, page, limit));
+	            res.send(addMetaInformationToReportsCollection(items, page, limit, {
+	            	week: searchParams.week,
+	            	year: searchParams.year
+	            }));
 	            res.end();
         });	 
  	} 	
 }
 
-function addMetaInformationToReportsCollection(reports, page, limit) {
+function addMetaInformationToReportsCollection(reports, page, limit, miscParams) {
 	var wrapper = {};
 
 	if(!reports) {
@@ -145,20 +148,20 @@ function addMetaInformationToReportsCollection(reports, page, limit) {
 
 	wrapper._links = {
 		self : {
-			href: '/reports'
+			href: '/reports?page=' + (page) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
 		},
 		totalCount: reports.length
 	}
 
 	if(page > 0) {
 		wrapper._links['prev'] = {
-			href: '/reports?page=' + (page-1) + '&limit=' + limit 
+			href: '/reports?page=' + (page-1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
 		}
 	}
 
 	if(true) {
 		wrapper._links['next'] = {
-			href: '/reports?page=' + (page+1) + '&limit=' + limit 
+			href: '/reports?page=' + (page+1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
 		}
 	}
 
