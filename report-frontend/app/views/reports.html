@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="alert alert-danger" ng-show="deleteTimer">
-		<h4><span l="report.killing.msg">Deleting report {{reportToDelete.name}} in </span>{{remainingSecondsBeforeDoomsday}}</h4>
+		<h4><span l="report.killing.msg">Deleting report {{reportToDelete.name}} in</span> {{remainingSecondsBeforeDoomsday}}</h4>
 		<br/>
 		<button ng-click="delayDoomsday()" class="btn btn-warning" l="cancel">Cancel</button>
 	</div>
@@ -76,7 +76,8 @@
 	<div>
 		<ul class="pager">
 		  <li class="previous"><a href="" l="prev" ng-show="reportsWrapper._links.prev" ng-click="loadReports('prev')">Previous</a></li>
-		  <li class="next"><a href="" l="next" ng-reportsWrapper="show._links.next" ng-click="loadReports('next')">Next</a></li>
+		  {{reportsWrapper.currentPage}}/{{reportsWrapper.totalPages}}
+		  <li class="next"><a href="" l="next" ng-show="reportsWrapper._links.next" ng-click="loadReports('next')">Next</a></li>
 		</ul>
 	</div>
 </div>

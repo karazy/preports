@@ -44,7 +44,7 @@ exports.getAll = function(req, res) {
 	var results,
 		searchYear = req.query.year,
 		searchWeek = req.query.calweek,
-		limit = req.query.limit || 2,
+		limit = req.query.limit || 5,
 		page = req.query.page || 0,
 		searchParams = {
 			$or: [
@@ -57,11 +57,13 @@ exports.getAll = function(req, res) {
 				{ year: { $type: 2 } },
 				{ year: { $type: 1 } }
 	        ]				
-		};
+		},
+		count;
 
 	debugObject(req.query, 'getAll: query params');	
 
 	if(req.accepts('text/plain')) {
+		//TODO handle query params here as well?
 		exports.getProjectNames(req, res);
 		return;
 	}
@@ -98,9 +100,10 @@ exports.getAll = function(req, res) {
 	 	}
 
 	 	// debugObject(searchParams, 'getAll: searchParams');
-	 	
-	 	res.setHeader('Content-Type', 'application/json');
 	 	res.status(200);
+	 	col.count(searchParams, function(err, result) {
+	 		count = result;
+	 	});
 
 	 	/*
 
@@ -119,6 +122,7 @@ db.collection.find({_id: {$lt: current_id}}).
 
 	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic
+	 	//TODO make it a range search via {_id: {$gt: current_id}}
 	 	col.find(searchParams)
 	 		.skip(page * limit)
 	 		.limit(limit)
@@ -127,20 +131,23 @@ db.collection.find({_id: {$lt: current_id}}).
 		 			addReportLinks(report);
 		 		});
 		 		res.set('Content-Type', req.get('Accept'));
-	            res.send(addMetaInformationToReportsCollection(items, page, limit, {
-	            	week: searchParams.week,
+
+	            res.send(addMetaWrapperToReports(items, page, limit, {
+	            	calweek: searchParams.week,
 	            	year: searchParams.year
-	            }));
+	            },count));
 	            res.end();
         });	 
  	} 	
 }
 
-function addMetaInformationToReportsCollection(reports, page, limit, miscParams) {
-	var wrapper = {};
+function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
+	var wrapper = {},
+		totalCount = count || 0,
+		totalPages = (count) ? Math.round(count/limit) : 0;
 
 	if(!reports) {
-		console.log('addMetaInformationToReportsCollection: no reports given')
+		console.log('addMetaWrapperToReports: no reports given')
 		return;
 	}
 
@@ -149,19 +156,25 @@ function addMetaInformationToReportsCollection(reports, page, limit, miscParams)
 	wrapper._links = {
 		self : {
 			href: '/reports?page=' + (page) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
-		},
-		totalCount: reports.length
+		}		
 	}
 
-	if(page > 0) {
-		wrapper._links['prev'] = {
-			href: '/reports?page=' + (page-1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
+	wrapper['totalCount'] = totalCount;
+	wrapper['totalPages'] = totalPages;
+	wrapper['currentPage'] = page + 1;
+
+	if(totalPages > 1) {
+		//add prev and next links
+		if(page > 0 && totalPages > 1) {
+			wrapper._links['prev'] = {
+				href: '/reports?page=' + (page-1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
+			}
 		}
-	}
 
-	if(true) {
-		wrapper._links['next'] = {
-			href: '/reports?page=' + (page+1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
+		if(page < (totalPages-1)) {
+			wrapper._links['next'] = {
+				href: '/reports?page=' + (page+1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
+			}
 		}
 	}
 
@@ -733,8 +746,8 @@ exports.deleteImage = function(req, res) {
 }
 
 /**
-* @deprecated
-* For backwards compatibility. Please use /reports with content-type text/plain
+* 
+* Returns all distinct project report names.
 */
 exports.getProjectNames = function(req, res) {
 
