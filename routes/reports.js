@@ -79,11 +79,11 @@ exports.getAll = function(req, res) {
 
 	 function callback(error, col) {
 	 	if(searchYear) {
-			searchParams.year = parseInt(req.query.year);
+			searchParams.year = parseInt(searchYear);
 		}
 
 		if(searchWeek) {
-			searchParams.week = parseInt(req.query.calweek);
+			searchParams.week = parseInt(searchWeek);
 		}
 
 		if(req.query.name) {
@@ -99,8 +99,7 @@ exports.getAll = function(req, res) {
 	 		return;
 	 	}
 
-	 	// debugObject(searchParams, 'getAll: searchParams');
-	 	res.status(200);
+	 	// debugObject(searchParams, 'getAll: searchParams');	 	
 	 	col.count(searchParams, function(err, result) {
 	 		count = result;
 	 	});
@@ -131,10 +130,11 @@ db.collection.find({_id: {$lt: current_id}}).
 		 			addReportLinks(report);
 		 		});
 		 		res.set('Content-Type', req.get('Accept'));
-
+		 		res.status(200);
 	            res.send(addMetaWrapperToReports(items, page, limit, {
-	            	calweek: searchParams.week,
-	            	year: searchParams.year
+	            	calweek: req.query.calweek,
+	            	year: req.query.year,
+	            	name: req.query.name
 	            },count));
 	            res.end();
         });	 
