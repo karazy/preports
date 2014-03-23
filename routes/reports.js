@@ -42,8 +42,8 @@ exports.setup = function(connectionUrl, uploadDirectory) {
 */
 exports.getAll = function(req, res) {
 	var results,
-		searchYear = req.query.year,
-		searchWeek = req.query.calweek,
+		year = req.query.year || (new Date()).getFullYear(),
+		week = req.query.week,
 		limit = req.query.limit || 5,
 		page = req.query.page || 0,
 		searchParams = {
@@ -58,6 +58,7 @@ exports.getAll = function(req, res) {
 				{ year: { $type: 1 } }
 	        ]				
 		},
+		relLinkParams = {},
 		count;
 
 	debugObject(req.query, 'getAll: query params');	
@@ -78,16 +79,19 @@ exports.getAll = function(req, res) {
 	getReportsCollection(callback);
 
 	 function callback(error, col) {
-	 	if(searchYear) {
-			searchParams.year = parseInt(searchYear);
+	 	if(year) {
+			searchParams.year = parseInt(year);
+			relLinkParams.year = parseInt(year);
 		}
 
-		if(searchWeek) {
-			searchParams.week = parseInt(searchWeek);
+		if(week) {
+			searchParams.week = parseInt(week);
+			relLinkParams.week = parseInt(week);
 		}
 
 		if(req.query.name) {
 			searchParams.name = RegExp(".*" + req.query.name +".*", 'i');
+			relLinkParams.name = req.query.name;
 		}
 
 		limit = parseInt(limit);
@@ -102,8 +106,6 @@ exports.getAll = function(req, res) {
 	 	// debugObject(searchParams, 'getAll: searchParams');	 	
 	 	col.count(searchParams, function(err, result) {
 	 		count = result;
-	 	});
-
 	 	/*
 
 // go to page current+N
@@ -122,29 +124,27 @@ db.collection.find({_id: {$lt: current_id}}).
 	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic
 	 	//TODO make it a range search via {_id: {$gt: current_id}}
-	 	col.find(searchParams)
-	 		.skip(page * limit)
-	 		.limit(limit)
-	 		.toArray(function(err, items) {	 		
-		 		items.forEach(function(report) {
-		 			addReportLinks(report);
-		 		});
-		 		res.set('Content-Type', req.get('Accept'));
-		 		res.status(200);
-	            res.send(addMetaWrapperToReports(items, page, limit, {
-	            	calweek: req.query.calweek,
-	            	year: req.query.year,
-	            	name: req.query.name
-	            },count));
-	            res.end();
-        });	 
+	 	debugObject(relLinkParams, 'relLinkParams');
+		 	col.find(searchParams)
+		 		.skip(page * limit)
+		 		.limit(limit)
+		 		.toArray(function(err, items) {	 		
+			 		items.forEach(function(report) {
+			 			addReportLinks(report);
+			 		});
+			 		res.set('Content-Type', req.get('Accept'));
+			 		res.status(200);
+		            res.send(addMetaWrapperToReports(items, page, limit, relLinkParams, count));
+		            res.end();
+	        });	 
+	 	});
  	} 	
 }
 
 function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 	var wrapper = {},
 		totalCount = count || 0,
-		totalPages = (count) ? Math.round(count/limit) : 0;
+		totalPages = (count) ? Math.ceil(count/limit) : 0;
 
 	if(!reports) {
 		console.log('addMetaWrapperToReports: no reports given')

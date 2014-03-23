@@ -32,12 +32,12 @@
 			</div>
 		</div>
 		<div class="form-group col-md-2">
-			<select ng-model="search.calweek" ng-change="loadReports()" ng-options="c.week as c.week for c in calWeeks"  class="form-control" >		
+			<select ng-model="search.week" ng-options="c.week as c.week for c in weeks"  class="form-control" >		
 				<option value="" l="all">all</option>
 			</select>
 		</div>		
 		<div class="form-group col-md-2">
-			<select ng-model="search.year" ng-change="loadReports()"  class="form-control"  >
+			<select ng-model="search.year" class="form-control"  >
 				<option value="" l="all">all</option>
 				<option value="2014">2014</option>
 				<option value="2015">2015</option>
@@ -75,9 +75,11 @@
 	</table>
 	<div>
 		<ul class="pager">
-		  <li class="previous"><a href="" l="prev" ng-show="reportsWrapper._links.prev" ng-click="loadReports('prev')">Previous</a></li>
-		  {{reportsWrapper.currentPage}}/{{reportsWrapper.totalPages}}
-		  <li class="next"><a href="" l="next" ng-show="reportsWrapper._links.next" ng-click="loadReports('next')">Next</a></li>
+		  <li class="previous"><a href="" ng-show="reportsWrapper._links.prev" ng-click="loadReports('prev')"><i class="glyphicon glyphicon-chevron-left"></i></a></li>
+		  <li ng-show="reportsWrapper.totalPages > 0">
+		  		{{reportsWrapper.currentPage}}/{{reportsWrapper.totalPages}}
+		  </li>
+		  <li class="next"><a href="" ng-show="reportsWrapper._links.next" ng-click="loadReports('next')"><i class="glyphicon glyphicon-chevron-right"></i></a></li>
 		</ul>
 	</div>
 </div>

@@ -2,7 +2,8 @@
 
 PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler, $rootScope, language, $timeout, $interval) {
 
-    var REPORT_DELETE_TIMEOUT = 5000;
+    var REPORT_DELETE_TIMEOUT = 5000,
+        PAGINATION_LIMIT = 5;
 
     /**
     * Size of the command queue that holds undo events.
@@ -16,10 +17,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	$rootScope.search = $rootScope.search || {};
     //initialize global search parameters if they don't exist on $rootScope
     $rootScope.search.year = ($rootScope.search.hasOwnProperty('year')) ? $rootScope.search.year : (new Date()).getFullYear();
-    $rootScope.search.calweek = ($rootScope.search.hasOwnProperty('calweek')) ? $rootScope.search.calweek : getWeek(new Date());
+    $rootScope.search.week = ($rootScope.search.hasOwnProperty('week')) ? $rootScope.search.week : getWeek(new Date());
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
+    $rootScope.search.limit = PAGINATION_LIMIT;
+    $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
   	
-  	$scope.calWeeks = [];
+  	$scope.weeks = [];
 
   	$scope.config = config;
 
@@ -66,7 +69,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	//fill calendar weeks
   	for (var i = 1; i < 53; i++) {
-  		$scope.calWeeks.push({
+  		$scope.weeks.push({
   			'week' : i
   		});
   	};
@@ -95,8 +98,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
        
   		$scope.reportsWrapper = Report.query({
   			'year': $rootScope.search.year,
-  			'calweek' : $rootScope.search.calweek,
-        'name' : $rootScope.search.name
+  			'week' : $rootScope.search.week,
+        'name' : $rootScope.search.name,
+        'page' : $rootScope.search.page,
+        'limit' : 5
   		},
       function(value) {
         //20140321 wrapper is new!
@@ -106,6 +111,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       }, errorHandler);
   	}
 
+    /**
+    * Registers change listeners for search form.
+    *
+    */
     function setupWatchForSearch() {
       var tempFilterText = '',
           filterTextTimeout;
@@ -116,8 +125,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           tempFilterText = val;
           filterTextTimeout = $timeout(function() {
               $scope.filterText = tempFilterText;
+              $rootScope.search.page = 0;
               $scope.loadReports();
           }, 250);
+      });
+
+      $rootScope.$watch('search.year', function (val) {
+          $rootScope.search.page = 0;
+          $scope.loadReports();          
+      });
+
+      $rootScope.$watch('search.week', function (val) {
+          $rootScope.search.page = 0;
+          $scope.loadReports();          
       });
     }
 
@@ -147,8 +167,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       //set it to empty object
       $location.$$search = {};
 
-      if($rootScope.search.calweek) {
-        $location.search('calweek', $rootScope.search.calweek);
+      if($rootScope.search.week) {
+        $location.search('week', $rootScope.search.week);
       }
 
       if($rootScope.search.year) {
@@ -167,8 +187,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     function setQueryParamsAsSearch() {
       var queryParams = $location.search();
       if(queryParams) {
-        if(queryParams.calweek) {
-          $rootScope.search.calweek = parseInt(queryParams.calweek);
+        if(queryParams.week) {
+          $rootScope.search.week = parseInt(queryParams.week);
         }
         if(queryParams.year) {
           $rootScope.search.year = queryParams.year;
