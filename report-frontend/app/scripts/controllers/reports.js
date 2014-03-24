@@ -86,14 +86,16 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.next.href).success(function(wrapper) {
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
-            $rootScope.search.page = wrapper.currentPage;
+            //page is  based
+            $rootScope.search.page = wrapper.currentPage - 1;
           }).error(errorHandler);
           return;
         } else if(direction == 'prev' && $scope.reportsWrapper._links.prev) {
           $scope.reportsWrapper = $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.prev.href).success(function(wrapper) {
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
-            $rootScope.search.page = wrapper.currentPage;
+            //page is  based
+            $rootScope.search.page = wrapper.currentPage - 1;
           }).error(errorHandler);
           return;
         }
@@ -107,10 +109,9 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         'limit' : 5
   		},
       function(value) {
-        //20140321 wrapper is new!
-        //html operates directly on $scope.reports
-        //TODO refactor using the new structure
         $scope.reports = $scope.reportsWrapper.reports;
+        //page is  based
+        $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
       }, errorHandler);
   	}
 
@@ -131,7 +132,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           if(newVal != oldVal) {
             if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
 
-            tempFilterText = val;
+            tempFilterText = newVal;
             filterTextTimeout = $timeout(function() {
                 $scope.filterText = tempFilterText;
                 $rootScope.search.page = 0;
@@ -175,6 +176,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       $rootScope.watchHandles = [];
     }
 
+    /**
+    * Load a single report. Sets $scope.currentReport with result.
+    * @param {String} id
+    *   Id of report to load.
+    */
     $scope.loadReport =  function(id) {
       if(!id) {
         $log.log('loadReport: No Id provided.');

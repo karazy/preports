@@ -37,8 +37,17 @@ exports.setup = function(connectionUrl, uploadDirectory) {
 };
 
 /**
-* Get all reports.
-*
+* Get all reports based on given query parameters.
+* @param {Object} req
+*	The request object.
+*	- req.query.year
+*	- req.query.week
+*	- req.query.name
+*	- req.query.page
+*	- req.query.limit
+*	- req.query.rangeid
+* @param {Object} res
+*	The response object.
 */
 exports.getAll = function(req, res) {
 	var results,
@@ -46,6 +55,7 @@ exports.getAll = function(req, res) {
 		week = req.query.week,
 		limit = req.query.limit || 5,
 		page = req.query.page || 0,
+		rangeId = req.query.rangeid,
 		searchParams = {
 			$or: [
 				{ week: { $type: 16 } },
@@ -59,7 +69,8 @@ exports.getAll = function(req, res) {
 	        ]				
 		},
 		relLinkParams = {},
-		count;
+		count,
+		totalPages;
 
 	debugObject(req.query, 'getAll: query params');	
 
@@ -95,7 +106,7 @@ exports.getAll = function(req, res) {
 		}
 
 		limit = parseInt(limit);
-		page = parseInt(page);
+		page = parseInt(page);		
 
 	 	if(error) {
 	 		res.send(404);
@@ -106,32 +117,39 @@ exports.getAll = function(req, res) {
 	 	// debugObject(searchParams, 'getAll: searchParams');	 	
 	 	col.count(searchParams, function(err, result) {
 	 		count = result;
-	 	/*
+	 		totalPages = (count) ? Math.ceil(count/limit) : 0;
+	 		if(page >= totalPages) {
+	 			//-1 because paging counts from 0
+	 			page = totalPages - 1;
+	 		} else if(page < 0) {
+	 			page = 0;
+	 		}
 
-// go to page current+N
-db.collection.find({_id: {$gt: current_id}}).
-              skip(N * page_size).
-              limit(page_size).
-              sort({_id: 1});
+	 		//create ranged query for better performance
+	 		if(rangeId) {
+	 			searchParams['_id'] = {
+	 				 $gt: ObjectID.createFromHexString(rangeId)
+	 			}
+	 		}
+	 		debugObject(searchParams._id, 'getAll: searchParams');	
+	 	
 
-// go to page current-N
-db.collection.find({_id: {$lt: current_id}}).
-              skip((N-1)*page_size).
-              limit(page_size).
-              sort({_id: 1});
-	 	*/
 
 	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic
-	 	//TODO make it a range search via {_id: {$gt: current_id}}
-	 	debugObject(relLinkParams, 'relLinkParams');
+
+	 	//ranged pagination based on 
+	 	//http://stackoverflow.com/questions/9703319/mongodb-ranged-pagination
 		 	col.find(searchParams)
-		 		.skip(page * limit)
+		 		//only prev and next supported so skip not needed currently
+		 		//.skip(page * limit)
 		 		.limit(limit)
-		 		.toArray(function(err, items) {	 		
-			 		items.forEach(function(report) {
-			 			addReportLinks(report);
-			 		});
+		 		.toArray(function(err, items) {
+		 			if(items) {
+		 				items.forEach(function(report) {
+			 				addReportLinks(report);
+			 			});	
+		 			}			 		
 			 		res.set('Content-Type', req.get('Accept'));
 			 		res.status(200);
 		            res.send(addMetaWrapperToReports(items, page, limit, relLinkParams, count));
@@ -144,18 +162,23 @@ db.collection.find({_id: {$lt: current_id}}).
 function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 	var wrapper = {},
 		totalCount = count || 0,
-		totalPages = (count) ? Math.ceil(count/limit) : 0;
+		totalPages = (count) ? Math.ceil(count/limit) : 0,
+		rangeId = '';
 
 	if(!reports) {
 		console.log('addMetaWrapperToReports: no reports given')
 		return;
 	}
 
+	if(reports.length > 0) {
+		rangeId = '&rangeid=' + reports[0]._id;
+	}
+
 	wrapper.reports = reports;
 
 	wrapper._links = {
 		self : {
-			href: '/reports?page=' + (page) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
+			href: '/reports?page=' + (page) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
 		}		
 	}
 
@@ -167,13 +190,13 @@ function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 		//add prev and next links
 		if(page > 0 && totalPages > 1) {
 			wrapper._links['prev'] = {
-				href: '/reports?page=' + (page-1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
+				href: '/reports?page=' + (page-1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
 			}
 		}
 
 		if(page < (totalPages-1)) {
 			wrapper._links['next'] = {
-				href: '/reports?page=' + (page+1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
+				href: '/reports?page=' + (page+1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
 			}
 		}
 	}
