@@ -14,13 +14,14 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     $scope.currentReport = null;
 
-  	$rootScope.search = $rootScope.search || {};
     //initialize global search parameters if they don't exist on $rootScope
+  	$rootScope.search = $rootScope.search || {};
     $rootScope.search.year = ($rootScope.search.hasOwnProperty('year')) ? $rootScope.search.year : (new Date()).getFullYear();
     $rootScope.search.week = ($rootScope.search.hasOwnProperty('week')) ? $rootScope.search.week : getWeek(new Date());
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
     $rootScope.search.limit = PAGINATION_LIMIT;
     $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
+
   	
   	$scope.weeks = [];
 
@@ -85,12 +86,14 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.next.href).success(function(wrapper) {
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
+            $rootScope.search.page = wrapper.currentPage;
           }).error(errorHandler);
           return;
         } else if(direction == 'prev' && $scope.reportsWrapper._links.prev) {
           $scope.reportsWrapper = $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.prev.href).success(function(wrapper) {
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
+            $rootScope.search.page = wrapper.currentPage;
           }).error(errorHandler);
           return;
         }
@@ -115,30 +118,61 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     * Registers change listeners for search form.
     *
     */
-    function setupWatchForSearch() {
+    function registerWatchForSearch() {
       var tempFilterText = '',
-          filterTextTimeout;
+          filterTextTimeout,
+          tmpHandle;
 
-      $rootScope.$watch('search.name', function (val) {
-          if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
+      if(!$rootScope.watchHandles) {
+        $rootScope.watchHandles = [];
+      }
 
-          tempFilterText = val;
-          filterTextTimeout = $timeout(function() {
-              $scope.filterText = tempFilterText;
-              $rootScope.search.page = 0;
-              $scope.loadReports();
-          }, 250);
+      tmpHandle =$rootScope.$watch('search.name', function (newVal, oldVal) {
+          if(newVal != oldVal) {
+            if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
+
+            tempFilterText = val;
+            filterTextTimeout = $timeout(function() {
+                $scope.filterText = tempFilterText;
+                $rootScope.search.page = 0;
+                $scope.loadReports();
+            }, 250);
+          }
       });
 
-      $rootScope.$watch('search.year', function (val) {
+      $rootScope.watchHandles.push(tmpHandle);
+
+      tmpHandle =$rootScope.$watch('search.year', function (newVal, oldVal) {
+        if(newVal != oldVal) {
+          $rootScope.search.page = 0;
+          $scope.loadReports();
+        }
+      });
+
+      $rootScope.watchHandles.push(tmpHandle);
+
+      tmpHandle= $rootScope.$watch('search.week', function (newVal, oldVal) {
+        if(newVal != oldVal) {
           $rootScope.search.page = 0;
           $scope.loadReports();          
+        }
       });
 
-      $rootScope.$watch('search.week', function (val) {
-          $rootScope.search.page = 0;
-          $scope.loadReports();          
-      });
+      $rootScope.watchHandles.push(tmpHandle);
+    }
+
+    /**
+    * Unregister change listeners for search form.
+    *
+    */
+    function unregisterWatchForSearch() {
+      if($rootScope.watchHandles && $rootScope.watchHandles.length > 0) {
+        angular.forEach($rootScope.watchHandles, function(handle) {
+          handle();
+        });
+      }
+
+      $rootScope.watchHandles = [];
     }
 
     $scope.loadReport =  function(id) {
@@ -763,11 +797,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	
     //initially load reports or report entity based on url
     if($routeParams.reportId) {
-      $scope.loadReport($routeParams.reportId);
+      unregisterWatchForSearch();
+      $scope.loadReport($routeParams.reportId);      
     } else {
       $scope.loadReports();
       loadProjectNames();
-      setupWatchForSearch();
+      registerWatchForSearch();
     }
   
   }
