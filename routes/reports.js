@@ -10,6 +10,10 @@ var mongo = require('mongodb'),
 	ObjectID,
 	db;
 
+//constants
+var DB_RESULT_LIMIT = 5;
+
+//setup mongo variables
 Db = mongo.Db;
 Connection = mongo.Connection;
 Server = mongo.Server;
@@ -53,8 +57,9 @@ exports.getAll = function(req, res) {
 	var results,
 		year = req.query.year || (new Date()).getFullYear(),
 		week = req.query.week,
-		limit = req.query.limit || 5,
+		limit = req.query.limit || DB_RESULT_LIMIT,
 		page = req.query.page || 0,
+		nextPage = req.query.next || page,
 		rangeId = req.query.rangeid,
 		searchParams = {
 			$or: [
@@ -90,6 +95,12 @@ exports.getAll = function(req, res) {
 	getReportsCollection(callback);
 
 	 function callback(error, col) {
+	 	if(error) {
+	 		res.send(404);
+	 		res.end();
+	 		return;
+	 	}
+
 	 	if(year) {
 			searchParams.year = parseInt(year);
 			relLinkParams.year = parseInt(year);
@@ -106,34 +117,34 @@ exports.getAll = function(req, res) {
 		}
 
 		limit = parseInt(limit);
-		page = parseInt(page);		
-
-	 	if(error) {
-	 		res.send(404);
-	 		res.end();
-	 		return;
-	 	}
+		page = parseInt(page);
+		nextPage = parseInt(nextPage);		
 
 	 	// debugObject(searchParams, 'getAll: searchParams');	 	
 	 	col.count(searchParams, function(err, result) {
 	 		count = result;
 	 		totalPages = (count) ? Math.ceil(count/limit) : 0;
-	 		if(page >= totalPages) {
+	 		if(nextPage >= totalPages && totalPages > 0) {
 	 			//-1 because paging counts from 0
-	 			page = totalPages - 1;
-	 		} else if(page < 0) {
-	 			page = 0;
+	 			nextPage = totalPages - 1;
+	 		} else if(nextPage < 0) {
+	 			nextPage = 0;
 	 		}
 
 	 		//create ranged query for better performance
 	 		if(rangeId) {
-	 			searchParams['_id'] = {
-	 				 $gt: ObjectID.createFromHexString(rangeId)
+	 			if(nextPage >= page) {
+	 				searchParams['_id'] = {
+		 				 $gt: ObjectID.createFromHexString(rangeId)
+		 			}
+	 			} else {
+	 				searchParams['_id'] = {
+		 				 $lt: ObjectID.createFromHexString(rangeId)
+		 			}
 	 			}
+	 			
 	 		}
 	 		debugObject(searchParams._id, 'getAll: searchParams');	
-	 	
-
 
 	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic
@@ -141,28 +152,32 @@ exports.getAll = function(req, res) {
 	 	//ranged pagination based on 
 	 	//http://stackoverflow.com/questions/9703319/mongodb-ranged-pagination
 		 	col.find(searchParams)
-		 		//only prev and next supported so skip not needed currently
-		 		//.skip(page * limit)
+		 		.sort({_id: 1})
+		 		.skip((nextPage-page)*limit)
 		 		.limit(limit)
 		 		.toArray(function(err, items) {
 		 			if(items) {
 		 				items.forEach(function(report) {
 			 				addReportLinks(report);
 			 			});	
-		 			}			 		
+		 			}
 			 		res.set('Content-Type', req.get('Accept'));
 			 		res.status(200);
-		            res.send(addMetaWrapperToReports(items, page, limit, relLinkParams, count));
+		            res.send(addMetaWrapperToReports(items, page, nextPage, limit, relLinkParams, count));
 		            res.end();
 	        });	 
 	 	});
  	} 	
 }
 
-function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
+/*
+*
+*/
+function addMetaWrapperToReports(reports, page, nextPage, limit, miscParams, count) {
 	var wrapper = {},
 		totalCount = count || 0,
 		totalPages = (count) ? Math.ceil(count/limit) : 0,
+		currentPage = page + 1,
 		rangeId = '';
 
 	if(!reports) {
@@ -178,25 +193,25 @@ function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 
 	wrapper._links = {
 		self : {
-			href: '/reports?page=' + (page) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
-		}		
+			href: '/reports?page=' + currentPage + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
+		}
 	}
 
 	wrapper['totalCount'] = totalCount;
 	wrapper['totalPages'] = totalPages;
-	wrapper['currentPage'] = page + 1;
+	wrapper['currentPage'] = currentPage;
 
 	if(totalPages > 1) {
 		//add prev and next links
 		if(page > 0 && totalPages > 1) {
 			wrapper._links['prev'] = {
-				href: '/reports?page=' + (page-1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
+				href: '/reports?page=' + currentPage + '&next=' + (page-1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
 			}
 		}
 
 		if(page < (totalPages-1)) {
 			wrapper._links['next'] = {
-				href: '/reports?page=' + (page+1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
+				href: '/reports?page=' + currentPage + '&next=' + (page+1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
 			}
 		}
 	}
@@ -929,4 +944,16 @@ function getUserHome() {
     } else {
         return uploadDir;
     }
+}
+
+/**
+* Get calendar week of given date.
+* @param {Date} date
+*	Date to get week for.
+* @return 
+*	week in year
+*/
+function getWeek(date) {
+    var onejan = new Date(date.getFullYear(), 0, 1);
+    return Math.ceil((((date - onejan) / 86400000) + onejan.getDay() + 1) / 7);
 }

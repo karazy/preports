@@ -688,7 +688,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         });
  	}
 
- 	$scope.copyReport = function(reportToCopy) {
+ 	$scope.copyReport = function(reportToCopy, $event) {
  		if(!reportToCopy) {
     		console.log('copyReport: no reportToCopy given');
     		return;
