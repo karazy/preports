@@ -11,7 +11,7 @@ var mongo = require('mongodb'),
 	db;
 
 //constants
-var DB_RESULT_LIMIT = 5;
+var DB_DEFAULT_RESULT_LIMIT = 5;
 
 //setup mongo variables
 Db = mongo.Db;
@@ -57,7 +57,7 @@ exports.getAll = function(req, res) {
 	var results,
 		year = req.query.year || (new Date()).getFullYear(),
 		week = req.query.week,
-		limit = req.query.limit || DB_RESULT_LIMIT,
+		limit = req.query.limit || DB_DEFAULT_RESULT_LIMIT,
 		page = req.query.page || 0,
 		nextPage = req.query.next || page,
 		rangeId = req.query.rangeid,
@@ -75,7 +75,8 @@ exports.getAll = function(req, res) {
 		},
 		relLinkParams = {},
 		count,
-		totalPages;
+		totalPages,
+		skipFactor;
 
 	debugObject(req.query, 'getAll: query params');	
 
@@ -123,24 +124,33 @@ exports.getAll = function(req, res) {
 	 	// debugObject(searchParams, 'getAll: searchParams');	 	
 	 	col.count(searchParams, function(err, result) {
 	 		count = result;
-	 		totalPages = (count) ? Math.ceil(count/limit) : 0;
+	 		totalPages = (count) ? Math.floor(count/limit) : 1;
 	 		if(nextPage >= totalPages && totalPages > 0) {
 	 			//-1 because paging counts from 0
-	 			nextPage = totalPages - 1;
+	 			nextPage = totalPages;
 	 		} else if(nextPage < 0) {
-	 			nextPage = 0;
+	 			nextPage = 1;
 	 		}
 
 	 		//create ranged query for better performance
 	 		if(rangeId) {
-	 			if(nextPage >= page) {
+	 			if(nextPage == page) {
 	 				searchParams['_id'] = {
 		 				 $gt: ObjectID.createFromHexString(rangeId)
 		 			}
+	 				skipFactor = 0;
+	 			} else if(nextPage > page) {
+	 				searchParams['_id'] = {
+		 				 $gt: ObjectID.createFromHexString(rangeId)
+		 			}
+
+		 			skipFactor = 1;
+		 			// (nextPage-page)
 	 			} else {
 	 				searchParams['_id'] = {
 		 				 $lt: ObjectID.createFromHexString(rangeId)
 		 			}
+		 			skipFactor = 1;
 	 			}
 	 			
 	 		}
@@ -153,8 +163,9 @@ exports.getAll = function(req, res) {
 	 	//http://stackoverflow.com/questions/9703319/mongodb-ranged-pagination
 		 	col.find(searchParams)
 		 		.sort({_id: 1})
-		 		.skip((nextPage-page)*limit)
+		 		.skip(1*limit)
 		 		.limit(limit)
+		 		
 		 		.toArray(function(err, items) {
 		 			if(items) {
 		 				items.forEach(function(report) {
@@ -163,7 +174,7 @@ exports.getAll = function(req, res) {
 		 			}
 			 		res.set('Content-Type', req.get('Accept'));
 			 		res.status(200);
-		            res.send(addMetaWrapperToReports(items, page, nextPage, limit, relLinkParams, count));
+		            res.send(addMetaWrapperToReports(items, nextPage, limit, relLinkParams, count));
 		            res.end();
 	        });	 
 	 	});
@@ -173,11 +184,11 @@ exports.getAll = function(req, res) {
 /*
 *
 */
-function addMetaWrapperToReports(reports, page, nextPage, limit, miscParams, count) {
+function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 	var wrapper = {},
 		totalCount = count || 0,
-		totalPages = (count) ? Math.ceil(count/limit) : 0,
-		currentPage = page + 1,
+		totalPages = (count) ? Math.floor(count/limit) : 0,
+		currentPage = page,
 		rangeId = '';
 
 	if(!reports) {
@@ -201,7 +212,7 @@ function addMetaWrapperToReports(reports, page, nextPage, limit, miscParams, cou
 	wrapper['totalPages'] = totalPages;
 	wrapper['currentPage'] = currentPage;
 
-	if(totalPages > 1) {
+	if(totalPages > 0) {
 		//add prev and next links
 		if(page > 0 && totalPages > 1) {
 			wrapper._links['prev'] = {
@@ -209,7 +220,7 @@ function addMetaWrapperToReports(reports, page, nextPage, limit, miscParams, cou
 			}
 		}
 
-		if(page < (totalPages-1)) {
+		if(page < (totalPages)) {
 			wrapper._links['next'] = {
 				href: '/reports?page=' + currentPage + '&next=' + (page+1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
 			}

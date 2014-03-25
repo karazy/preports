@@ -51,6 +51,7 @@
 <div class="col-md-12" style="margin-top:20px;">	
 	<table class="table table-hover">
 		<thead>
+			<th>_id</th>
 			<th l="reports.table.name">Project name</th>
 			<th l="reports.table.week">Week</th>
 			<th l="reports.table.year">Year</th>
@@ -60,6 +61,7 @@
 		<tbody>
 			<!-- | filter:{name: search.name} -->
 			<tr ng-repeat="r in reports | orderBy:['year','week', 'name']" ng-click="showReport(r._id, $event)">
+				<td>{{r._id}}</td>
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>

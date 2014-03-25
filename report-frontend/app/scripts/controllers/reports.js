@@ -106,7 +106,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   			'week' : $rootScope.search.week,
         'name' : $rootScope.search.name,
         'page' : $rootScope.search.page,
-        'limit' : 5
+        'limit' : PAGINATION_LIMIT
   		},
       function(value) {
         $scope.reports = $scope.reportsWrapper.reports;
