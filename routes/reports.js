@@ -136,36 +136,39 @@ exports.getAll = function(req, res) {
 	 		if(rangeId) {
 	 			if(nextPage == page) {
 	 				searchParams['_id'] = {
-		 				 $gt: ObjectID.createFromHexString(rangeId)
+		 				 $gte: ObjectID.createFromHexString(rangeId)
 		 			}
 	 				skipFactor = 0;
 	 			} else if(nextPage > page) {
 	 				searchParams['_id'] = {
-		 				 $gt: ObjectID.createFromHexString(rangeId)
+		 				 $gte: ObjectID.createFromHexString(rangeId)
 		 			}
 
-		 			skipFactor = 1;
-		 			// (nextPage-page)
+		 			skipFactor = nextPage-page;
 	 			} else {
+	 				////TODO going back gets more expensive when we are on the last page!
+	 				////then its like plain skipping everything from the beginning
 	 				searchParams['_id'] = {
 		 				 $lt: ObjectID.createFromHexString(rangeId)
 		 			}
-		 			skipFactor = 1;
+		 			skipFactor = nextPage;
 	 			}
 	 			
 	 		}
-	 		debugObject(searchParams._id, 'getAll: searchParams');	
+	 		//debugObject(searchParams, 'getAll: searchParams');
+	 		//debugObject(searchParams._id, 'getAll: searchParams_id');	
 
 	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic
-
+		var options = {
+		    "limit": limit,
+		    "skip": skipFactor*limit,
+		    "sort": [['_id','asc'], ['_year','asc'], ['week','asc']]
+		}
+		debugObject(options, 'getAll: options');	
 	 	//ranged pagination based on 
 	 	//http://stackoverflow.com/questions/9703319/mongodb-ranged-pagination
-		 	col.find(searchParams)
-		 		.sort({_id: 1})
-		 		.skip(1*limit)
-		 		.limit(limit)
-		 		
+		 	col.find(searchParams, options)		
 		 		.toArray(function(err, items) {
 		 			if(items) {
 		 				items.forEach(function(report) {
@@ -208,13 +211,14 @@ function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 		}
 	}
 
+	//this is for displaying purpose, so we add +1 since counting is zero based
 	wrapper['totalCount'] = totalCount;
-	wrapper['totalPages'] = totalPages;
-	wrapper['currentPage'] = currentPage;
+	wrapper['totalPages'] = totalPages + 1;
+	wrapper['currentPage'] = currentPage + 1;
 
 	if(totalPages > 0) {
 		//add prev and next links
-		if(page > 0 && totalPages > 1) {
+		if(page > 0 && totalPages > 0) {
 			wrapper._links['prev'] = {
 				href: '/reports?page=' + currentPage + '&next=' + (page-1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
 			}
