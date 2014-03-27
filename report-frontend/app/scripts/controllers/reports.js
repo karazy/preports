@@ -331,21 +331,37 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
       $scope.doomsdayInterval = $interval(countDown, 1000, $scope.remainingSecondsBeforeDoomsday + 1);
 
-      function killTheReport() {      
-        $scope.reportToDelete.$delete(function() {
-          $scope.reportToDelete = null;
-          if($location.path() == '/reports') {
-            angular.forEach($scope.reports, function(r, index) {
-              if($scope.reportToDelete._id == r._id) {
-                $scope.reports.splice(index, 1);
-                //exit loop
-                return false;
-              }
-            });
-          } else {
-            $location.path('/');
-          }
-        }, errorHandler);        
+      function killTheReport() {
+          $http.delete(config.getCombinedServiceUrl() + $scope.reportToDelete._links.self.href).
+        success(function(data, status, headers, config) {           
+            if($location.path() == '/reports') {
+              angular.forEach($scope.reports, function(r, index) {
+                if($scope.reportToDelete._id == r._id) {
+                  $scope.reports.splice(index, 1);
+                  $scope.reportToDelete = null;
+                  //exit loop
+                  return false;
+                }
+              });
+            } else {
+              $location.path('/');
+            }
+        }).error(errorHandler);
+        
+        // $scope.reportToDelete.$delete(function() {
+        //   $scope.reportToDelete = null;
+        //   if($location.path() == '/reports') {
+        //     angular.forEach($scope.reports, function(r, index) {
+        //       if($scope.reportToDelete._id == r._id) {
+        //         $scope.reports.splice(index, 1);
+        //         //exit loop
+        //         return false;
+        //       }
+        //     });
+        //   } else {
+        //     $location.path('/');
+        //   }
+        // }, errorHandler);        
       }     
 
       function countDown() {

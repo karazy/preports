@@ -51,7 +51,7 @@
 <div class="col-md-12" style="margin-top:20px;">	
 	<table class="table table-hover">
 		<thead>
-			<!-- <th>_id</th> -->
+			<th>_id</th>
 			<th l="reports.table.name">Project name</th>
 			<th l="reports.table.week">Week</th>
 			<th l="reports.table.year">Year</th>
@@ -61,8 +61,8 @@
 		<tbody>
 			<!-- | filter:{name: search.name} -->
 			<!-- | orderBy:['year','week', 'name'] -->
-			<tr ng-repeat="r in reports" ng-click="showReport(r._id, $event)">
-				<!-- <td>{{r._id}}</td> -->
+			<tr ng-repeat="r in reports | orderBy:['year','week']" ng-click="showReport(r._id, $event)">
+				<td>{{r._id}}</td>
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>
@@ -79,7 +79,7 @@
 	<div>
 		<ul class="pager">
 		  <li class="previous"><a href="" ng-show="reportsWrapper._links.prev" ng-click="loadReports('prev')"><i class="glyphicon glyphicon-chevron-left"></i></a></li>
-		  <li ng-show="reportsWrapper.totalPages > 0">
+		  <li ng-show="reportsWrapper.totalPages > 1">
 		  		{{reportsWrapper.currentPage}}/{{reportsWrapper.totalPages}}
 		  </li>
 		  <li class="next"><a href="" ng-show="reportsWrapper._links.next" ng-click="loadReports('next')"><i class="glyphicon glyphicon-chevron-right"></i></a></li>

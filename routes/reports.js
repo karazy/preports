@@ -124,7 +124,7 @@ exports.getAll = function(req, res) {
 	 	// debugObject(searchParams, 'getAll: searchParams');	 	
 	 	col.count(searchParams, function(err, result) {
 	 		count = result;
-	 		totalPages = (count) ? Math.floor(count/limit) : 1;
+	 		totalPages = (count) ? Math.floor(count/limit) : 0;
 	 		if(nextPage >= totalPages && totalPages > 0) {
 	 			//-1 because paging counts from 0
 	 			nextPage = totalPages;
@@ -141,19 +141,19 @@ exports.getAll = function(req, res) {
 	 				skipFactor = 0;
 	 			} else if(nextPage > page) {
 	 				searchParams['_id'] = {
-		 				 $gte: ObjectID.createFromHexString(rangeId)
+		 				 $gt: ObjectID.createFromHexString(rangeId)
 		 			}
 
 		 			skipFactor = nextPage-page;
 	 			} else {
-	 				////TODO going back gets more expensive when we are on the last page!
-	 				////then its like plain skipping everything from the beginning
+	 				//Going back gets more expensive when we are on the last page!
+	 				//Then its like plain skipping everything from the beginning. 
+	 				//Think about a solution when this imposes a problem.
 	 				searchParams['_id'] = {
 		 				 $lt: ObjectID.createFromHexString(rangeId)
 		 			}
 		 			skipFactor = nextPage;
-	 			}
-	 			
+	 			}	 			
 	 		}
 	 		//debugObject(searchParams, 'getAll: searchParams');
 	 		//debugObject(searchParams._id, 'getAll: searchParams_id');	
@@ -163,7 +163,7 @@ exports.getAll = function(req, res) {
 		var options = {
 		    "limit": limit,
 		    "skip": skipFactor*limit,
-		    "sort": [['_id','asc'], ['_year','asc'], ['week','asc']]
+		    "sort": [['year','asc'], ['week','asc'], ['_id','asc']]
 		}
 		debugObject(options, 'getAll: options');	
 	 	//ranged pagination based on 
@@ -190,7 +190,7 @@ exports.getAll = function(req, res) {
 function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 	var wrapper = {},
 		totalCount = count || 0,
-		totalPages = (count) ? Math.floor(count/limit) : 0,
+		totalPages = (count) ? Math.ceil(count/limit) : 1,
 		currentPage = page,
 		rangeId = '';
 
@@ -213,12 +213,12 @@ function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 
 	//this is for displaying purpose, so we add +1 since counting is zero based
 	wrapper['totalCount'] = totalCount;
-	wrapper['totalPages'] = totalPages + 1;
+	wrapper['totalPages'] = totalPages;
 	wrapper['currentPage'] = currentPage + 1;
 
-	if(totalPages > 0) {
+	if(totalPages > 1) {
 		//add prev and next links
-		if(page > 0 && totalPages > 0) {
+		if(page > 0 && totalPages > 1) {
 			wrapper._links['prev'] = {
 				href: '/reports?page=' + currentPage + '&next=' + (page-1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
 			}
