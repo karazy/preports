@@ -76,7 +76,7 @@ exports.getAll = function(req, res) {
 		relLinkParams = {},
 		count,
 		totalPages,
-		skipFactor;
+		skipFactor = 0;
 
 	debugObject(req.query, 'getAll: query params');	
 
@@ -136,7 +136,7 @@ exports.getAll = function(req, res) {
 	 		if(rangeId) {
 	 			if(nextPage == page) {
 	 				searchParams['_id'] = {
-		 				 $gte: ObjectID.createFromHexString(rangeId)
+		 				 $gt: ObjectID.createFromHexString(rangeId)
 		 			}
 	 				skipFactor = 0;
 	 			} else if(nextPage > page) {
@@ -144,7 +144,7 @@ exports.getAll = function(req, res) {
 		 				 $gt: ObjectID.createFromHexString(rangeId)
 		 			}
 
-		 			skipFactor = nextPage-page;
+		 			skipFactor = (nextPage-page)*limit-1;
 	 			} else {
 	 				//Going back gets more expensive when we are on the last page!
 	 				//Then its like plain skipping everything from the beginning. 
@@ -152,17 +152,18 @@ exports.getAll = function(req, res) {
 	 				searchParams['_id'] = {
 		 				 $lt: ObjectID.createFromHexString(rangeId)
 		 			}
-		 			skipFactor = nextPage;
+		 			skipFactor = nextPage*limit;
 	 			}	 			
 	 		}
 	 		//debugObject(searchParams, 'getAll: searchParams');
 	 		//debugObject(searchParams._id, 'getAll: searchParams_id');	
+	 		console.log('skipFactor ' + skipFactor);
 
 	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic
 		var options = {
 		    "limit": limit,
-		    "skip": skipFactor*limit,
+		    "skip": skipFactor,
 		    "sort": [['year','asc'], ['week','asc'], ['_id','asc']]
 		}
 		debugObject(options, 'getAll: options');	

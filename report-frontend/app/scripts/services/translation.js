@@ -55,9 +55,13 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Reports",
 			"EN" : "Reports"
 		},
+		"reports.back" : {
+			"DE" :  "Reportliste",
+			"EN" : "Reports list"
+		},
 		"reports.new" : {
-			"DE" :  "Projektname",
-			"EN" : "Project name"
+			"DE" :  "Projektname eingeben",
+			"EN" : "Enter project name"
 		},
 		"reports.new.button" : {
 			"DE" :  "Neuer Report",
