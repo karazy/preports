@@ -60,8 +60,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Reports list"
 		},
 		"reports.new" : {
-			"DE" :  "Projektname eingeben",
-			"EN" : "Enter project name"
+			"DE" :  "Projektname eingeben und Neuer Report anklicken",
+			"EN" : "Enter project name and click New report"
 		},
 		"reports.new.button" : {
 			"DE" :  "Neuer Report",
@@ -247,6 +247,14 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"report.delete.text" : {
 			"DE" :  "Report wird unwideruflich gelöscht!",
 			"EN" : "Report will be deleted permanent!"
+		},
+		"report.copy.title" : {
+			"DE" :  "Report kopieren",
+			"EN" : "Copy report"
+		},
+		"report.copy.text" : {
+			"DE" :  "Report kopieren?",
+			"EN" : "Copy report?"
 		},
 		"report.copyof" : {
 			"DE" :  "Dies ist eine Kopie",
