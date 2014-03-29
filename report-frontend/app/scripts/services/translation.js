@@ -113,7 +113,7 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Year"
 		},
 		"report.week" : {
-			"DE" :  "Report KW",
+			"DE" :  "Report Kalenderwoche",
 			"EN" : "Report cal week"
 		},
 		"report.leaddevelopers.title" : {
@@ -253,8 +253,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Copy report"
 		},
 		"report.copy.text" : {
-			"DE" :  "Report kopieren?",
-			"EN" : "Copy report?"
+			"DE" :  "Erzeugt eine Kopie des Reports und erhöht die Kalenderwoche.",
+			"EN" : "Creates a copy of this report and increases calendar week."
 		},
 		"report.copyof" : {
 			"DE" :  "Dies ist eine Kopie",

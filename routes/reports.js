@@ -213,7 +213,7 @@ exports.getAll = function(req, res) {
 		 		.toArray(function(err, items) {
 		 			if(items) {
 		 				items.forEach(function(report) {
-			 				addReportLinks(report);
+			 				addReportMetadata(report);
 			 			});	
 		 			}
 			 		res.set('Content-Type', req.get('Accept'));
@@ -324,9 +324,9 @@ function findReport(id, callback) {
 			if(!item) {
 				callback(404);
 				return;
-			}
+			}			
 
-			addReportLinks(item);
+			addReportMetadata(item);
 			// debugObject(item, 'findReport: report');
             callback(200, item);
         });
@@ -334,12 +334,16 @@ function findReport(id, callback) {
 }
 
 /**
-* Adds hypermedia links for API navigation to the report.
+* Adds additional metadata to the report.
+* This includes hypermedia links for API navigation and createdOn.
 */
-function addReportLinks(report) {
+function addReportMetadata(report) {	
 	if(!report) {
 		return;
 	}
+
+	report.createdOn = report._id.getTimestamp();
+
 
 	if(!report._links) {
 		report._links = {};	
@@ -424,7 +428,7 @@ function persistReportChanges(report, callback) {
 
 exports.createReport = function(req, res) {
 	var	 reportToSave = req.body,
-		creationDate = (new Date()).getTime();
+		modifyDate = (new Date()).getTime();
 
 	if(!req.body) {
 		return;		
@@ -443,9 +447,7 @@ exports.createReport = function(req, res) {
 
 		debugObject(req.body, 'Insert new report');
 
-		//set creation date
-		reportToSave.createdOn = creationDate;
-		reportToSave.lastModified = creationDate;
+		reportToSave.lastModified = modifyDate;
 
 		//This is a copy report. Assign new image ids.
 		if(reportToSave.copyOf && reportToSave.images) {

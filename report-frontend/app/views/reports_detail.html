@@ -21,8 +21,7 @@
 		<!-- <i class="glyphicon glyphicon-arrow-left"></i>  -->
 		<div class="col-md-6">
 			<div class="btn-toolbar pull-right" role="toolbar">
-				<button type="button" class="btn btn-info" ng-click="removeAndUndoLastCommand();" style="margin-top: 20px;" ng-disabled="commands.length == 0 || ajaxLoading"><i class="icon-undo"></i> x {{commands.length}}</button>
-				
+				<button type="button" class="btn btn-info" ng-click="removeAndUndoLastCommand();" style="margin-top: 20px;" ng-disabled="commands.length == 0 || ajaxLoading"><i class="icon-undo"></i> x {{commands.length}}</button>				
 				<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(currentReport)" dialog-confirm-button="copy" dialog-class="alert-info">
 					<button class="btn btn-primary btn-info copy-button" style="margin-top: 20px;"><i class="icon-copy"></i></button>
 				</span>
@@ -349,7 +348,8 @@
 </div>
 <div class="row section hidden-print">
 	<div class="col-md-12">
-		<span ng-show="currentReport.createdOn"><span l="report.createdon">Creation date</span>: {{currentReport.createdOn | date:'yyyy-MM-dd HH:mm:ss'}} |</span>
+		<span ng-show="currentReport.createdOn"><span l="report.createdon">Creation date</span>: {{currentReport.createdOn | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+		<span ng-show="currentReport.createdOn && currentReport.lastModified"> | </span>
 		<span ng-show="currentReport.lastModified"> <span l="report.lastmodified">Last modified</span>: {{currentReport.lastModified | date:'yyyy-MM-dd HH:mm:ss'}} </span>
 	</div>
 </div>
