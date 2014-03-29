@@ -29,9 +29,37 @@ connect = function(connectUrl) {
         test.ok(_db != null);
         console.log("Connected to 'project report' database");
         db = _db;
-         
+
+        createIndexes();
     });
 };
+
+/**
+* Creates all indexes used by preports.
+*/
+function createIndexes() {
+	getReportsCollection(doCreate)
+
+
+	function doCreate(err, col) {
+		if(err) {
+			 console.log('createIndexes: ' + err);
+			 return;
+		}		
+
+		col.ensureIndex({
+			'year' : 1,
+			'name' : 1
+		}, function(err, indexName) {
+			if(err) {
+				 console.log('createIndexes: failed to create index ' + err);
+				 return;
+			}	
+			console.log('createIndexes: created index ' + indexName);
+		});
+
+	}
+}
 
 exports.setup = function(connectionUrl, uploadDirectory) {
     console.log("connecting to db: " + connectionUrl);
@@ -80,6 +108,8 @@ exports.getAll = function(req, res) {
 
 	debugObject(req.query, 'getAll: query params');	
 
+
+
 	if(req.accepts('text/plain')) {
 		//TODO handle query params here as well?
 		exports.getProjectNames(req, res);
@@ -96,6 +126,8 @@ exports.getAll = function(req, res) {
 	getReportsCollection(callback);
 
 	 function callback(error, col) {
+	 	var sortParams;
+
 	 	if(error) {
 	 		res.send(404);
 	 		res.end();
@@ -133,7 +165,11 @@ exports.getAll = function(req, res) {
 	 		}
 
 	 		//create ranged query for better performance
+	 		//NOT WORKING since we first have to sort for year and week!
+	 		//Changing a week afterwards can change the initial order and the $gt and $lt
+	 		//will not work.
 	 		if(rangeId) {
+	 			sortParams = [['year','asc'], ['week','asc'], ['_id','asc']];
 	 			if(nextPage == page) {
 	 				searchParams['_id'] = {
 		 				 $gt: ObjectID.createFromHexString(rangeId)
@@ -154,19 +190,23 @@ exports.getAll = function(req, res) {
 		 			}
 		 			skipFactor = nextPage*limit;
 	 			}	 			
+	 		} else {
+	 			//non opitimized pagination without rangeId
+	 			skipFactor = nextPage * limit;
+	 			sortParams = [['year','asc'], ['week','asc']];
 	 		}
 	 		//debugObject(searchParams, 'getAll: searchParams');
 	 		//debugObject(searchParams._id, 'getAll: searchParams_id');	
-	 		console.log('skipFactor ' + skipFactor);
+	 		// console.log('skipFactor ' + skipFactor);
 
 	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic
 		var options = {
 		    "limit": limit,
 		    "skip": skipFactor,
-		    "sort": [['year','asc'], ['week','asc'], ['_id','asc']]
+		    "sort": sortParams
 		}
-		debugObject(options, 'getAll: options');	
+		// debugObject(options, 'getAll: options');	
 	 	//ranged pagination based on 
 	 	//http://stackoverflow.com/questions/9703319/mongodb-ranged-pagination
 		 	col.find(searchParams, options)		
@@ -186,7 +226,8 @@ exports.getAll = function(req, res) {
 }
 
 /*
-*
+* Adds totalCount, totalPages and currentPage properties.
+* Also adds self, next and prev links.
 */
 function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 	var wrapper = {},
@@ -200,15 +241,15 @@ function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 		return;
 	}
 
-	if(reports.length > 0) {
-		rangeId = '&rangeid=' + reports[0]._id;
-	}
+	// if(reports.length > 0) {
+	// 	rangeId = '&rangeid=' + reports[0]._id;
+	// }
 
 	wrapper.reports = reports;
 
 	wrapper._links = {
 		self : {
-			href: '/reports?page=' + currentPage + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
+			href: '/reports?page=' + currentPage + '&limit=' + limit + '&' + queryString.stringify(miscParams)
 		}
 	}
 
@@ -221,13 +262,15 @@ function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 		//add prev and next links
 		if(page > 0 && totalPages > 1) {
 			wrapper._links['prev'] = {
-				href: '/reports?page=' + currentPage + '&next=' + (page-1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
+				//currentPage + '&next=' +
+				href: '/reports?page=' + (page-1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
 			}
 		}
 
-		if(page < (totalPages)) {
+		if(page < (totalPages-1)) {
 			wrapper._links['next'] = {
-				href: '/reports?page=' + currentPage + '&next=' + (page+1) + '&limit=' + limit + rangeId + '&' + queryString.stringify(miscParams)
+				//currentPage + '&next=' +
+				href: '/reports?page=' + (page+1) + '&limit=' + limit  + '&' + queryString.stringify(miscParams)
 			}
 		}
 	}
