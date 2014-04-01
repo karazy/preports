@@ -241,8 +241,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Architecture diagrams"
 		},
 		"report.delete.title" : {
-			"DE" :  "Report löschen?",
-			"EN" : "Delete report?"
+			"DE" :  "Report löschen",
+			"EN" : "Delete report"
 		},
 		"report.delete.text" : {
 			"DE" :  "Report wird unwideruflich gelöscht!",

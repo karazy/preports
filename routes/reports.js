@@ -76,6 +76,7 @@ exports.setup = function(connectionUrl, uploadDirectory) {
 *	- req.query.week
 *	- req.query.name
 *	- req.query.page
+*	- req.query.next
 *	- req.query.limit
 *	- req.query.rangeid
 * @param {Object} res

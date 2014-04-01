@@ -1,0 +1,37 @@
+@font-face {
+	font-family: 'preports-icons';
+	src:url('fonts/preports-icons.eot?-12d1nd');
+	src:url('fonts/preports-icons.eot?#iefix-12d1nd') format('embedded-opentype'),
+		url('fonts/preports-icons.woff?-12d1nd') format('woff'),
+		url('fonts/preports-icons.ttf?-12d1nd') format('truetype'),
+		url('fonts/preports-icons.svg?-12d1nd#preports-icons') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'preports-icons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-copy:before {
+	content: "\e601";
+}
+.icon-undo:before {
+	content: "\e600";
+}
+.icon-lock:before {
+	content: "\e602";
+}
+.icon-unlocked:before {
+	content: "\e603";
+}

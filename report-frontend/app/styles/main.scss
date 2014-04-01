@@ -40,6 +40,14 @@ $secondary-color: #FF8300;
   content: "\e601";
 }
 
+.icon-lock:before {
+  content: "\e602";
+}
+
+.icon-unlock:before {
+  content: "\e603";
+}
+
 /* For IE < 9 */
 .browsehappy {
     margin: 0.2em 0;
