@@ -729,6 +729,28 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
  	}
 
   /**
+  * Locks currently edited report to prevnt accidential edits.
+  */
+  $scope.toggleReportLock = function() {
+    var prevLockState;
+    if(!$scope.currentReport) {
+      console.log('copyReport: no currentReport');
+      return;
+    }
+
+    if(typeof $scope.currentReport.locked != 'undefined') {
+      prevLockState = $scope.currentReport.locked;
+      $scope.currentReport.locked = !prevLockState;       
+    } else {
+      prevLockState = false;
+      $scope.currentReport.locked = true;
+    }
+
+    $scope.updateReport();
+    
+  }
+
+  /**
   * Stores command in queue and executes it.
   * @param {Function} command
   *   Object with execute and undo function.
