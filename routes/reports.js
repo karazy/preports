@@ -552,7 +552,7 @@ exports.updateReport = function(req, res) {
 				doUpdate(reports);
 			} else {
 				//a new version was saved in between throw 428 Precondition Required and return current document
-				res.send(428, item);
+				res.send(428, 'Report was modified on server. Refresh needed.');
 				res.end();
 			}
 		});
