@@ -4,6 +4,24 @@
 		<br/>
 		<button ng-click="delayDoomsday()" class="btn btn-warning" l="cancel">Cancel</button>
 	</div>
+	<!-- Report modified 428 dialog -->
+	<div class="modal fade" id="dialogModifiedReport">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title" l="report.428.title">Report modified</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p l="report.428.msg">Report has been modified in the meantime. You can reload and discard your last change or cancel, copy your last change and reload.</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" l="report.428.cancel">Cancel reload</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="reloadReport(false);" l="report.428.reload">Reload and discard</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- Report detail view. -->
 	<div class="row">
 		<div class="col-md-12 hidden-print">
 			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="reports.back">Reports</span></a>
@@ -21,7 +39,7 @@
 		<!-- <i class="glyphicon glyphicon-arrow-left"></i>  -->
 		<div class="col-md-6">
 			<div class="btn-toolbar pull-right" role="toolbar">
-				<button type="button" class="btn btn-info" ng-click="removeAndUndoLastCommand();" style="margin-top: 20px;" ng-disabled="commands.length == 0 || ajaxLoading" ng-hide="currentReport.locked"><i class="icon-undo"></i> x {{commands.length}}</button>				
+				<button type="button" class="btn btn-info" ng-click="removeAndUndoLastCommand();" style="margin-top: 20px;" ng-disabled="commands.length == 0 || ajaxLoading" ng-hide="currentReport.locked"><i class="icon-undo"></i> x {{commands.length}}</button>
 				<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(currentReport)" dialog-confirm-button="copy" dialog-class="alert-info">
 					<button class="btn btn-primary btn-info copy-button" style="margin-top: 20px;"><i class="icon-copy"></i></button>
 				</span>

@@ -86,7 +86,6 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.next.href).success(function(wrapper) {
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
-            //page is  based
             $rootScope.search.page = wrapper.currentPage - 1;
           }).error(errorHandler);
           return;
@@ -94,7 +93,6 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           $scope.reportsWrapper = $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.prev.href).success(function(wrapper) {
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
-            //page is  based
             $rootScope.search.page = wrapper.currentPage - 1;
           }).error(errorHandler);
           return;
@@ -195,7 +193,38 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       	$scope.reportNotFound = true;
       	errorHandler(httpResponse);
       });
+    }
 
+    /**
+    * Reloads current report after external modifications.
+    * @param {Boolean} redoLastModification
+    *   If true re applies the last issued command.
+    */
+    $scope.reloadReport = function(redoLastModification) {
+      if(!$scope.currentReport) {
+        $log.log('loadReport: No currentReport.');
+        return;
+      }
+
+      //show 404 message
+      $scope.reportNotFound = false;
+
+      $scope.currentReport = Report.get({'id':$scope.currentReport._id}, function() {       
+          if($scope.commands && $scope.commands.length > 0) {
+            //TODO redo last action not ready for primetime yet! Undo must be taken into account!
+            // if(redoLastModification) {           
+            //   var lastCommand = $scope.commands[$scope.commands.length-1];
+            //   lastCommand.execute();
+            // } 
+            if(redoLastModification===false) {
+              //remove last command
+              $scope.commands.pop();
+            }
+          }
+      }, function(httpResponse) {
+        $scope.reportNotFound = true;
+        errorHandler(httpResponse);
+      });
     }
 
     /**
@@ -282,24 +311,39 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     * TODO document all param
     */
   	$scope.updateReport = function(modifiedProperty, prevValue, isArray, index, arrayName) {
-      var updateCommand = {
-        mP: modifiedProperty,
-        pV: prevValue,
-        iA: isArray,
-        i: index,
-        aN: arrayName
-      };
+      var updateCommand;
 
   		if(!$scope.currentReport) {
   			console.log('updateReport: no current report');
   			return;
   		}
+
+      //prepare command
+      updateCommand = {
+        mP: modifiedProperty,
+        pV: prevValue,
+        iA: isArray,
+        i: index,
+        aN: arrayName
+      }
+
+      if(isArray && typeof index == 'number' && arrayName) {
+        updateCommand.nV = $scope.currentReport[arrayName][index][updateCommand.mP];
+      } else {
+        updateCommand.nV = $scope.currentReport[updateCommand.mP];  
+      }
   		
       //always convert to int before saving
       convertYearAndWeekToInt($scope.currentReport);
 
       updateCommand.execute = function() {
-        $scope.currentReport.$update();  
+        if(isArray && typeof index == 'number' && arrayName) {
+          $scope.currentReport[arrayName][index][updateCommand.mP] = updateCommand.nV;
+        } else {
+          $scope.currentReport[updateCommand.mP] = updateCommand.nV;  
+        }
+
+        $scope.currentReport.$update(angular.noop, handleUpdateError);  
       }
 
       //only add update command when a modified property exists
@@ -311,12 +355,13 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           } else {
             $scope.currentReport[updateCommand.mP] = updateCommand.pV;  
           }
-          $scope.currentReport.$update();
+          $scope.currentReport.$update(angular.noop, handleUpdateError);
         }
       }      
 
       storeAndExecute(updateCommand);
   	}
+
 
   	$scope.deleteReport = function(report) {
       $scope.reportToDelete = report || $scope.currentReport;
@@ -436,12 +481,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         $scope.currentReport.milestones.push({
           name: 'New milestone'
         });
-        $scope.currentReport.$update();
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
       }
 
       updateCommand.undo = function() {
         $scope.currentReport.milestones.pop();
-        $scope.currentReport.$update();
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
       }
 
       storeAndExecute(updateCommand);
@@ -476,12 +521,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       updateCommand.execute = function() {
         milestoneToRemove = $scope.currentReport.milestones[index];
         $scope.currentReport.milestones.splice(index, 1);
-        $scope.currentReport.$update();
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
       }
 
       updateCommand.undo = function() {
         $scope.currentReport.milestones.splice(index, 0, milestoneToRemove);
-        $scope.currentReport.$update();
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
       }
 
       storeAndExecute(updateCommand);
@@ -785,7 +830,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         $scope.commands.push(command);
       } else {
         $scope.commands.push(command);  
-      }  
+      }
     }
 
     try {
@@ -807,7 +852,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
       if($scope.commands.length > 0) {
         commandToUndo = $scope.commands.pop();
-        commandToUndo.undo();  
+        commandToUndo.undo();
       } else {
         $log.log('removeAndUndoLastCommand: no commands in queue');
       }
@@ -847,8 +892,28 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       $scope.loadReports();
       loadProjectNames();
       registerWatchForSearch();
+    }  
+
+   /**
+   * Handles errors during report update.
+   * Especially for error 428 when report has been modified externaly. Lost update problem.
+   * @param {Object} response
+   *  Server resonse
+   */
+   function handleUpdateError(response) {
+    if(!response) {
+      return
     }
-  
+
+    if(response.status == 428) {
+      //modified by third party
+      $log.log('Failed to update report because it has been modified.');
+      $('#dialogModifiedReport').modal('toggle');
+    } else {
+      //TODO handle error
+    }
   }
+
+}
 
 PReports.ReportCtrl.$inject = ['$scope', '$location', '$routeParams', 'Report', '$log', '$http', '$fileUploader', 'config', 'errorHandler', '$rootScope', 'language', '$timeout', '$interval'];

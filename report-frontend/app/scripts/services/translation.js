@@ -114,7 +114,7 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		},
 		"report.week" : {
 			"DE" :  "Report Kalenderwoche",
-			"EN" : "Report cal week"
+			"EN" : "Report calendar week"
 		},
 		"report.leaddevelopers.title" : {
 			"DE" :  "Lead developers",
@@ -268,6 +268,18 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		},
 		"report.killing.msg" : {
 			"DE" :  "Lösche Report {{reportToDelete.name}} in "
+		},
+		"report.428.title" : {
+			"DE" : "Report wure bearbeitet"
+		},
+		"report.428.msg" : {
+			"DE" : "Der Report wurde in der Zwischenzeit bearbeitet. Sie können Neuladen und die letzte Änderung verwerfen oder abbrechen, Ihre letzte Änderung sichern und neuladen."
+		},
+		"report.428.cancel" : {
+			"DE" : "Abbrechen"
+		},
+		"report.428.reload" : {
+			"DE" : "Neuladen und verwerfen"
 		},
 		//general
 		"back" : {

@@ -535,7 +535,34 @@ exports.updateReport = function(req, res) {
 			return;
 		}
 
+		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, item) {
+			if(err) {
+				console.log(err);
+				callback(500, err);
+				return;
+			}
+
+			if(!item) {
+				callback(404);
+				return;
+			}
+
+			//no changes in the meantime proceed
+			if(item.version == docToUpdate.version || item.version == 'undefined') {
+				doUpdate(reports);
+			} else {
+				//a new version was saved in between throw 428 Precondition Required and return current document
+				res.send(428, item);
+				res.end();
+			}
+		});
+	}
+
+	function doUpdate(reports) {
 		docToUpdate.lastModified = lastModified;
+
+		// docToUpdate.version = 
+		
 
 		reports.update({'_id': ObjectID.createFromHexString(_id)}, docToUpdate, function(err, numberOfUpdatedDocs) {
 			if(err) {
@@ -545,11 +572,21 @@ exports.updateReport = function(req, res) {
 				return;
 			}
 
-			docToUpdate._id = _id;
+			reports.update({'_id': ObjectID.createFromHexString(_id)}, { $inc: { version: 1 } }, function(err, numberOfUpdatedDocs) {
+				docToUpdate._id = _id;
+				//save an additional db load and manually increase version
+				if(docToUpdate.version) {
+					docToUpdate.version++;	
+				} else {
+					docToUpdate.version = 1;
+				}
+				
+				console.log('Updated ' + _id + '  report. New version ' + docToUpdate.version);
+				res.send(200, docToUpdate);
+				res.end();
+			});
 
-			console.log('Updated ' + numberOfUpdatedDocs + ' records');
-			res.send(200, docToUpdate);
-			res.end();
+			
         });
 	}
 }
