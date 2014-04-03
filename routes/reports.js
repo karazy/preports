@@ -328,6 +328,25 @@ function findReport(id, callback) {
 			}			
 
 			addReportMetadata(item);
+
+			//lock reports to prevent accidential edit, that have a modified date older than 6 days
+			//or that have none at all (reports from an old version)
+			if(item.lastModified) {
+				var now = new Date(),
+					timeDiff,
+					diffDays;
+				// var lastModified = new Date(item.lastModified);
+				timeDiff = Math.abs(item.lastModified - now.getTime());
+				diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+				
+				if(diffDays >= 6 ) {
+					item.locked = true;
+				}
+			} else {
+				item.locked = true;
+			}
+			
+
 			// debugObject(item, 'findReport: report');
             callback(200, item);
         });
