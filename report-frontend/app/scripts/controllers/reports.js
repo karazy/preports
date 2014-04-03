@@ -555,12 +555,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         $scope.currentReport.codeReviews.push({
           authors: 'Add authors',
         });
-        $scope.currentReport.$update();
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
       }
 
       updateCommand.undo = function() {
         $scope.currentReport.codeReviews.pop();
-        $scope.currentReport.$update();
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
       }
 
       storeAndExecute(updateCommand);
@@ -627,12 +627,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         $scope.currentReport.systems.push({
         });
 
-        $scope.currentReport.$update();
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
       }
 
       updateCommand.undo = function() {
         $scope.currentReport.systems.pop();
-        $scope.currentReport.$update();
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
       }
 
       storeAndExecute(updateCommand);
@@ -740,7 +740,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         });
 
         uploader.bind('error', function( event, xhr, item, response) {
-        	console.log('setupFileUpload: upload failed');
+        	$log.log('setupFileUpload: upload failed');
         	//show global error. for more information have a look inside the errorHandler
         	$rootScope.error = true;
         	$rootScope.errorMessage = language.translate('error.image.upload') || 

@@ -338,7 +338,7 @@ function findReport(id, callback) {
 				// var lastModified = new Date(item.lastModified);
 				timeDiff = Math.abs(item.lastModified - now.getTime());
 				diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-				
+				console.log('DIFFDAYS ' + diffDays);
 				if(diffDays >= 6 ) {
 					item.locked = true;
 				}
@@ -414,11 +414,19 @@ function addReportImageLinks(image, reportId) {
 	return image;
 }
 
-function persistReportChanges(report, callback) {
+/**
+* Add given image to report.
+* @param {Object} report
+*	Report to add image to.
+* @param {Object} image
+*	Image to add.
+* @param {Function} callback
+*/
+function persistReportImage(report, image, callback) {
 	var _id = report._id,
 		lastModified = (new Date()).getTime();
 
-	debugObject(report, 'persistReportChanges: report');
+	debugObject(report, 'persistReportImage: report');
 	delete report._id;
 
 	getReportsCollection(doPersist);
@@ -432,7 +440,11 @@ function persistReportChanges(report, callback) {
 		report.lastModified = lastModified;
 
 		//_id is already an object ID so no conversion
-		reports.update({'_id':_id}, report, function(err) {
+		reports.update({'_id':_id}, { 
+			$push: {'images': image},
+			$set: {'lastModified' : lastModified},
+			$inc: {version: 1}
+			}, function(err) {
 			if(err) {
 				console.log(err);
 				callback(500);
@@ -691,7 +703,6 @@ exports.uploadImage = function(req, res) {
 		return image.path.substring(index, image.path.length);
 	}
 
-	//TODO read folder from a config file
 	newAbsFilename = pathHelper.join(uploadPath, _id, filename);
 
 	console.log('uploadImage: Trying to move ' + req.files.image.path + ' to ' + newAbsFilename);
@@ -738,9 +749,9 @@ exports.uploadImage = function(req, res) {
 				addReportImageLinks(image, report._id);
 
 				//debugObject(image, 'uploadImage: add image metadata to currentReport ' + report._id);
-				report.images.push(image);
+				// report.images.push(image);
 
-				persistReportChanges(report, function(status, updatedReport) {
+				persistReportImage(report, image, function(status, updatedReport) {
 					if(status == 500) {
 						res.send(500);
 						res.end();
@@ -755,8 +766,6 @@ exports.uploadImage = function(req, res) {
 			}
 		});
 	}
-
-	// res.send(200);
 }
 
 exports.getImage = function(req, res) {
@@ -871,11 +880,13 @@ exports.deleteImage = function(req, res) {
 
 		imgId = img._id;
 		imgPath = pathHelper.join(uploadPath, _id, img.filename);
-
-		// '_id': ObjectID.createFromHexString(_id), 'images._id' : ObjectID.createFromHexString(imgId)
-		col.update( {}, 
-
-			{ $pull: { 'images' :{ '_id' : imgId}}},
+		
+		col.update( {},
+			{ 
+				$pull: { 'images' :{ '_id' : imgId}},
+				$set: {lastModified : (new Date()).getTime()},
+				$inc: {version: 1}
+			},
 			{
 				upsert: false,
 				multi: true
