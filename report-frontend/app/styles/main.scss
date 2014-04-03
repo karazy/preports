@@ -229,6 +229,14 @@ body {
     }
 }
 
+.report-image-locked {
+    &:hover {
+      .image-delete-button {
+        display: none !important;
+      }      
+    }
+}
+
 .file-drop {
     border-radius: 3px;
     border: 1px dotted gray;
