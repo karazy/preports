@@ -1,26 +1,26 @@
+<!-- Report modified 428 dialog -->
+<div class="modal fade" id="dialogModifiedReport">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" l="report.428.title">Report modified</h4>
+      </div>
+      <div class="modal-body">
+        <p l="report.428.msg">Report has been modified in the meantime. You can reload and discard your last change or cancel, then copy your last change and reload.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" l="report.428.cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="reloadReport(false);" l="report.428.reload">Reload and discard</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div ng-show="currentReport._id">
 	<div class="alert alert-danger" ng-show="deleteTimer">
 		<h4><span l="report.killing.msg">Deleting report {{reportToDelete.name}} in</span> {{remainingSecondsBeforeDoomsday}}</h4>
 		<br/>
 		<button ng-click="delayDoomsday()" class="btn btn-warning" l="cancel">Cancel</button>
-	</div>
-	<!-- Report modified 428 dialog -->
-	<div class="modal fade" id="dialogModifiedReport">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h4 class="modal-title" l="report.428.title">Report modified</h4>
-	      </div>
-	      <div class="modal-body">
-	        <p l="report.428.msg">Report has been modified in the meantime. You can reload and discard your last change or cancel, copy your last change and reload.</p>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-primary" data-dismiss="modal" l="report.428.cancel">Cancel</button>
-	        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="reloadReport(false);" l="report.428.reload">Reload and discard</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+	</div>	
 	<!-- Report detail view. -->
 	<div class="row">
 		<div class="col-md-12 hidden-print">
