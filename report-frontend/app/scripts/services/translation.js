@@ -253,8 +253,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Copy report"
 		},
 		"report.copy.text" : {
-			"DE" :  "Erzeugt eine Kopie des Reports und erhöht die Kalenderwoche.",
-			"EN" : "Creates a copy of this report and increases calendar week."
+			"DE" :  "Erzeugt eine Kopie des Reports und nimmt setzt aktuelle Kalenderwoche.",
+			"EN" : "Creates a copy of this report and uses current calendar week."
 		},
 		"report.copyof" : {
 			"DE" :  "Dies ist eine Kopie",

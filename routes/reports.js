@@ -1074,15 +1074,3 @@ function getUserHome() {
         return uploadDir;
     }
 }
-
-/**
-* Get calendar week of given date.
-* @param {Date} date
-*	Date to get week for.
-* @return 
-*	week in year
-*/
-function getWeek(date) {
-    var onejan = new Date(date.getFullYear(), 0, 1);
-    return Math.ceil((((date - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-}

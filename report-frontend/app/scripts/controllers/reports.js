@@ -17,7 +17,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     //initialize global search parameters if they don't exist on $rootScope
   	$rootScope.search = $rootScope.search || {};
     $rootScope.search.year = ($rootScope.search.hasOwnProperty('year')) ? $rootScope.search.year : (new Date()).getFullYear();
-    $rootScope.search.week = ($rootScope.search.hasOwnProperty('week')) ? $rootScope.search.week : getWeek(new Date());
+    $rootScope.search.week = ($rootScope.search.hasOwnProperty('week')) ? $rootScope.search.week : (new Date()).getWeek();
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
     $rootScope.search.limit = PAGINATION_LIMIT;
     $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
@@ -294,7 +294,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           date = new Date();
 
       newReport.year = date.getFullYear();
-      newReport.week = getWeek(date);
+      newReport.week = date.getWeek();
       newReport.name = $scope.newReportName;
 
       newReport.milestones = [];
@@ -453,11 +453,6 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         });
         
       }
-    }
-
-    function getWeek(date) {
-        var onejan = new Date(date.getFullYear(), 0, 1);
-        return Math.ceil((((date - onejan) / 86400000) + onejan.getDay() + 1) / 7);
     }
 
     /**
@@ -750,6 +745,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
  	}
 
  	$scope.copyReport = function(reportToCopy, $event) {
+    var date = new Date();
+
  		if(!reportToCopy) {
     		console.log('copyReport: no reportToCopy given');
     		return;
@@ -760,15 +757,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     	delete reportToCopy._id;
 
     	reportToCopy.name = reportToCopy.name +'_copy';
-
-      if(reportToCopy.week < 52) {
-        reportToCopy.week =  reportToCopy.week + 1;
-      } else {
-        reportToCopy.week = 1;
-        reportToCopy.year++;
-      }
-      
-
+      reportToCopy.week = date.getWeek();
+      reportToCopy.year = date.getFullYear();
 
     	saveReport(reportToCopy);
  	}
