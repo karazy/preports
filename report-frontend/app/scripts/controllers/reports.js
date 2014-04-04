@@ -3,7 +3,7 @@
 PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler, $rootScope, language, $timeout, $interval) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
-        PAGINATION_LIMIT = 50;
+        PAGINATION_LIMIT = 25;
 
     /**
     * Size of the command queue that holds undo events.
@@ -759,6 +759,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     	reportToCopy.name = reportToCopy.name +'_copy';
       reportToCopy.week = date.getWeek();
       reportToCopy.year = date.getFullYear();
+      reportToCopy.locked = false;
 
     	saveReport(reportToCopy);
  	}

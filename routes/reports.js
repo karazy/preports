@@ -11,7 +11,7 @@ var mongo = require('mongodb'),
 	db;
 
 //constants
-var DB_DEFAULT_RESULT_LIMIT = 50;
+var DB_DEFAULT_RESULT_LIMIT = 25;
 
 //setup mongo variables
 Db = mongo.Db;
