@@ -2,7 +2,6 @@ var http = require('http');
 var express = require('express');
 var reports = require('./routes/reports');
 var crucible = require('./routes/crucible');
-var WebSocketServer = require('ws').Server;
 
 var app = express();
 
@@ -92,20 +91,6 @@ var App = function() {
 
         self.server.listen(self.port, self.ipaddr, function() {
             console.log('%s: Node server started on %s:%d ...', Date(Date.now()), self.ipaddr, self.port);
-        });
-
-        //WS Test
-        var wss = new WebSocketServer({server: self.server});
-        wss.on('connection', function(ws) {
-          var id = setInterval(function() {
-            ws.send(JSON.stringify(process.memoryUsage()), function() { /* ignore errors */ });
-            
-          }, 500);
-          console.log('started client interval');
-          ws.on('close', function() {
-            console.log('stopping client interval');
-            clearInterval(id);
-          });
         });
 
     };

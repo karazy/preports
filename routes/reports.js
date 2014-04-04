@@ -338,7 +338,7 @@ function findReport(id, callback) {
 				// var lastModified = new Date(item.lastModified);
 				timeDiff = Math.abs(item.lastModified - now.getTime());
 				diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-				console.log('DIFFDAYS ' + diffDays);
+
 				if(diffDays >= 6 ) {
 					item.locked = true;
 				}
