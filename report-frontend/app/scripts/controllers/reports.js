@@ -198,7 +198,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     /**
     * Reloads current report after external modifications.
     * @param {Boolean} redoLastModification
-    *   If true re applies the last issued command.
+    *   If true reapplies the last issued command.
     */
     $scope.reloadReport = function(redoLastModification) {
       if(!$scope.currentReport) {
@@ -211,7 +211,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
       $scope.currentReport = Report.get({'id':$scope.currentReport._id}, function() {       
           if($scope.commands && $scope.commands.length > 0) {
-            //TODO redo last action not ready for primetime yet! Undo must be taken into account!
+            //TODO redo last action not ready for primetime yet! Undo must also be taken into account!
             // if(redoLastModification) {           
             //   var lastCommand = $scope.commands[$scope.commands.length-1];
             //   lastCommand.execute();
@@ -555,12 +555,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         $scope.currentReport.codeReviews.push({
           authors: 'Add authors',
         });
-        $scope.currentReport.$update(angular.noop, handleUpdateError);
+        $scope.currentReport.$update();
       }
 
       updateCommand.undo = function() {
         $scope.currentReport.codeReviews.pop();
-        $scope.currentReport.$update(angular.noop, handleUpdateError);
+        $scope.currentReport.$update();
       }
 
       storeAndExecute(updateCommand);
@@ -627,12 +627,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         $scope.currentReport.systems.push({
         });
 
-        $scope.currentReport.$update(angular.noop, handleUpdateError);
+        $scope.currentReport.$update();
       }
 
       updateCommand.undo = function() {
         $scope.currentReport.systems.pop();
-        $scope.currentReport.$update(angular.noop, handleUpdateError);
+        $scope.currentReport.$update();
       }
 
       storeAndExecute(updateCommand);
@@ -740,7 +740,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         });
 
         uploader.bind('error', function( event, xhr, item, response) {
-        	$log.log('setupFileUpload: upload failed');
+        	console.log('setupFileUpload: upload failed');
         	//show global error. for more information have a look inside the errorHandler
         	$rootScope.error = true;
         	$rootScope.errorMessage = language.translate('error.image.upload') || 

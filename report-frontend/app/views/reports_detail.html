@@ -40,12 +40,12 @@
 		<div class="col-md-6">
 			<div class="btn-toolbar pull-right" role="toolbar">
 				<button type="button" class="btn btn-info" ng-click="removeAndUndoLastCommand();" style="margin-top: 20px;" ng-disabled="commands.length == 0 || ajaxLoading" ng-hide="currentReport.locked"><i class="icon-undo"></i> x {{commands.length}}</button>
-				<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(currentReport)" dialog-confirm-button="copy" dialog-class="alert-info">
+				<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(currentReport)" dialog-confirm-button="copy">
 					<button class="btn btn-primary btn-info copy-button" style="margin-top: 20px;"><i class="icon-copy"></i></button>
 				</span>
 				<button type="button" class="btn btn-info" ng-click="printReport();" style="margin-top: 20px;"><i class="glyphicon glyphicon-print"></i></button>
 				<button class="btn btn-primary btn-info" style="margin-top: 20px;"><i ng-class="{'icon-unlock':!currentReport.locked, 'icon-lock':currentReport.locked}" ng-click="toggleReportLock()"></i></button>
-				<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport()" dialog-confirm-button="delete" dialog-class="alert-danger">
+				<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport()" dialog-confirm-button="delete" dialog-confirm-btn-cls="btn-danger">
 					<button type="button" class="btn btn-danger" style="margin-top: 20px;"><i class="glyphicon glyphicon-trash" ></i></button>
 					<!-- ng-click="deleteReport()" -->
 				</span>	

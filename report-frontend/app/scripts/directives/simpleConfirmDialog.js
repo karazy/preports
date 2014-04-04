@@ -11,11 +11,11 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 			dialogOnConfirm: '&',
 			dialogConfirmButton: '@',
 			dialogDisabled: '=',
-			dialogClass: '@',
+			dialogConfirmBtnCls: '@',
 		},
 		template: function(element, attrs) {
 			var html,
-				dClass = attrs.hasOwnProperty('dialogClass') ? attrs.dialogClass : "alert-info";
+				btnClass = attrs.hasOwnProperty('dialogConfirmBtnCls') ? attrs.dialogConfirmBtnCls : "btn-primary";
 
 			html = 
 			'<span class="toggler" ng-transclude></span>'+
@@ -26,12 +26,12 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 					    	'<button type="button" class="close" data-dismiss="modal">×</button>'+
 					    	'<h4 l="{{dialogTitle}}">Confirm dialog</h4>'+
 					'</div>'+
-					'<div class="modal-body '+dClass+'">'+
+					'<div class="modal-body">'+
 					    	'<p l="{{dialogText}}"></p>'+
 				   '</div>  '+
 					'<div class="modal-footer">'+
 					  		'<button type="button" class="btn" data-dismiss="modal" l="cancel">Cancel</button>'+
-					    	'<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="confirm()" l="{{dialogConfirmButton}}">Confirm</button>'+
+					    	'<button type="button" class="btn '+btnClass+'" data-dismiss="modal" ng-click="confirm()" l="{{dialogConfirmButton}}">Confirm</button>'+
 					'</div>'+
 					'</div>'+
 				'</div>'+
