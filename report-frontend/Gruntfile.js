@@ -30,6 +30,7 @@ module.exports = function (grunt) {
 
     pkg: {
       version: require('./package.json').version,
+      versionName: require('./package.json').versionName
     },
 
     // Watches files for changes and runs tasks based on the changed files
@@ -375,7 +376,7 @@ module.exports = function (grunt) {
             },
             {
               pattern: '{version}',
-              replacement: '<%= pkg.version %>'
+              replacement: '<%= pkg.version %> <%= pkg.versionName %>'
             }
           ]
         }
@@ -396,7 +397,7 @@ module.exports = function (grunt) {
             },
             {
               pattern: '{version}',
-              replacement: '<%= pkg.version %>'
+              replacement: '<%= pkg.version %> <%= pkg.versionName %>'
             }
           ]
         }

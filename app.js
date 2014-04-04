@@ -60,13 +60,17 @@ var App = function() {
 
 
     //define routes
-    self.app.get('/rest', function(req, res) {
+    self.app.get('/', function(req, res) {
         console.log('Displaying options');
         res.status(200);
         res.send('<h1>preports</h1>' +
-                '<p><a href="/reports">/reports</a></p>' +
-                '<p><a href="/app">preports frontend -> relocated</a></p>'
+                '<h2>API</2h>'+
+                '<p><a href="/reports">GET /reports</a></p>' +
+                '<p>To retrieve actual reports use accept application/json or application/hal+json </p>'+
+                '<h2>Frontend</2h>'+
+                '<p><a href="/app">preports frontend</a></p>'
                 );
+        res.end();
     });
 
 //Reports CRUD API
