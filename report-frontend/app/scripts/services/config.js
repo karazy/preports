@@ -14,7 +14,7 @@ angular.module('PReports.services').provider('config', function() {
 	self.config_ = {
 		'serviceUrl' : '',
 		'servicePort' : '',
-		'version' : '0.4.0 Dude Diederich',
+		'version' : '0.4.1 Dude Diederich',
 		// 'serviceUrl' : '',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {
