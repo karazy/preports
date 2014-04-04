@@ -273,7 +273,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "Report wure bearbeitet"
 		},
 		"report.428.msg" : {
-			"DE" : "Der Report wurde in der Zwischenzeit bearbeitet. Sie können Neuladen und die letzte Änderung verwerfen oder abbrechen, Ihre letzte Änderung sichern und neuladen."
+			"DE" : "Der Report wurde in der Zwischenzeit bearbeitet. Sie können Neuladen und die letzte Änderung verwerfen oder"+
+			 " abbrechen, Ihre letzte Änderung sichern und manuell neuladen. Der Undo Stack wurde geleert, um Überschreiben zu verhindern."
 		},
 		"report.428.cancel" : {
 			"DE" : "Abbrechen"

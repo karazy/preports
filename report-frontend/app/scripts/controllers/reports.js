@@ -3,7 +3,7 @@
 PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, errorHandler, $rootScope, language, $timeout, $interval) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
-        PAGINATION_LIMIT = 5;
+        PAGINATION_LIMIT = 50;
 
     /**
     * Size of the command queue that holds undo events.
@@ -216,10 +216,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
             //   var lastCommand = $scope.commands[$scope.commands.length-1];
             //   lastCommand.execute();
             // } 
-            if(redoLastModification===false) {
+            // else if(redoLastModification===false) {
               //remove last command
-              $scope.commands.pop();
-            }
+              // $scope.commands.pop();
+            // }
           }
       }, function(httpResponse) {
         $scope.reportNotFound = true;
@@ -908,9 +908,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     if(response.status == 428) {
       //modified by third party
       $log.log('Failed to update report because it has been modified.');
+      //prevent accidential overrides by killing the undo stack
+      $scope.commands = [];
       $('#dialogModifiedReport').modal('toggle');
     } else {
-      //TODO handle error
+      errorHandler(response);
     }
   }
 
