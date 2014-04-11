@@ -881,7 +881,7 @@ exports.deleteImage = function(req, res) {
 		imgId = img._id;
 		imgPath = pathHelper.join(uploadPath, _id, img.filename);
 		
-		col.update( {},
+		col.update({'_id': ObjectID.createFromHexString(_id)},
 			{ 
 				$pull: { 'images' :{ '_id' : imgId}},
 				$set: {lastModified : (new Date()).getTime()},
@@ -904,7 +904,7 @@ exports.deleteImage = function(req, res) {
 						//continue nevertheless also the file may still exist					
 					}
 					res.send(200);
-					res.end();
+				res.end();
 				});
 				
 	        });		
