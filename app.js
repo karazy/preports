@@ -67,9 +67,10 @@ var App = function() {
         console.log('Displaying options');
         res.status(200);
         res.send('<h1>preports - service</h1>' +
-                // '<h2>API</h2>'+
-                // '<p><a href="/reports">GET /reports</a></p>' +
-                // '<p>To retrieve actual reports use accept application/json or application/hal+json </p>'+
+                '<h3>API</h3>'+
+                '<p><a href="/reports">GET /reports</a></p>' +
+                '<p>To retrieve actual reports use accept application/json or application/hal+json </p>'+
+                '<h3>APP</h3>'+
                 '<p>This is the preports service. The app has moved to another URL:</p>'+
                 // '<h2>Frontend</2h>'+
                 '<p><a href="http://preports-reifschneider.paas.pironet-ndh.com">preports app</a></p>'

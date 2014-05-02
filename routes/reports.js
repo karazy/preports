@@ -4,6 +4,7 @@ var mongo = require('mongodb'),
 	mv = require('mv'),
 	queryString = require('querystring'),
 	pathHelper = require('path'),
+	j2h = require('node-json2html'),
 	Db,
 	Connection,
 	Server,
@@ -20,6 +21,20 @@ Server = mongo.Server;
 BSON = mongo.BSON;
 ObjectID = mongo.ObjectID;
 MongoClient = mongo.MongoClient; 
+
+
+var listTransform = {	
+	'tag' : 'div',
+	'html' : '<h1>List of reports</h1>',
+	'children':function(obj){
+	    return(json2html.transform(obj.reports,listReportTransform));
+	}
+}
+
+var listReportTransform = {
+	'tag' : 'div',
+	'html' : '<a target="_self" href="${_links.self.href}">${name}</a> - CW ${week}|${year}'
+}
 
 
 connect = function(connectUrl) {
@@ -111,14 +126,14 @@ exports.getAll = function(req, res) {
 
 
 
-	if(req.accepts('text/plain')) {
+	if(req.accepts('text/plain') && !req.accepts('text/html')) {
 		//TODO handle query params here as well?
 		exports.getProjectNames(req, res);
 		return;
 	}
 
 	//support json and hal+json type, otherwise return not acceptable
-	if(!req.accepts('application/json') && !req.accepts('application/hal+json')) {
+	if(!req.accepts('application/json') && !req.accepts('application/hal+json')  && !req.accepts('text/html')) {
 		res.status(406);
 		res.end();
 		return;
@@ -217,9 +232,23 @@ exports.getAll = function(req, res) {
 			 				addReportMetadata(report);
 			 			});	
 		 			}
+
 			 		res.set('Content-Type', req.get('Accept'));
 			 		res.status(200);
-		            res.send(addMetaWrapperToReports(items, nextPage, limit, relLinkParams, count));
+			 		var reportsWithMeta = addMetaWrapperToReports(items, nextPage, limit, relLinkParams, count);
+
+			 		//create html representation
+			 		if(req.accepts('text/html')) {
+			 			// reportsWithMeta.reports.forEach(function(report) {
+			 			// 	listTransform.children.push({
+			 			// 		'tag' : 'div',
+			 			// 		'html' : ''
+			 			// 	});
+			 			// });
+			 			reportsWithMeta = j2h.transform(reportsWithMeta, listTransform);
+			 		}
+
+		            res.send(reportsWithMeta);
 		            res.end();
 	        });	 
 	 	});
