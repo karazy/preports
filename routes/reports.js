@@ -43,7 +43,11 @@ var reportTransform = {
 		'<p><a target="_self" href="${_links.collection.href}">&lt; All Reports</a></p>'+
 		'<h1>${name}</h1>'+
 		'<p>CW ${week}</p>'+
-		'<p>Year ${year}</p>',
+		'<p>Year ${year}</p>'+
+		'<p>Start ${start}</p>'+
+		'<p>Go live ${goLive}</p>'+
+		'<p>Lead developers ${leadDevelopers}</p>'+
+		'<p>Project managers ${projectManagers}</p>',
 		'children':[
 			{
 				'tag' : 'div',
@@ -62,6 +66,16 @@ var reportTransform = {
 				    return(json2html.transform(obj.codeReviews, {
 				    	'tag' : 'ul',
 				    	'html' : '<li>Topic: ${underReview} | Reviewer: ${authors} | Content: ${result}</li>'
+				    }));
+				}	
+			},
+			{
+				'tag' : 'div',
+				'html' : 'Systems',
+				'children': function(obj){
+				    return(json2html.transform(obj.systems, {
+				    	'tag' : 'ul',
+				    	'html' : '<li>Name: ${name} | Url: ${url} | Remarks: ${remarks}</li>'
 				    }));
 				}	
 			}
