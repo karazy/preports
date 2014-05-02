@@ -4,7 +4,7 @@ var mongo = require('mongodb'),
 	mv = require('mv'),
 	queryString = require('querystring'),
 	pathHelper = require('path'),
-	j2h = require('node-json2html'),
+	htmlExport = require('./exporter/html'),
 	Db,
 	Connection,
 	Server,
@@ -21,67 +21,6 @@ Server = mongo.Server;
 BSON = mongo.BSON;
 ObjectID = mongo.ObjectID;
 MongoClient = mongo.MongoClient; 
-
-
-var listTransform = {	
-	'tag' : 'div',
-	'html' : '<h1>List of reports</h1>'+
-		'<p style="margin-bottom:20px;"><a href="/" target="_self">&lt; back</a></p>',
-	'children':function(obj){
-	    return(json2html.transform(obj.reports,listReportTransform));
-	}
-}
-
-var listReportTransform = {
-	'tag' : 'div',
-	'html' : '<a target="_self" href="${_links.self.href}">${name}</a> - CW ${week}|${year}'
-}
-
-var reportTransform = {
-	'tag' : 'div',
-	'html' : 
-		'<p><a target="_self" href="${_links.collection.href}">&lt; All Reports</a></p>'+
-		'<h1>${name}</h1>'+
-		'<p>CW ${week}</p>'+
-		'<p>Year ${year}</p>'+
-		'<p>Start ${start}</p>'+
-		'<p>Go live ${goLive}</p>'+
-		'<p>Lead developers ${leadDevelopers}</p>'+
-		'<p>Project managers ${projectManagers}</p>',
-		'children':[
-			{
-				'tag' : 'div',
-				'html' : 'Milestones',
-				'children': function(obj){
-				    return(json2html.transform(obj.milestones, {
-				    	'tag' : 'ul',
-				    	'html' : '<li>Name: ${name} | Start: ${start} | End: ${End}</li>'
-				    }));
-				}	
-			},
-			{
-				'tag' : 'div',
-				'html' : 'Code reviews',
-				'children': function(obj){
-				    return(json2html.transform(obj.codeReviews, {
-				    	'tag' : 'ul',
-				    	'html' : '<li>Topic: ${underReview} | Reviewer: ${authors} | Content: ${result}</li>'
-				    }));
-				}	
-			},
-			{
-				'tag' : 'div',
-				'html' : 'Systems',
-				'children': function(obj){
-				    return(json2html.transform(obj.systems, {
-				    	'tag' : 'ul',
-				    	'html' : '<li>Name: ${name} | Url: ${url} | Remarks: ${remarks}</li>'
-				    }));
-				}	
-			}
-			
-		]	
-}
 
 
 
@@ -287,7 +226,7 @@ exports.getAll = function(req, res) {
 
 			 		//create html representation
 			 		if(req.accepts('text/html')) {
-			 			reportsWithMeta = j2h.transform(reportsWithMeta, listTransform);
+			 			reportsWithMeta = htmlExport.transformReportList(reportsWithMeta);
 			 		}
 
 		            res.send(reportsWithMeta);
@@ -374,7 +313,7 @@ exports.getById = function(req, res) {
 
 		//create html representation
  		if(req.accepts('text/html')) {
- 			report = j2h.transform(report, reportTransform);
+ 			report = htmlExport.transformReport(report);
  		}
 
 		res.send(status, report);
