@@ -43,9 +43,30 @@ var reportTransform = {
 		'<p><a target="_self" href="${_links.collection.href}">&lt; All Reports</a></p>'+
 		'<h1>${name}</h1>'+
 		'<p>CW ${week}</p>'+
-		'<p>Year ${year}</p>'
-		
-
+		'<p>Year ${year}</p>',
+		'children':[
+			{
+				'tag' : 'div',
+				'html' : 'Milestones',
+				'children': function(obj){
+				    return(json2html.transform(obj.milestones, {
+				    	'tag' : 'ul',
+				    	'html' : '<li>Name: ${name} | Start: ${start} | End: ${End}</li>'
+				    }));
+				}	
+			},
+			{
+				'tag' : 'div',
+				'html' : 'Code reviews',
+				'children': function(obj){
+				    return(json2html.transform(obj.codeReviews, {
+				    	'tag' : 'ul',
+				    	'html' : '<li>Topic: ${underReview} | Reviewer: ${authors} | Content: ${result}</li>'
+				    }));
+				}	
+			}
+			
+		]	
 }
 
 
