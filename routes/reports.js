@@ -25,7 +25,8 @@ MongoClient = mongo.MongoClient;
 
 var listTransform = {	
 	'tag' : 'div',
-	'html' : '<h1>List of reports</h1>',
+	'html' : '<h1>List of reports</h1>'+
+		'<p style="margin-bottom:20px;"><a href="/" target="_self">&lt; back</a></p>',
 	'children':function(obj){
 	    return(json2html.transform(obj.reports,listReportTransform));
 	}
@@ -35,6 +36,18 @@ var listReportTransform = {
 	'tag' : 'div',
 	'html' : '<a target="_self" href="${_links.self.href}">${name}</a> - CW ${week}|${year}'
 }
+
+var reportTransform = {
+	'tag' : 'div',
+	'html' : 
+		'<p><a target="_self" href="${_links.collection.href}">&lt; All Reports</a></p>'+
+		'<h1>${name}</h1>'+
+		'<p>CW ${week}</p>'+
+		'<p>Year ${year}</p>'
+		
+
+}
+
 
 
 connect = function(connectUrl) {
@@ -239,12 +252,6 @@ exports.getAll = function(req, res) {
 
 			 		//create html representation
 			 		if(req.accepts('text/html')) {
-			 			// reportsWithMeta.reports.forEach(function(report) {
-			 			// 	listTransform.children.push({
-			 			// 		'tag' : 'div',
-			 			// 		'html' : ''
-			 			// 	});
-			 			// });
 			 			reportsWithMeta = j2h.transform(reportsWithMeta, listTransform);
 			 		}
 
@@ -317,9 +324,24 @@ exports.getById = function(req, res) {
 		console.log('getById: no id given');
 	}
 
-	console.log('getById: load report with id ' + _id);		
+	console.log('getById: load report with id ' + _id);	
+
+	//support json and hal+json type, otherwise return not acceptable
+	if(!req.accepts('application/json') && !req.accepts('application/hal+json')  && !req.accepts('text/html')) {
+		res.status(406);
+		res.end();
+		return;
+	}
 
 	findReport(_id, function(status, report) {
+		res.set('Content-Type', req.get('Accept'));
+		res.status(200);
+
+		//create html representation
+ 		if(req.accepts('text/html')) {
+ 			report = j2h.transform(report, reportTransform);
+ 		}
+
 		res.send(status, report);
 		res.end();
 	});
