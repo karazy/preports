@@ -9,9 +9,31 @@ var listTransform = {
 	'tag' : 'div',
 	'html' : '<h1>List of reports</h1>'+
 		'<p style="margin-bottom:20px;"><a href="/" target="_self">&lt; root</a></p>',
-	'children':function(obj){
-	    return(json2html.transform(obj.reports,listReportTransform));
-	}
+	'children': [
+		{
+			'tag' : 'div',
+			'children': function(obj){
+			    return(json2html.transform(obj.reports,listReportTransform));
+			}
+		},
+		{
+			'tag' : 'div',
+			'children': function(obj){
+				var html = '';
+				if(obj._links) {
+					if(obj._links.prev) {
+						html += '<a href="'+obj._links.prev.href+'" target="_self">&lt; prev</a>'
+					}
+					if(obj._links.next) {
+						html += '<a href="'+obj._links.next.href+'" target="_self">next &gt;</a>'
+					}					
+				}
+				html += '<br>Page ' + obj.currentPage + '/' + obj.totalPages + '<br>Total reports ' + obj.totalCount;
+
+			    return html;
+			}
+		}
+	]
 }
 
 /**
