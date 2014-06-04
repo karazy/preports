@@ -69,7 +69,7 @@ var App = function() {
         res.send('<h1>preports - service</h1>' +
                 '<h3>API</h3>'+
                 '<p><a href="/reports">GET /reports</a></p>' +
-                '<p>To retrieve actual reports use accept application/json or application/hal+json </p>'+
+                '<p>To retrieve reports in json use accept application/hal+json or application/json</p>'+
                 '<h3>APP</h3>'+
                 '<p>This is the preports service. The app has moved to another URL:</p>'+
                 // '<h2>Frontend</2h>'+
