@@ -22,13 +22,13 @@ var listTransform = {
 				var html = '';
 				if(obj._links) {
 					if(obj._links.prev) {
-						html += '<a href="'+obj._links.prev.href+'" target="_self">&lt; prev</a>'
+						html += '<a href="'+obj._links.prev.href+'" target="_self">&lt; prev</a><span> </span>'
 					}
 					if(obj._links.next) {
 						html += '<a href="'+obj._links.next.href+'" target="_self">next &gt;</a>'
 					}					
 				}
-				html += '<br>Page ' + obj.currentPage + '/' + obj.totalPages + '<br>Total reports ' + obj.totalCount;
+				html += '<br/><br/>Page ' + obj.currentPage + '/' + obj.totalPages + '<br/>Total reports ' + obj.totalCount;
 
 			    return html;
 			}
@@ -105,6 +105,23 @@ var reportTransform = {
 		]	
 }
 
+function getHtmlHeader() {
+	var header;
+	//xmlns="http://www.w3.org/1999/xhtml"
+	header = '<!DOCTYPE html><html><body>';
+
+	return header;
+}
+
+function getHtmlFooter() {
+	var header;
+
+	header = "</body></html>";
+
+	return header;
+}
+
+
 /**
 * Transforms json reports into an html representation.
 * @param reports
@@ -118,7 +135,13 @@ exports.transformReportList = function(reports) {
 		return false;
 	}
 
-	return j2h.transform(reports, listTransform);
+	var transform = j2h.transform(reports, listTransform);
+	
+	//build valid html document
+	transform = getHtmlHeader().concat(transform);
+	transform = transform.concat(getHtmlFooter());
+
+	return transform;
 }
 
 /**
@@ -134,5 +157,11 @@ exports.transformReport = function(report) {
 		return false;
 	}
 
-	return j2h.transform(report, reportTransform);
+	var transform = j2h.transform(report, reportTransform);
+	
+	//build valid html document
+	transform = getHtmlHeader().concat(transform);
+	transform = transform.concat(getHtmlFooter());
+
+	return transform;
 }

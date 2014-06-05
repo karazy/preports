@@ -226,7 +226,9 @@ exports.getAll = function(req, res) {
 
 			 		//create html representation
 			 		if(req.accepts('text/html')) {
+			 			res.set('Content-Type', 'text/html');
 			 			reportsWithMeta = htmlExport.transformReportList(reportsWithMeta);
+			 			console.log(reportsWithMeta);
 			 		}
 
 		            res.send(reportsWithMeta);
@@ -259,7 +261,7 @@ function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 	wrapper.reports = reports;
 
 	wrapper._links = {
-		self : {
+		self : { 
 			href: '/reports?page=' + currentPage + '&limit=' + limit + '&' + queryString.stringify(miscParams)
 		}
 	}
@@ -274,14 +276,14 @@ function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 		if(page > 0 && totalPages > 1) {
 			wrapper._links['prev'] = {
 				//currentPage + '&next=' +
-				href: '/reports?page=' + (page-1) + '&limit=' + limit + '&' + queryString.stringify(miscParams)
+				href: '/reports?page=' + (page-1) + '&limit=' + limit + '&' +  queryString.stringify(miscParams)
 			}
 		}
 
 		if(page < (totalPages-1)) {
 			wrapper._links['next'] = {
 				//currentPage + '&next=' +
-				href: '/reports?page=' + (page+1) + '&limit=' + limit  + '&' + queryString.stringify(miscParams)
+				href: '/reports?page=' + (page+1) + '&limit=' + limit  + '&' +  queryString.stringify(miscParams)
 			}
 		}
 	}
@@ -313,6 +315,7 @@ exports.getById = function(req, res) {
 
 		//create html representation
  		if(req.accepts('text/html')) {
+ 			res.set('Content-Type', 'text/html');
  			report = htmlExport.transformReport(report);
  		}
 
