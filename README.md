@@ -10,6 +10,9 @@ PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ###Release Notes
 
+####v1.1.1
+- Fixed display issues in firefox for html representation.
+
 ####v1.1.0
 - Service supports type text/html as return type.
 
