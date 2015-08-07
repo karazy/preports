@@ -49,7 +49,7 @@ function createIndexes() {
 			 return;
 		}		
 
-		col.ensureIndex({
+		col.createIndex('searchIndex',{
 			'year' : 1,
 			'name' : 1
 		}, function(err, indexName) {
@@ -521,7 +521,8 @@ exports.createReport = function(req, res) {
 			};
 		}
 
-		reports.insert(reportToSave, function(err, result) {
+		reports.insertOne(reportToSave, function(err, writeOpResult) {
+			console.log("Called reports.insert");
 			if(err) {
 				res.send(500);
 				res.end();
@@ -529,14 +530,16 @@ exports.createReport = function(req, res) {
 				
 				if(reportToSave.copyOf && reportToSave.images) {
 					//This is a copy report. Copy the images to new folder.
-					copyReportImages(reportToSave.copyOf, result[0]._id, function(err) {
+					copyReportImages(reportToSave.copyOf, writeOpResult.ops[0]._id, function(err) {
 						if(err) {
-							console.log('createReport: failed to copy images for ' + result[0]._id);
+							console.log('createReport: failed to copy images for ' + writeOpResult.ops[0]._id);
 						}
 					});
 				}
-				//result is an array
-				res.send(200, result[0]);
+				console.log("Save success");
+				debugObject(writeOpResult.ops[0], 'Saved record');
+				//writeOpResult.ops is an array
+				res.send(200, writeOpResult.ops[0]);
 				res.end();
 			}
 
@@ -604,7 +607,7 @@ exports.updateReport = function(req, res) {
 		// docToUpdate.version = 
 		
 
-		reports.update({'_id': ObjectID.createFromHexString(_id)}, docToUpdate, function(err, numberOfUpdatedDocs) {
+		reports.updateOne({'_id': ObjectID.createFromHexString(_id)}, docToUpdate, function(err, numberOfUpdatedDocs) {
 			if(err) {
 				console.log(err);
 				res.status(500);
@@ -612,7 +615,7 @@ exports.updateReport = function(req, res) {
 				return;
 			}
 
-			reports.update({'_id': ObjectID.createFromHexString(_id)}, { $inc: { version: 1 } }, function(err, numberOfUpdatedDocs) {
+			reports.updateOne({'_id': ObjectID.createFromHexString(_id)}, { $inc: { version: 1 } }, function(err, numberOfUpdatedDocs) {
 				docToUpdate._id = _id;
 				//save an additional db load and manually increase version
 				if(docToUpdate.version) {
@@ -1070,6 +1073,7 @@ getReportsCollection = function(callback) {
 
 debugObject = function(obj, title) {
 	if(!obj) {
+		console.error("No debug object given.");
 		return;
 	}
 

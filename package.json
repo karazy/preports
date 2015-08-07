@@ -1,7 +1,7 @@
 {
   "name": "project-reports",
   "description": "project reports | reports at a glance",
-  "version": "1.1.0",  
+  "version": "1.1.0",
   "keywords": [
     "OpenShift",
     "Node.js",
@@ -11,7 +11,7 @@
   "author": {
     "name": "Frederik Reifschneider",
     "email": "frederik.reifschneider@bisnode.com",
-    "url":  "http://www.bisnode.com/"
+    "url": "http://www.bisnode.com/"
   },
   "homepage": "http://www.openshift.com/",
   "repository": {
@@ -22,14 +22,13 @@
     "node": ">= 0.10.0",
     "npm": ">= 1.0.0"
   },
-
   "dependencies": {
     "express": "3.4.8",
-    "mongodb": "1.3.23",
     "fs-extra": "~0.8.1",
-    "mv" : "1.0.0",
-    "pdfkit": "~0.2.7",
-    "node-json2html" : "~0.4.1"
+    "mongodb": "^2.0.39",
+    "mv": "1.0.0",
+    "node-json2html": "~0.4.1",
+    "pdfkit": "~0.2.7"
   },
   "devDependencies": {},
   "bundleDependencies": [],
