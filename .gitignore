@@ -1,1 +1,6 @@
 node_modules
+app
+.forever
+.preports
+.directory
+.bash_history

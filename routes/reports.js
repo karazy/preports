@@ -12,7 +12,8 @@ var mongo = require('mongodb'),
 	db;
 
 //constants
-var DB_DEFAULT_RESULT_LIMIT = 25;
+var DB_DEFAULT_RESULT_LIMIT = 25,
+	DATA_UPLOAD_PATH = '.preports';
 
 //setup mongo variables
 Db = mongo.Db;
@@ -653,7 +654,7 @@ exports.deleteReport = function(req, res) {
 		//delete all images files
 		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, report) {
 			if(report && report.images) {
-				var imgPath = pathHelper.join(getImageUploadPath(), _id+''),
+				var imgPath = pathHelper.join(getUploadPath(), _id+''),
 					imgFullPath;
 
         		for (var h = 0; h < report.images.length; h++) {
@@ -712,7 +713,7 @@ exports.uploadImage = function(req, res) {
 	var _id = req.params.id,
 		filename,		
 		newAbsFilename,
-		uploadPath =  getImageUploadPath(),
+		uploadPath =  getUploadPath(),
 		pathDelim = pathHelper.sep,
 		image;
 
@@ -845,7 +846,7 @@ exports.getImage = function(req, res) {
 		var img,
 			imgPath;
 
-		imgPath = pathHelper.join(getImageUploadPath(), _id , image.filename);
+		imgPath = pathHelper.join(getUploadPath(), _id , image.filename);
 		console.log('getImage: loaded from path ' + imgPath);
 		img = fs.readFileSync(imgPath);
 		res.contentLength = img.size;
@@ -895,7 +896,7 @@ exports.deleteImage = function(req, res) {
 	function deleteFile(col, img) {
 		var imgId,
 			path,
-			uploadPath = getImageUploadPath();
+			uploadPath = getUploadPath();
 
 		if(!img) {
 			res.send(500, 'No image found');
@@ -1031,7 +1032,7 @@ exports.getReportsCount = function(req, res) {
 function copyReportImages(srcDirId, destDirId, callback) {
 	var srcDir, 
 		destDir,
-		uploadPath = getImageUploadPath();
+		uploadPath = getUploadPath();
 
 	//convert srcDir/destDir to string. otherwise pathHelper throws an error
 	srcDir = pathHelper.join(uploadPath, srcDirId+''); 
@@ -1090,18 +1091,16 @@ debugObject = function(obj, title) {
 	}
 }
 
+
 /**
-* Returns the upload path for images.
+* Returns the upload path for files (images).
+* If a upload path is specified during initialization this one will be used otherwise 
+* Users home dir + DATA_UPLOAD_PATH
 */
-function getImageUploadPath() {
-	var userHome = getUserHome();
-
-	return pathHelper.join(userHome, '.preports');
-}
-
-function getUserHome() {
+function getUploadPath() {
   if (typeof uploadDir === "undefined") {
-        return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+        var userHome = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+        return pathHelper.join(userHome, DATA_UPLOAD_PATH);
     } else {
         return uploadDir;
     }

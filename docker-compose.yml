@@ -1,0 +1,22 @@
+web:
+ build: .
+ volumes:
+  #mount the app from the current folder
+  - .:/opt/yukon/node
+  #Upload directory for images
+  - /var/preports/upload:/var/preports/upload
+ links:
+  - db
+ environment:
+  - NODE_ENV=production
+  - UPLOAD_DIR=/var/preports/upload
+  - MONGODB_DB_HOST=db
+ ports:
+  - "0.0.0.0:3000:3000"
+ net: "bridge"
+db:
+ image: mongo:3.0.5
+ ports:
+  - "127.0.0.1:27017:27017"
+ volumes:
+  - /var/preports/db:/data/db

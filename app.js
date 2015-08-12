@@ -14,15 +14,15 @@ var App = function() {
     self.ipaddr = process.env.OPENSHIFT_NODEJS_IP;
     self.port = parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 3000;
 
-    self.dbHost = process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost";
+    self.dbHost = process.env.MONGODB_DB_HOST || process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost";
     self.dbPort = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017;
+    self.uploadDir = process.env.UPLOAD_DIR || process.env.OPENSHIFT_DATA_DIR;
 
 
     if (typeof self.ipaddr === "undefined") {
         console.warn('No OPENSHIFT_NODEJS_IP environment variable');
-        self.ipaddr = "localhost";
+        self.ipaddr = "0.0.0.0";
     }
-    ;
 
     var allowCrossDomain = function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
@@ -42,7 +42,6 @@ var App = function() {
         self.app.use('/', express.static(__dirname + '/app'));
         self.app.use(express.bodyParser({
             keepExtensions: true
-                    // uploadDir: '~/Pictures/nodejs' 
         }));
         self.app.use(express.methodOverride());
         self.app.use(allowCrossDomain);
@@ -57,7 +56,7 @@ var App = function() {
                     + process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@"
                     + self.dbHost + ":" + self.dbPort + "/preports";
         }
-        reports.setup(self.dbConnect, process.env.OPENSHIFT_DATA_DIR);
+        reports.setup(self.dbConnect, self.uploadDir);
     });
 
 
