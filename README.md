@@ -3,12 +3,14 @@ preports-service
 
 project reports - create and manage weekly it project reports
 
-This repository contains the REST service. The frontend can be found here [preports-app](https://github.com/BisnodeInformatics/preports-app).
-
 
 PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ###Release Notes
+
+####v1.2.0
+- Readded UI into this project since it is easier to use.
+- Added Dockerfiles for deployment.
 
 ####v1.1.1
 - Fixed display issues in firefox for html representation.

@@ -39,7 +39,7 @@ var App = function() {
 
 //define usages
     self.app.configure(function() {
-        self.app.use('/', express.static(__dirname + '/app'));
+        self.app.use('/', express.static(__dirname + '/www'));
         self.app.use(express.bodyParser({
             keepExtensions: true
         }));

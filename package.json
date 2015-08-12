@@ -10,13 +10,11 @@
   ],
   "author": {
     "name": "Frederik Reifschneider",
-    "email": "frederik.reifschneider@bisnode.com",
-    "url": "http://www.bisnode.com/"
+    "email": "frederik.reifschneider@bisnode.de"
   },
-  "homepage": "http://www.openshift.com/",
   "repository": {
     "type": "git",
-    "url": "https://gitub.com/openshift/origin-server"
+    "url": "https://github.com/BisnodeInformatics/preports"
   },
   "engines": {
     "node": ">= 0.10.0",
