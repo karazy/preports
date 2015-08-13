@@ -1,4 +1,4 @@
-web:
+preportsweb:
  build: .
  volumes:
   #mount the app from the current folder
@@ -6,17 +6,17 @@ web:
   #Upload directory for images
   - /var/preports/upload:/var/preports/upload
  links:
-  - db
+  - preportsdb
  environment:
   - NODE_ENV=production
   - UPLOAD_DIR=/var/preports/upload
-  - MONGODB_DB_HOST=db
+  - MONGODB_DB_HOST=preportsdb
  ports:
   - "0.0.0.0:3000:3000"
  net: "bridge"
-db:
+preportsdb:
  image: mongo:3.0.5
  ports:
-  - "127.0.0.1:27017:27017"
+  - "127.0.0.1:27018:27017"
  volumes:
   - /var/preports/db:/data/db
