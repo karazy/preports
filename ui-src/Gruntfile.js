@@ -390,7 +390,7 @@ module.exports = function (grunt) {
             },
             {
               pattern: '{notificationUrl}',
-              replacement: 'http://yu-dev-service-01:8181/rest/notification-service'
+              replacement: 'http://ysr-dev-service-01:8181/rest/notification-service'
             }
           ]
         }
@@ -419,7 +419,7 @@ module.exports = function (grunt) {
             },
             {
               pattern: '{notificationUrl}',
-              replacement: 'http://yu-dev-service-01:8181/rest/notification-service'
+              replacement: 'http://ysr-dev-service-01:8181/rest/notification-service'
             }
           ]
         }
