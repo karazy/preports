@@ -374,11 +374,11 @@ module.exports = function (grunt) {
           replacements: [
             {
               pattern: '{serviceUrl}',
-              replacement: 'http://127.0.0.1'
+              replacement: ''
             },
             {
               pattern: '{servicePort}',
-              replacement: '3000'
+              replacement: ''
             },
             {
               pattern: '{version}',
