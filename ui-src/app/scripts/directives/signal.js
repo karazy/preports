@@ -22,7 +22,7 @@ var //directive configuration
 			html = 
 
 				'<div class="signal">'+
-					'<div class="signal-title">{{title}}</div>'+
+					'<div class="signal-title" l="{{title}}"></div>'+
 					'<div class="signal-body">'+
 						'<div class="signal-light" ng-class="{red: isActive(1)}" ng-click="switchSignal(\'red\')">'+
 							'<input type="radio" value="1" name="budget" ng-model="signalValue" ng-change=""/>'+
@@ -47,7 +47,7 @@ var //directive configuration
 		        },
 		        post: function postLink(scope, iElement, iAttrs, controller) {
 		        	var dialog = iElement.find('.signal-body');
-		        	
+
 		        	scope.signalValue = scope.signalEntity[scope.signalField];
 	
 		        	scope.switchSignal = function (state) {		 

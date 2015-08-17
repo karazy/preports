@@ -316,6 +316,18 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "E-Mail eingeben",
 			"EN" : "Enter email"
 		},
+		"report.signal.budget" : {
+			"DE" : "Budget",
+			"EN" : "Budget"
+		},
+		"report.signal.time" : {
+			"DE" : "Time",
+			"EN" : "Time"
+		},
+		"report.signal.quality" : {
+			"DE" : "Quality",
+			"EN" : "Quality"
+		},
 		//general
 		"back" : {
 			"DE" :  "zurück",
