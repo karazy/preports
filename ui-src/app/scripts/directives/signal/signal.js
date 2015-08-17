@@ -15,30 +15,7 @@ var //directive configuration
 			signalField: '@',
 			signalEntity: '='
 		},
-		template: function(element, attrs) {
-			var html,
-				btnClass = attrs.hasOwnProperty('dialogConfirmBtnCls') ? attrs.dialogConfirmBtnCls : "btn-primary";
-
-			html = 
-
-				'<div class="signal">'+
-					'<div class="signal-title" l="{{title}}"></div>'+
-					'<div class="signal-body">'+
-						'<div class="signal-light" ng-class="{red: isActive(1)}" ng-click="switchSignal(\'red\')">'+
-							'<input type="radio" value="1" name="budget" ng-model="signalValue" ng-change=""/>'+
-						'</div>'+
-						'<div class="signal-light" ng-class="{yellow: isActive(2)}" ng-click="switchSignal(\'yellow\')">'+
-							'<input type="radio" value="2" name="budget" ng-model="signalValue" ng-change=""/>'+
-						'</div>'+
-						'<div class="signal-light" ng-class="{green: isActive(3)}" ng-click="switchSignal(\'green\')">'+
-							'<input type="radio" value="3" name="budget" ng-model="signalValue" ng-change=""/>'+
-						'</div>'+
-					'</div>'+
-				'</div>'
-			;
-
-			return html;
-		},
+		templateUrl: 'scripts/directives/signal/signal.html',
 		compile: function(element, attrs, transclude) {
 
 			return {
