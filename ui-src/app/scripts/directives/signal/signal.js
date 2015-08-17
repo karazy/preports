@@ -16,7 +16,7 @@ var //directive configuration
 			signalEntity: '=',
 			signalEnabled: '=',
 		},
-		templateUrl: 'scripts/directives/signal/signal.html',
+		templateUrl: 'views/templates/signal.html',
 		compile: function(element, attrs, transclude) {
 
 			return {
