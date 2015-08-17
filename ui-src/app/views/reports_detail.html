@@ -104,7 +104,7 @@
 		<div class="col-md-6">
 			<p l="report.executivesponsor.title" class="section-header">Executive Sponsor</p>
 			<div simple-property-editor editor-title="report.executivesponsor.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.executivesponsor.ph" editor-required editor-field="executiveSponsor" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
-				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">		<span l="report.executivesponsor.ph" ng-hide="currentReport.executivesponsor" class="simple-property-placeholder" >Executive Sponsor</span>
+				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">		<span l="report.executivesponsor.ph" ng-hide="currentReport.executiveSponsor" class="simple-property-placeholder" >Executive Sponsor</span>
 					{{currentReport.executiveSponsor}}
 				</p>
 			</div>
