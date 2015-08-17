@@ -2,6 +2,8 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 @import 'sass-bootstrap/lib/bootstrap';
 
+@import 'signal';
+
 $global-border-radius: 3px;
 $primary-color: #000;
 $secondary-color: #FF8300;

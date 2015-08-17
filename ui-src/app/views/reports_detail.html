@@ -57,6 +57,13 @@
 	</div>
 	<div class="row section">
 		<div class="col-md-6">
+			<signal title="Budget" signal-field="budgetState" signal-entity="currentReport" on-signal-change="updateReport()"></signal>
+			<signal title="Time" signal-field="timeState" signal-entity="currentReport" on-signal-change="updateReport()"></signal>
+			<signal title="Quality" signal-field="qualityState" signal-entity="currentReport" on-signal-change="updateReport()"></signal>
+		</div>
+	</div>
+	<div class="row section">
+		<div class="col-md-6">
 			<p l="report.start.title" class="section-header">Project start</p>
 			<div simple-property-editor editor-title="report.start.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.start.ph" editor-required editor-field="start" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	

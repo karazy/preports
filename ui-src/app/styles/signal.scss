@@ -1,0 +1,31 @@
+$signal-size: 40px;
+$signal-radius: 50%;
+
+.signal {
+	float: left;
+	margin: 0 10px 0 10px;
+
+	.signal-light {
+		width: $signal-size;
+		height: $signal-size;
+		border-radius: $signal-radius;
+		border: 1px solid #c3c3c3;
+		margin: 3px 0 3px 0;
+
+		&.red {
+			background-color: red;
+		}
+
+		&.yellow {
+			background-color: yellow;
+		}
+
+		&.green {
+			background-color: green;
+		}
+
+		input {
+			display: none;
+		}
+	}
+}
