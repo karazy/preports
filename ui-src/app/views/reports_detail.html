@@ -102,6 +102,25 @@
 	</div>
 	<div class="row section">
 		<div class="col-md-6">
+			<p l="report.executivesponsor.title" class="section-header">Executive Sponsor</p>
+			<div simple-property-editor editor-title="report.executivesponsor.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.executivesponsor.ph" editor-required editor-field="executiveSponsor" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
+				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">		<span l="report.executivesponsor.ph" ng-hide="currentReport.executivesponsor" class="simple-property-placeholder" >Executive Sponsor</span>
+					{{currentReport.executiveSponsor}}
+				</p>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<p l="report.partner.title" class="section-header">Partner</p>
+			<div simple-property-editor editor-title="report.partner.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.partner.ph" editor-required editor-field="partner" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
+				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
+					<span l="report.partner.ph" ng-hide="currentReport.partner" class="simple-property-placeholder" >Partner</span>
+					{{currentReport.partner}}
+				</p>
+			</div>		
+		</div>
+	</div>
+	<div class="row section">
+		<div class="col-md-6">
 			<p l="report.leaddevelopers.title" class="section-header">Lead developers</p>
 			<div simple-property-editor editor-title="report.leaddevelopers.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.leaddevelopers.ph" editor-required editor-field="leadDevelopers" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">		<span l="report.leaddevelopers.ph" ng-hide="currentReport.leadDevelopers" class="simple-property-placeholder" >Project manager</span>
@@ -128,31 +147,15 @@
 				</p>			
 			</div>
 			<div class="row section-row" ng-show="currentReport.milestones.length > 0">
-				<div class="col-md-4 section-info">
-					Name
+				<div class="col-md-3 section-info" l="date">
+					Date
 				</div>
-				<div class="col-md-3 section-info" l="start">
-					Start
-				</div>
-				<div class="col-md-3 section-info" l="end">	
-					End
-				</div>
+				<div class="col-md-7 section-info" l="milestone">
+					Milestone
+				</div>				
 			</div>
 			<div ng-repeat="m in currentReport.milestones" style="margin-bottom: 15px;">
 				<div class="row section-row">
-					<div class="col-md-4">	
-						<div simple-property-editor editor-title="report.milestones" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="report.milestones.ph" editor-required editor-field="name" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">{{m.name}}</p>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div simple-property-editor editor-title="report.milestones.start" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="start" editor-field="start" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
-								<span l="start" ng-hide="currentReport.milestones[$index].start" class="simple-property-placeholder" >Start</span>
-								{{m.start}}
-							</p>
-						</div>
-					</div>
 					<div class="col-md-3">
 						<div simple-property-editor editor-title="report.milestones.end" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="end" editor-field="end" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
@@ -161,6 +164,19 @@
 							</p>
 						</div>
 					</div>
+					<div class="col-md-7">	
+						<div simple-property-editor editor-title="report.milestones" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="report.milestones.ph" editor-required editor-field="name" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
+							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">{{m.name}}</p>
+						</div>
+					</div>
+				<!-- 	<div class="col-md-3">
+						<div simple-property-editor editor-title="report.milestones.start" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="start" editor-field="start" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
+							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
+								<span l="start" ng-hide="currentReport.milestones[$index].start" class="simple-property-placeholder" >Start</span>
+								{{m.start}}
+							</p>
+						</div>
+					</div> -->
 					<div class="col-md-2">
 						<button class="btn btn-warning btn-xs pull-right" ng-click="removeMilestone($index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>
 					</div>

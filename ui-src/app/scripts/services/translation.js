@@ -120,13 +120,29 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Lead developers",
 			"EN" : "Lead developers"
 		},
-		"report.projectmanagers.title" : {
-			"DE" :  "Projektmanager",
-			"EN" : "Project manager"
-		},
 		"report.leaddevelopers.ph" : {
 			"DE" :  "Entwickler eingeben",
 			"EN" : "Enter developers"
+		},
+		"report.executivesponsor.title" : {
+			"DE" :  "Executive Sponsor",
+			"EN" : "Executive Sponsor"
+		},
+		"report.executivesponsor.ph" : {
+			"DE" :  "Executive Sponsor eingeben",
+			"EN" : "Enter executive sponsor"
+		},
+		"report.partner.title" : {
+			"DE" :  "Partner",
+			"EN" : "Partner"
+		},
+		"report.partner.ph" : {
+			"DE" :  "Partner eingeben",
+			"EN" : "Enter partner"
+		},
+		"report.projectmanagers.title" : {
+			"DE" :  "Projektmanager",
+			"EN" : "Project manager"
 		},
 		"report.projectmanagers.ph" : {
 			"DE" :  "Manager eingeben",
@@ -397,6 +413,14 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"name" : {
 			"DE" : "Name",
 			"EN" : "Name"
+		},
+		"date" : {
+			"DE" :  "Datum",
+			"EN" : "Date"
+		},
+		"milestone" : {
+			"DE" :  "Meilenstein",
+			"EN" : "Milestone"
 		},
 		//Property editor
 		"propertyeditor.error.required" : {
