@@ -13,7 +13,8 @@ var //directive configuration
 			title: '@',
 			onSignalChange: '&',
 			signalField: '@',
-			signalEntity: '='
+			signalEntity: '=',
+			signalEnabled: '=',
 		},
 		templateUrl: 'scripts/directives/signal/signal.html',
 		compile: function(element, attrs, transclude) {
@@ -27,25 +28,26 @@ var //directive configuration
 
 		        	scope.signalValue = scope.signalEntity[scope.signalField];
 	
-		        	scope.switchSignal = function (state) {		 
+		        	scope.switchSignal = function (state) {	
 
-		        		//scope.activeState = state;       		
+		        		if(scope.signalEnabled == true || typeof scope.signalEnabled == 'undefined') {
 
-		        		switch(state) {
-		        			case 'red':
-		        				scope.signalEntity[scope.signalField] = 1;
-		        				break;
-		        			case 'yellow':
-		        				scope.signalEntity[scope.signalField] = 2;
-		        				break;
-		        			case 'green':
-		        				scope.signalEntity[scope.signalField] = 3;
-		        				break;
-		        		}
+			        		switch(state) {
+			        			case 'red':
+			        				scope.signalEntity[scope.signalField] = 1;
+			        				break;
+			        			case 'yellow':
+			        				scope.signalEntity[scope.signalField] = 2;
+			        				break;
+			        			case 'green':
+			        				scope.signalEntity[scope.signalField] = 3;
+			        				break;
+			        		}
 
-		        		scope.onSignalChange();
+			        		scope.onSignalChange();
 
-						console.log("Set state to " +scope.signalField);
+							console.log("Set state to " +scope.signalField);
+						}
 
 		        	}
 

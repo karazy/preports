@@ -5,6 +5,16 @@ $signal-radius: 50%;
 	float: left;
 	margin: 0 10px 0 10px;
 
+	.signal-title {
+		text-align: center;
+	}
+
+
+	.signal-body {
+		border: 1px solid black;
+ 		padding: 3px 5px;
+	}
+
 	.signal-light {
 		width: $signal-size;
 		height: $signal-size;
