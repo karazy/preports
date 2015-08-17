@@ -10,8 +10,7 @@ ENV USER_NAME bi-yukon
 # set Bisnode npm registry
 #RUN npm set registry http://npmregistry/
 
-RUN mkdir -p /opt/yukon
-RUN useradd -d /opt/yukon/${APP_TYPE} -ms /bin/bash -k /root/ ${USER_NAME}
+RUN mkdir -p /opt/yukon/node
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 

@@ -2,21 +2,23 @@ preportsweb:
  build: .
  volumes:
   #mount the app from the current folder
-  - .:/opt/yukon/node
+  - /opt/preports:/opt/yukon/node
   #Upload directory for images
-  - /var/preports/upload:/var/preports/upload
+  - /opt/preports-data/upload:/var/preports/upload
  links:
-  - preportsdb
+  - db
  environment:
   - NODE_ENV=production
-  - UPLOAD_DIR=/var/preports/upload
-  - MONGODB_DB_HOST=preportsdb
+  - UPLOAD_DIR=/opt/preports-data/upload
+  - MONGODB_DB_HOST=db
  ports:
   - "0.0.0.0:3000:3000"
  net: "bridge"
-preportsdb:
+ privileged: true
+db:
  image: mongo:3.0.5
  ports:
-  - "127.0.0.1:27018:27017"
+  - "0.0.0.0:27018:27017"
  volumes:
-  - /var/preports/db:/data/db
+  - /opt/preports-data/db:/data/db
+ privileged: true
