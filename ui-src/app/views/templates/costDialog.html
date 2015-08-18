@@ -1,9 +1,4 @@
-<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" data-toggle="modal" data-target="#costDialog"> 
-<span l="report.costs.plan.ph" ng-hide="currentReport.costsCurrent" class="simple-property-placeholder">Current costs</span>    
-  {{currentReport.costsCurrent}}
-</p>
-
-<div class="modal fade" id="costDialog">
+<div class="modal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

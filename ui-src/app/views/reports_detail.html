@@ -82,7 +82,12 @@
 							</p>
 						</div>
 					</td>
-					<td><div ng-include src="'views/templates/costDialog.html'"></div></td>
+					<td>					
+					<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" ng-click="toggleCostDialog()">
+						<span l="report.costs.plan.ph" ng-hide="currentReport.costsCurrent" class="simple-property-placeholder">Current costs</span>    
+					  	{{currentReport.costsCurrent}}
+					</p>
+					</td>
 					<td>{{currentReport.costsRest}}</td>
 					<td>{{currentReport.costsDelta}}</td>
 				</tbody>
@@ -479,3 +484,5 @@
 		</div>
 	</div>
 </div>
+
+<div ng-include src="'views/templates/costDialog.html'" id="costDialog"></div>

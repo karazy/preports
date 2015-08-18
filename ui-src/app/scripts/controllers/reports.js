@@ -1004,6 +1004,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   }
 
+  $scope.toggleCostDialog = function() {
+    var modal = angular.element('#costDialog .modal');
+
+    if(!modal) {
+      console.log('No cost dialog found.');
+    }
+
+    if(!$scope.currentReport.locked) {
+      modal.modal('toggle');  
+    }
+    
+  }
+
   function calcCostsDelta() {
     var delta = $scope.currentReport.costsCurrent / $scope.currentReport.costsPlanned;
     
