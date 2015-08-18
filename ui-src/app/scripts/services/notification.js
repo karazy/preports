@@ -16,7 +16,7 @@ angular.module('PReports.services')
 	* Define dummy send function when no valid provider was found.
 	*/
 	service.send = function() {
-		alert('Notifications not working currently.');
+		alert('No notification provider configured.');
 		$log.log('PReports.services.notification.send: no valid notificationProvider to delegate send to');
 	}
 
