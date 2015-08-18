@@ -999,7 +999,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
       $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
-      $scope.currentReport.costsDelta =  calcCostsDetal();
+      $scope.currentReport.costsDelta =  calcCostsDelta();
     }
     
     
@@ -1007,10 +1007,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   }
 
-  function calcCostsDetal() {
+  function calcCostsDelta() {
     var delta = $scope.currentReport.costsCurrent / $scope.currentReport.costsPlanned;
     
-    delta = Math.round(delta * 100) / 100;
+    //reduce to precision of 2 
+    delta = Math.round(delta * 100);
 
     return delta;
 

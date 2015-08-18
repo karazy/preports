@@ -184,9 +184,9 @@
 			<div ng-repeat="m in currentReport.milestones" style="margin-bottom: 15px;">
 				<div class="row section-row">
 					<div class="col-md-3">
-						<div simple-property-editor editor-title="report.milestones.end" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="end" editor-field="end" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
+						<div simple-property-editor editor-title="report.milestones.end" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="date" editor-field="end" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
-								<span l="end" ng-hide="currentReport.milestones[$index].end" class="simple-property-placeholder" >Start</span>
+								<span l="date" ng-hide="currentReport.milestones[$index].end" class="simple-property-placeholder" >date</span>
 								{{m.end}}
 							</p>
 						</div>

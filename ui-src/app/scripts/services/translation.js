@@ -161,8 +161,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Milestone start"
 		},
 		"report.milestones.end" : {
-			"DE" :  "Meilenstein Ende",
-			"EN" : "Milestone end"
+			"DE" :  "Meilenstein Datum",
+			"EN" : "Milestone date"
 		},
 		"report.milestones.name" : {
 			"DE" :  "Name",
