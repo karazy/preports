@@ -56,6 +56,17 @@
 		<!-- <i class="glyphicon glyphicon-arrow-left"></i>  -->		
 	</div>
 	<div class="row section">
+		<div class="col-md-4">
+			<div simple-property-editor editor-title="report.ordernumber.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.ordernumber.ph" editor-required editor-field="orderNumber" editor-entity="currentReport" editor-enabled="!currentReport.locked">
+				<span l="report.ordernumber.title">#Order</span>
+				<span ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
+				<span l="report.ordernumber.ph" ng-hide="currentReport.orderNumber" class="simple-property-placeholder">Enter Order</span>		
+					{{currentReport.orderNumber}}
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="row section">
 		<!-- Signals -->
 		<div class="col-md-4">
 			<signal title="report.signal.budget" signal-field="budgetState" signal-entity="currentReport" on-signal-change="updateReport()" signal-enabled="!currentReport.locked"></signal>
@@ -73,23 +84,25 @@
 					<th>Δ%</th>
 				</thead>
 				<tbody>
-					<th>COST(total)</th>
-					<td>
-					<div simple-property-editor editor-title="report.costs.plan" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="costsPlanned" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-type="number">			
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
-							<span l="report.costs.plan.ph" ng-hide="currentReport.costsPlanned" class="simple-property-placeholder">Planned costs</span>		
-								{{currentReport.costsPlanned}}
-							</p>
-						</div>
-					</td>
-					<td>					
-					<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" ng-click="toggleCostDialog()">
-						<span l="report.costs.plan.ph" ng-hide="currentReport.costsCurrent" class="simple-property-placeholder">Current costs</span>    
-					  	{{currentReport.costsCurrent}}
-					</p>
-					</td>
-					<td>{{currentReport.costsRest}}</td>
-					<td>{{currentReport.costsDelta}}</td>
+					<tr>
+						<th>COST(total)</th>
+						<td>
+						<div simple-property-editor editor-title="report.costs.plan" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="costsPlanned" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-type="number">			
+								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
+								<span l="report.costs.plan.ph" ng-hide="currentReport.costsPlanned" class="simple-property-placeholder">Planned costs</span>		
+									{{currentReport.costsPlanned}}
+								</p>
+							</div>
+						</td>
+						<td>					
+						<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" ng-click="toggleCostDialog()">
+							<span l="report.costs.plan.ph" ng-hide="currentReport.costsCurrent" class="simple-property-placeholder">Current costs</span>    
+						  	{{currentReport.costsCurrent}}
+						</p>
+						</td>
+						<td>{{currentReport.costsRest}}</td>
+						<td>{{currentReport.costsDelta}}</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
