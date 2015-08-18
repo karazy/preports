@@ -12,8 +12,8 @@ angular.module('PReports.services').provider('config', function() {
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : '',
-		'servicePort' : '',
+		'serviceUrl' : 'http://127.0.0.1',
+		'servicePort' : '3000',
 		'version' : '0.5.1 Fancy Fox',
 		//the notification(emails) provider to use
 		'notificationProvider' : 'com-bisnode-notification',
