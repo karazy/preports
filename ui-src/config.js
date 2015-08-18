@@ -22,7 +22,10 @@ angular.module('PReports.services').provider('config', function() {
 		'currencyFormats' : {
 			'EUR': '$1,$2 €',
 			'USD': '\$ $1.$2'
-		}
+		},
+		'COST_EXTERNAL' : 85,
+		'COST_INTERNAL_BI' : 68,
+		'COST_INTERNAL_IQUEST': 45
 	}
 
 	/**
