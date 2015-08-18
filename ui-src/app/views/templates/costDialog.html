@@ -1,0 +1,40 @@
+<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" data-toggle="modal" data-target="#costDialog"> 
+<span l="report.costs.plan.ph" ng-hide="currentReport.costsCurrent" class="simple-property-placeholder">Current costs</span>    
+  {{currentReport.costsCurrent}}
+</p>
+
+<div class="modal fade" id="costDialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" l="report.costs.dialog.title">Current costs</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="CDINPUT_1" class="col-sm-4 control-label">External</label>
+            <div class="col-sm-8">
+              <input type="number" class="form-control" ng-model="currentReport.hoursExternal" id="CDINPUT_1"/>
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="CDINPUT_2" class="col-sm-4 control-label">Internal BI</label>
+            <div class="col-sm-8">
+              <input type="number" class="form-control" ng-model="currentReport.hoursInternalBi" id="CDINPUT_2"/>
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="CDINPUT_3" class="col-sm-4 control-label">Internal iQuest</label>
+            <div class="col-sm-8">
+              <input type="number" class="form-control" ng-model="currentReport.hoursInternalIQuest" id="CDINPUT_3"/>
+              </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" l="cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="calculateCosts();" l="save">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

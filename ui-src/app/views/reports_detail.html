@@ -77,14 +77,14 @@
 					<td>
 					<div simple-property-editor editor-title="report.costs.plan" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="costsPlanned" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-type="number">			
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
-							<span l="report.costs.plan.ph" ng-hide="currentReport.costsPlanned" class="simple-property-placeholder">Enter start</span>		
+							<span l="report.costs.plan.ph" ng-hide="currentReport.costsPlanned" class="simple-property-placeholder">Planned costs</span>		
 								{{currentReport.costsPlanned}}
 							</p>
 						</div>
 					</td>
-					<td>{{currentReport.costs.current}}</td>
-					<td>{{calculateCosts('rest')}}</td>
-					<td>{{calculateCosts('delta')}}</td>
+					<td><div ng-include src="'views/templates/costDialog.html'"></div></td>
+					<td>{{currentReport.costsRest}}</td>
+					<td>{{currentReport.costsDelta}}</td>
 				</tbody>
 			</table>
 		</div>

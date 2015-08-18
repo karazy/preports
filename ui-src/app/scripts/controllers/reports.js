@@ -5,7 +5,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   helper) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
-        PAGINATION_LIMIT = 25;
+        PAGINATION_LIMIT = 25,
+        COST_INTERNAL_BI = 68,
+        COST_INTERNAL_IQUEST = 45,
+        COST_EXTERNAL = 85;
 
     /**
     * Size of the command queue that holds undo events.
@@ -968,6 +971,51 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   $scope.isUrl = function(url) {
     return helper.isUrl(url);
   }
+
+  $scope.calculateCosts = function() {
+    if(!$scope.currentReport) {
+      console.log('copyReport: no currentReport');
+      return;
+    }
+
+    console.log('calculateCosts');
+
+    $scope.currentReport.costsCurrent = 0;
+    
+    if($scope.currentReport.hoursExternal) {
+      $scope.currentReport.costsCurrent = COST_EXTERNAL * $scope.currentReport.hoursExternal;  
+    }
+
+    if($scope.currentReport.hoursInternalBI) {
+      $scope.currentReport.costsCurrent += COST_INTERNAL_BI * $scope.currentReport.hoursInternalBI;  
+    }
+
+    if($scope.currentReport.hoursInternalIQuest) {
+      $scope.currentReport.costsCurrent += COST_INTERNAL_IQUEST * $scope.currentReport.hoursInternalIQuest;  
+    } 
+
+    //Adjust for display in k€
+    $scope.currentReport.costsCurrent =  $scope.currentReport.costsCurrent / 1000;
+
+    if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
+      $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
+      $scope.currentReport.costsDelta =  calcCostsDetal();
+    }
+    
+    
+    $scope.updateReport();
+
+  }
+
+  function calcCostsDetal() {
+    var delta = $scope.currentReport.costsCurrent / $scope.currentReport.costsPlanned;
+    
+    delta = Math.round(delta * 100) / 100;
+
+    return delta;
+
+  } 
+
 
   /**
   * Stores command in queue and executes it.
