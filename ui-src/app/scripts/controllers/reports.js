@@ -975,40 +975,100 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       return;
     }
 
-    console.log('calculateCosts');
-
-    $scope.currentReport.costsCurrent = 0;
+    var updateCommand = {
+      prev: {
+        hoursExternal: $scope.currentReport.hoursExternal,
+        hoursInternalBI: $scope.currentReport.hoursInternalBI,
+        hoursInternalIQuest: $scope.currentReport.hoursInternalIQuest
+      }
+    };
     
-    if($scope.currentReport.hoursExternal) {
-      $scope.currentReport.costsCurrent = $scope.config.COST_EXTERNAL * $scope.currentReport.hoursExternal;  
+
+    updateCommand.execute = function() {
+          console.log('calculateCosts: execute');
+          var currentCosts = 0;
+              
+          if($scope.temp.costs.hoursExternal) {
+            $scope.currentReport.hoursExternal = $scope.temp.costs.hoursExternal;
+            currentCosts = $scope.config.COST_EXTERNAL * $scope.temp.costs.hoursExternal;  
+          }
+
+          if($scope.temp.costs.hoursInternalBI) {
+            $scope.currentReport.hoursInternalBI = $scope.temp.costs.hoursInternalBI;
+            currentCosts += $scope.config.COST_INTERNAL_BI * $scope.temp.costs.hoursInternalBI;  
+          }
+
+          if($scope.temp.costs.hoursInternalIQuest) {
+            $scope.currentReport.hoursInternalIQuest = $scope.temp.costs.hoursInternalIQuest;
+            currentCosts += $scope.config.COST_INTERNAL_IQUEST * $scope.temp.costs.hoursInternalIQuest;  
+          } 
+
+          //Adjust for display in k€
+          $scope.currentReport.costsCurrent =  currentCosts / 1000;
+
+          if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
+            $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
+            $scope.currentReport.costsDelta =  calcCostsDelta();
+          }
+          
+          $scope.currentReport.$update(angular.noop, handleUpdateError); 
+
+          //remove the temp costs
+          delete $scope.temp.costs;
     }
 
-    if($scope.currentReport.hoursInternalBI) {
-      $scope.currentReport.costsCurrent += $scope.config.COST_INTERNAL_BI * $scope.currentReport.hoursInternalBI;  
+    updateCommand.undo = function() {
+      console.log('calculateCosts: undo');
+      var currentCosts = 0;
+    
+          if(updateCommand.prev.hoursExternal) {
+            $scope.currentReport.hoursExternal = updateCommand.prev.hoursExternal;
+            currentCosts = $scope.config.COST_EXTERNAL * updateCommand.prev.hoursExternal;  
+          }
+
+          if(updateCommand.prev.hoursInternalBI) {
+            $scope.currentReport.hoursInternalBI = updateCommand.prev.hoursInternalBI;
+            currentCosts += $scope.config.COST_INTERNAL_BI * updateCommand.prev.hoursInternalBI;  
+          }
+
+          if(updateCommand.prev.hoursInternalIQuest) {
+            $scope.currentReport.hoursInternalIQuest = updateCommand.prev.hoursInternalIQuest;
+            currentCosts += $scope.config.COST_INTERNAL_IQUEST * updateCommand.prev.hoursInternalIQuest;  
+          } 
+
+          //Adjust for display in k€
+          $scope.currentReport.costsCurrent =  currentCosts / 1000;
+
+          if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
+            $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
+            $scope.currentReport.costsDelta =  calcCostsDelta();
+          }
+          
+          $scope.currentReport.$update(angular.noop, handleUpdateError); 
+
+          //remove the temp costs
+          delete $scope.temp.costs;
     }
 
-    if($scope.currentReport.hoursInternalIQuest) {
-      $scope.currentReport.costsCurrent += $scope.config.COST_INTERNAL_IQUEST * $scope.currentReport.hoursInternalIQuest;  
-    } 
-
-    //Adjust for display in k€
-    $scope.currentReport.costsCurrent =  $scope.currentReport.costsCurrent / 1000;
-
-    if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
-      $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
-      $scope.currentReport.costsDelta =  calcCostsDelta();
-    }
-    
-    
-    $scope.updateReport();
-
+     storeAndExecute(updateCommand);
   }
+
+
 
   $scope.toggleCostDialog = function() {
     var modal = angular.element('#costDialog .modal');
 
     if(!modal) {
       console.log('No cost dialog found.');
+    }
+
+
+    $scope.temp = $scope.temp ? $scope.temp : {};
+
+    $scope.temp.costs = {
+      hoursExternal: $scope.currentReport.hoursExternal,
+      hoursInternalBI: $scope.currentReport.hoursInternalBI,
+      hoursInternalIQuest: $scope.currentReport.hoursInternalIQuest
     }
 
     if(!$scope.currentReport.locked) {

@@ -10,28 +10,28 @@
           <div class="form-group">
             <label for="CDINPUT_1" class="col-sm-4 control-label">External</label>
             <div class="col-sm-4">
-              <input type="number" class="form-control" ng-model="currentReport.hoursExternal" id="CDINPUT_1"/>
+              <input type="number" class="form-control" ng-model="temp.costs.hoursExternal" id="CDINPUT_1"/>
               </div>
               <p class="col-sm-4 form-control-static">
-              * {{config.COST_EXTERNAL}}€ = {{currentReport.hoursExternal*config.COST_EXTERNAL}}
+              * {{config.COST_EXTERNAL}}€ = {{temp.costs.hoursExternal*config.COST_EXTERNAL}}
               </p>
           </div>
           <div class="form-group">
             <label for="CDINPUT_2" class="col-sm-4 control-label">Internal BI</label>
             <div class="col-sm-4">
-              <input type="number" class="form-control" ng-model="currentReport.hoursInternalBI" id="CDINPUT_2"/>
+              <input type="number" class="form-control" ng-model="temp.costs.hoursInternalBI" id="CDINPUT_2"/>
             </div>
             <p class="col-sm-4 form-control-static">
-              * {{config.COST_INTERNAL_BI}}€ = {{currentReport.hoursInternalBI*config.COST_INTERNAL_BI}}
+              * {{config.COST_INTERNAL_BI}}€ = {{temp.costs.hoursInternalBI*config.COST_INTERNAL_BI}}
             </p>
           </div>
           <div class="form-group">
             <label for="CDINPUT_3" class="col-sm-4 control-label">Internal iQuest</label>
             <div class="col-sm-4">
-              <input type="number" class="form-control" ng-model="currentReport.hoursInternalIQuest" id="CDINPUT_3"/>
+              <input type="number" class="form-control" ng-model="temp.costs.hoursInternalIQuest" id="CDINPUT_3"/>
             </div>
             <p class="col-sm-4 form-control-static">
-              * {{config.COST_INTERNAL_IQUEST}}€ = {{currentReport.hoursInternalIQuest*config.COST_INTERNAL_IQUEST}}
+              * {{config.COST_INTERNAL_IQUEST}}€ = {{temp.costs.hoursInternalIQuest*config.COST_INTERNAL_IQUEST}}
               </p>
           </div>
         </form>
