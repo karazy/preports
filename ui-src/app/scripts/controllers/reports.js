@@ -5,10 +5,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   helper) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
-        PAGINATION_LIMIT = 25,
-        COST_INTERNAL_BI = 68,
-        COST_INTERNAL_IQUEST = 45,
-        COST_EXTERNAL = 85;
+        PAGINATION_LIMIT = 25;
 
     /**
     * Size of the command queue that holds undo events.
@@ -983,15 +980,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     $scope.currentReport.costsCurrent = 0;
     
     if($scope.currentReport.hoursExternal) {
-      $scope.currentReport.costsCurrent = COST_EXTERNAL * $scope.currentReport.hoursExternal;  
+      $scope.currentReport.costsCurrent = $scope.config.COST_EXTERNAL * $scope.currentReport.hoursExternal;  
     }
 
     if($scope.currentReport.hoursInternalBI) {
-      $scope.currentReport.costsCurrent += COST_INTERNAL_BI * $scope.currentReport.hoursInternalBI;  
+      $scope.currentReport.costsCurrent += $scope.config.COST_INTERNAL_BI * $scope.currentReport.hoursInternalBI;  
     }
 
     if($scope.currentReport.hoursInternalIQuest) {
-      $scope.currentReport.costsCurrent += COST_INTERNAL_IQUEST * $scope.currentReport.hoursInternalIQuest;  
+      $scope.currentReport.costsCurrent += $scope.config.COST_INTERNAL_IQUEST * $scope.currentReport.hoursInternalIQuest;  
     } 
 
     //Adjust for display in k€
