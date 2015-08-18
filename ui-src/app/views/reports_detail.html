@@ -56,10 +56,37 @@
 		<!-- <i class="glyphicon glyphicon-arrow-left"></i>  -->		
 	</div>
 	<div class="row section">
-		<div class="col-md-6">
+		<!-- Signals -->
+		<div class="col-md-4">
 			<signal title="report.signal.budget" signal-field="budgetState" signal-entity="currentReport" on-signal-change="updateReport()" signal-enabled="!currentReport.locked"></signal>
 			<signal title="report.signal.time" signal-field="timeState" signal-entity="currentReport" on-signal-change="updateReport()" signal-enabled="!currentReport.locked"></signal>
 			<signal title="report.signal.quality" signal-field="qualityState" signal-entity="currentReport" on-signal-change="updateReport()" signal-enabled="!currentReport.locked"></signal>
+		</div>
+		<!-- Costs -->
+		<div class="col-md-8">		
+			<table class="table">
+				<thead>
+					<th>K€</th>
+					<th>Plan</th>
+					<th>Current</th>
+					<th>Rest</th>
+					<th>Δ%</th>
+				</thead>
+				<tbody>
+					<th>COST(total)</th>
+					<td>
+					<div simple-property-editor editor-title="report.costs.plan" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="costsPlanned" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-type="number">			
+							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
+							<span l="report.costs.plan.ph" ng-hide="currentReport.costsPlanned" class="simple-property-placeholder">Enter start</span>		
+								{{currentReport.costsPlanned}}
+							</p>
+						</div>
+					</td>
+					<td>{{currentReport.costs.current}}</td>
+					<td>{{calculateCosts('rest')}}</td>
+					<td>{{calculateCosts('delta')}}</td>
+				</tbody>
+			</table>
 		</div>
 	</div>
 	<div class="row section">
