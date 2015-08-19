@@ -252,7 +252,10 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
         						if(dataElementValue && dataElementValue.length == 1) {
         							dataElementValueLeft = dataElementValue.offset().left - dataElementValue.offsetParent().offset().left;
         							dialog.css('left', dataElementValueLeft);
-        						}	
+        						} else if(iElement.parent().is('td')) {
+        							dataElementValueLeft = iElement.offset().left - iElement.offsetParent().offset().left;
+        							dialog.css('left', dataElementValueLeft);
+        						}
         					} catch(e) {
         						$log.error('simplePropertyEditor: failed to calculate left');
         					}
