@@ -27,8 +27,9 @@
 			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="reports.back">Reports</span></a>
 			<!-- <a href="#/reports/{{currentReport.copyOf}}" ng-show="currentReport.copyOf" class="pull-right"><i class="glyphicon glyphicon-download"></i> <span l="report.copyof">This is a copy.</span></a>		 -->
 		</div>
+		<!-- Action bar -->
 		<div class="col-md-8">
-			<div class="btn-toolbar pull-right" role="toolbar">
+			<div id="actionBar" class="btn-toolbar pull-right" role="toolbar">
 				<button type="button" class="btn btn-info btn-sm" ng-click="removeAndUndoLastCommand();" style="margin-top: 0px;" ng-disabled="commands.length == 0 || ajaxLoading" ng-hide="currentReport.locked"><i class="icon-undo"></i> x {{commands.length}}</button>
 				<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(currentReport)" dialog-confirm-button="copy">
 					<button class="btn btn-primary btn-info copy-button btn-sm" style="margin-top: 0px;"><i class="icon-copy"></i></button>
