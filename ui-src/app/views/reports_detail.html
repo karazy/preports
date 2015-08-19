@@ -148,7 +148,7 @@
 	<div class="row section">
 		<div class="col-md-6">
 			<p l="report.executivesponsor.title" class="section-header">Executive Sponsor</p>
-			<div simple-property-editor editor-title="report.executivesponsor.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.executivesponsor.ph" editor-required editor-field="executiveSponsor" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
+			<div simple-property-editor editor-title="report.executivesponsor.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.executivesponsor.ph" editor-field="executiveSponsor" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">		<span l="report.executivesponsor.ph" ng-hide="currentReport.executiveSponsor" class="simple-property-placeholder" >Executive Sponsor</span>
 					{{currentReport.executiveSponsor}}
 				</p>
@@ -156,7 +156,7 @@
 		</div>
 		<div class="col-md-6">
 			<p l="report.partner.title" class="section-header">Partner</p>
-			<div simple-property-editor editor-title="report.partner.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.partner.ph" editor-required editor-field="partner" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
+			<div simple-property-editor editor-title="report.partner.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.partner.ph" editor-field="partner" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
 					<span l="report.partner.ph" ng-hide="currentReport.partner" class="simple-property-placeholder" >Partner</span>
 					{{currentReport.partner}}
@@ -167,7 +167,7 @@
 	<div class="row section">
 		<div class="col-md-6">
 			<p l="report.leaddevelopers.title" class="section-header">Lead developers</p>
-			<div simple-property-editor editor-title="report.leaddevelopers.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.leaddevelopers.ph" editor-required editor-field="leadDevelopers" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
+			<div simple-property-editor editor-title="report.leaddevelopers.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.leaddevelopers.ph" editor-field="leadDevelopers" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">		<span l="report.leaddevelopers.ph" ng-hide="currentReport.leadDevelopers" class="simple-property-placeholder" >Project manager</span>
 					{{currentReport.leadDevelopers}}
 				</p>
@@ -175,7 +175,7 @@
 		</div>
 		<div class="col-md-6">
 			<p l="report.projectmanagers.title" class="section-header">Project manager</p>
-			<div simple-property-editor editor-title="report.projectmanagers.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.projectmanagers.ph" editor-required editor-field="projectManagers" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
+			<div simple-property-editor editor-title="report.projectmanagers.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.projectmanagers.ph" editor-field="projectManagers" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
 					<span l="report.projectmanagers.ph" ng-hide="currentReport.projectManagers" class="simple-property-placeholder" >Project manager</span>
 					{{currentReport.projectManagers}}

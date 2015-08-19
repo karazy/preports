@@ -1009,6 +1009,9 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
             $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
             $scope.currentReport.costsDelta =  calcCostsDelta();
+          } else {
+            $scope.currentReport.costsRest = null;
+            $scope.currentReport.costsDelta = null;
           }
           
           $scope.currentReport.$update(angular.noop, handleUpdateError); 
