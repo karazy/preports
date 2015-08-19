@@ -5,33 +5,33 @@
         <h4 class="modal-title" l="report.costs.dialog.title">Current costs</h4>
       </div>
       <div class="modal-body">
-        <p>Enter hours spend on the project.</p>
+        <p l="report.costs.dialog.msg">Enter hours spend on the project.</p>
         <form class="form-horizontal">
           <div class="form-group">
-            <label for="CDINPUT_1" class="col-sm-4 control-label">External</label>
+            <label for="CDINPUT_1" class="col-sm-4 control-label" l="report.dialog.costs.external">External</label>
             <div class="col-sm-4">
               <input type="number" class="form-control" ng-model="temp.costs.hoursExternal" id="CDINPUT_1"/>
               </div>
               <p class="col-sm-4 form-control-static">
-              * {{config.COST_EXTERNAL}}€ = {{temp.costs.hoursExternal*config.COST_EXTERNAL}}
+              h * {{config.COST_EXTERNAL}}€ = {{temp.costs.hoursExternal*config.COST_EXTERNAL}}
               </p>
           </div>
           <div class="form-group">
-            <label for="CDINPUT_2" class="col-sm-4 control-label">Internal BI</label>
+            <label for="CDINPUT_2" class="col-sm-4 control-label" l="report.dialog.costs.internal.bi">Internal BI</label>
             <div class="col-sm-4">
               <input type="number" class="form-control" ng-model="temp.costs.hoursInternalBI" id="CDINPUT_2"/>
             </div>
             <p class="col-sm-4 form-control-static">
-              * {{config.COST_INTERNAL_BI}}€ = {{temp.costs.hoursInternalBI*config.COST_INTERNAL_BI}}
+              h * {{config.COST_INTERNAL_BI}}€ = {{temp.costs.hoursInternalBI*config.COST_INTERNAL_BI}}
             </p>
           </div>
           <div class="form-group">
-            <label for="CDINPUT_3" class="col-sm-4 control-label">Internal iQuest</label>
+            <label for="CDINPUT_3" class="col-sm-4 control-label" l="report.dialog.costs.internal.iquest">Internal iQuest</label>
             <div class="col-sm-4">
               <input type="number" class="form-control" ng-model="temp.costs.hoursInternalIQuest" id="CDINPUT_3"/>
             </div>
             <p class="col-sm-4 form-control-static">
-              * {{config.COST_INTERNAL_IQUEST}}€ = {{temp.costs.hoursInternalIQuest*config.COST_INTERNAL_IQUEST}}
+              h * {{config.COST_INTERNAL_IQUEST}}€ = {{temp.costs.hoursInternalIQuest*config.COST_INTERNAL_IQUEST}}
               </p>
           </div>
         </form>

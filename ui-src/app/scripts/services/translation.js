@@ -344,6 +344,54 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "Quality",
 			"EN" : "Quality"
 		},
+		"report.costs.table.th.title" : {
+			"DE" : "K€",
+			"EN" : "K€"
+		},
+		"report.costs.table.th.current" : {
+			"DE" : "Aktuell",
+			"EN" : "Current"
+		},
+		"report.costs.table.th.rest" : {
+			"DE" : "Rest",
+			"EN" : "Rest"
+		},
+		"report.costs.table.tr.title" : {
+			"DE" : "Kosten(total)",
+			"EN" : "COST(total)"
+		},
+		"report.costs.plan" : {
+			"DE" : "Geplant",
+			"EN" : "Plan"
+		},
+		"report.costs.plan.ph" : {
+			"DE" : "Eingabe in K€",
+			"EN" : "Enter in K€"
+		},
+		"report.costs.current.ph" : {
+			"DE" : "Aktuelle Kosten",
+			"EN" : "Current costs"
+		},
+		"report.costs.dialog.title": {
+			"DE" : "Kostenberechnung in Projektstunden",
+			"EN" : "Costs calculations in project hours"
+		},
+		"report.costs.dialog.msg": {
+			"DE" : "Geben Sie die aufgewendeten Projektstunden ein.",
+			"EN" : "Enter hours spend in project."
+		},
+		"report.dialog.costs.external" : {
+			"DE" : "Extern",
+			"EN" : "External"
+		},
+		"report.dialog.costs.internal.bi" : {
+			"DE" : "Intern BI",
+			"EN" : "Internal BI"
+		},
+		"report.dialog.costs.internal.iquest" : {
+			"DE" : "Intern iQuest",
+			"EN" : "Internal iQuest"
+		},
 		//general
 		"back" : {
 			"DE" :  "zurück",

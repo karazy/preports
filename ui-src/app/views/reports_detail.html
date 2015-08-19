@@ -77,17 +77,17 @@
 		<div class="col-md-8">		
 			<table class="table">
 				<thead>
-					<th>K€</th>
-					<th>Plan</th>
-					<th>Current</th>
-					<th>Rest</th>
+					<th l="report.costs.table.th.title">K€</th>
+					<th l="report.costs.table.th.plan">Plan</th>
+					<th l="report.costs.table.th.current">Current</th>
+					<th l="report.costs.table.th.rest">Rest</th>
 					<th>Δ%</th>
 				</thead>
 				<tbody>
 					<tr>
-						<th>COST(total)</th>
+						<th l="report.costs.table.tr.title">COST(total)</th>
 						<td>
-						<div simple-property-editor editor-title="report.costs.plan" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="costsPlanned" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-type="number">			
+						<div simple-property-editor editor-title="report.costs.plan" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="costsPlanned" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-type="number" editor-placeholder="report.costs.plan.ph">			
 								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
 								<span l="report.costs.plan.ph" ng-hide="currentReport.costsPlanned" class="simple-property-placeholder">Planned costs</span>		
 									{{currentReport.costsPlanned}}
@@ -96,7 +96,7 @@
 						</td>
 						<td>					
 						<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" ng-click="toggleCostDialog()">
-							<span l="report.costs.plan.ph" ng-hide="currentReport.costsCurrent" class="simple-property-placeholder">Current costs</span>    
+							<span l="report.costs.current.ph" ng-hide="currentReport.costsCurrent" class="simple-property-placeholder">Current costs</span>    
 						  	{{currentReport.costsCurrent}}
 						</p>
 						</td>
