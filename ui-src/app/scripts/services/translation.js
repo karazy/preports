@@ -400,6 +400,30 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "SAP Nummer eingeben",
 			"EN" : "Enter SAP number"
 		},
+		"report.time.plan.title": {
+			"DE" : "Plan",
+			"EN" : "Plan"
+		},
+		"report.time.current.title": {
+			"DE" : "Aktuell",
+			"EN" : "Current"
+		},
+		"report.time.plan": {
+			"DE" : "Plan",
+			"EN" : "Plan"
+		},
+		"report.time.plan.ph": {
+			"DE" : "Geplanter GoLive",
+			"EN" : "Planned GoLive"
+		},
+		"report.time.current": {
+			"DE" : "Aktuell",
+			"EN" : "Current"
+		},
+		"report.time.current.ph": {
+			"DE" : "Aktueller GoLive",
+			"EN" : "Current GoLive"
+		},
 		//general
 		"back" : {
 			"DE" :  "zurück",

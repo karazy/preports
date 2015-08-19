@@ -105,8 +105,38 @@
 					</tr>
 				</tbody>
 			</table>
+			<table class="table">
+				<thead>
+					<th></th>
+					<th l="report.time.plan.title">Plan</th>
+					<th l="report.time.current.title">Current</th>
+				</thead>
+				<tbody>
+					<tr>
+						<th>Time</th>
+						<td>
+						<div simple-property-editor editor-title="report.time.plan" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="timePlanned" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-placeholder="report.time.plan.ph">			
+								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
+								<span l="report.time.plan.ph" ng-hide="currentReport.timePlanned" class="simple-property-placeholder">GoLive planned</span>		
+									{{currentReport.timePlanned}}
+								</p>
+							</div>
+						</td>
+						<td>
+							<div simple-property-editor editor-title="report.time.current" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="timeCurrent" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-placeholder="report.time.current.ph">			
+								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
+								<span l="report.time.current.ph" ng-hide="currentReport.timeCurrent" class="simple-property-placeholder">Current time</span>		
+									{{currentReport.timeCurrent}}
+								</p>
+							</div>							
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
+	<!--@Deprecated Start and GoLive. -->
+	<!--
 	<div class="row section">
 		<div class="col-md-6">
 			<p l="report.start.title" class="section-header">Project start</p>
@@ -127,6 +157,7 @@
 			</div>		
 		</div>
 	</div>
+	-->
 	<div class="row section">
 		<div class="col-md-6">
 			<p l="report.year" class="section-header">Year</p>
