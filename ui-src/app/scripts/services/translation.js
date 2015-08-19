@@ -424,6 +424,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "Aktueller GoLive",
 			"EN" : "Current GoLive"
 		},
+		"report.time.time.title": {
+			"DE" : "Zeit",
+			"EN" : "Time"
+		},
 		//general
 		"back" : {
 			"DE" :  "zurück",

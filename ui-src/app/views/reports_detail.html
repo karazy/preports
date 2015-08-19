@@ -114,7 +114,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<th>Time</th>
+						<th l="report.time.time.title">Time</th>
 						<td>
 						<div simple-property-editor editor-title="report.time.plan" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="timePlanned" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-placeholder="report.time.plan.ph">			
 								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
