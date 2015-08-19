@@ -169,12 +169,12 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Name"
 		},
 		"report.lastweektasks" : {
-			"DE" :  "Aufgaben letzte Woche",
-			"EN" : "Last week tasks"
+			"DE" :  "Ergebnisse",
+			"EN" : "Achievements"
 		},
 		"report.nextweektasks" : {
-			"DE" :  "Aufgaben nächste Woche",
-			"EN" : "Nextweek tasks"
+			"DE" :  "Nächste Aufgaben",
+			"EN" : "Next objectives"
 		},
 		"report.tasks.ph" : {
 			"DE" :  "Aufgaben eingeben",
