@@ -975,11 +975,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       return;
     }
 
+    //save prev values
     var updateCommand = {
       prev: {
         hoursExternal: $scope.currentReport.hoursExternal,
         hoursInternalBI: $scope.currentReport.hoursInternalBI,
-        hoursInternalIQuest: $scope.currentReport.hoursInternalIQuest
+        hoursInternalIQuest: $scope.currentReport.hoursInternalIQuest,
+        costsCurrent: $scope.currentReport.costsCurrent,
+        costsRest: $scope.currentReport.costsRest,
+        costsDelta: $scope.currentReport.costsDelta
       }
     };
     
@@ -1004,11 +1008,13 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           } 
 
           //Adjust for display in k€
-          $scope.currentReport.costsCurrent =  currentCosts / 1000;
+          currentCosts =  currentCosts / 1000;
+
+          $scope.currentReport.costsCurrent = Math.round(currentCosts);
 
           if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
             $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
-            $scope.currentReport.costsDelta =  calcCostsDelta();
+            $scope.currentReport.costsDelta =  calcCostsDelta($scope.currentReport.costsCurrent, $scope.currentReport.costsPlanned);
           } else {
             $scope.currentReport.costsRest = null;
             $scope.currentReport.costsDelta = null;
@@ -1022,35 +1028,18 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     updateCommand.undo = function() {
       console.log('calculateCosts: undo');
-      var currentCosts = 0;
-    
-          if(updateCommand.prev.hoursExternal) {
-            $scope.currentReport.hoursExternal = updateCommand.prev.hoursExternal;
-            currentCosts = $scope.config.COST_EXTERNAL * updateCommand.prev.hoursExternal;  
-          }
+      //restore previous values
+      $scope.currentReport.hoursExternal = updateCommand.prev.hoursExternal;
+      $scope.currentReport.hoursInternalBI = updateCommand.prev.hoursInternalBI;
+      $scope.currentReport.hoursInternalIQuest = updateCommand.prev.hoursInternalIQuest;
+      $scope.currentReport.costsCurrent =  updateCommand.prev.costsCurrent;
+      $scope.currentReport.costsRest =  updateCommand.prev.costsRest;
+      $scope.currentReport.costsDelta =  updateCommand.prev.costsDelta;
+      
+      $scope.currentReport.$update(angular.noop, handleUpdateError); 
 
-          if(updateCommand.prev.hoursInternalBI) {
-            $scope.currentReport.hoursInternalBI = updateCommand.prev.hoursInternalBI;
-            currentCosts += $scope.config.COST_INTERNAL_BI * updateCommand.prev.hoursInternalBI;  
-          }
-
-          if(updateCommand.prev.hoursInternalIQuest) {
-            $scope.currentReport.hoursInternalIQuest = updateCommand.prev.hoursInternalIQuest;
-            currentCosts += $scope.config.COST_INTERNAL_IQUEST * updateCommand.prev.hoursInternalIQuest;  
-          } 
-
-          //Adjust for display in k€
-          $scope.currentReport.costsCurrent =  currentCosts / 1000;
-
-          if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
-            $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
-            $scope.currentReport.costsDelta =  calcCostsDelta();
-          }
-          
-          $scope.currentReport.$update(angular.noop, handleUpdateError); 
-
-          //remove the temp costs
-          delete $scope.temp.costs;
+      //remove the temp costs
+      delete $scope.temp.costs;
     }
 
      storeAndExecute(updateCommand);
@@ -1067,7 +1056,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
 
     $scope.temp = $scope.temp ? $scope.temp : {};
-
+    //fill dialog with temporary cost values
+    //needed to provide undo functionality
     $scope.temp.costs = {
       hoursExternal: $scope.currentReport.hoursExternal,
       hoursInternalBI: $scope.currentReport.hoursInternalBI,
@@ -1080,8 +1070,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     
   }
 
-  function calcCostsDelta() {
-    var delta = $scope.currentReport.costsCurrent / $scope.currentReport.costsPlanned;
+  function calcCostsDelta(current, planned) {
+    var delta = current / planned;
     
     //reduce to precision of 2 
     delta = Math.round(delta * 100);
@@ -1153,6 +1143,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         $log.log('removeAndUndoLastCommand: no commands in queue');
       }
       
+  }
+
+  $scope.isZero = function(value) {
+    return helper.isZero(value);
   }
 
  	function loadProjectNames() {

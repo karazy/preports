@@ -48,6 +48,14 @@ angular.module('PReports.services').factory('helper', function() {
 	    }
 
 	    return regexp.test(url);
+  	},
+
+  	isZero : function(value) {
+  		if(value === 0) {
+  			return true;
+  		}
+
+  		return false;
   	}
   };
 
