@@ -392,6 +392,14 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "Intern iQuest",
 			"EN" : "Internal iQuest"
 		},
+		"report.ordernumber.title": {
+			"DE" : "#Order",
+			"EN" : "#Order"
+		},
+		"report.ordernumber.ph": {
+			"DE" : "SAP Nummer eingeben",
+			"EN" : "Enter SAP number"
+		},
 		//general
 		"back" : {
 			"DE" :  "zurück",
