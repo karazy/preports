@@ -44,6 +44,24 @@ PReports.NavigationCtrl =  function ($scope, $route, language, config, $location
  		});
  	}
 
+ 	/**
+ 	* Checks if the page is embeded in an iFrame.
+ 	*
+ 	* @return true if in iFrame
+ 	*/
+ 	$scope.inIFrame = function() {
+ 		var inIFrame = true;
+	    try {
+	        inIFrame = window.self !== window.top;
+	    } catch (e) {
+	        return true;
+	    }
+
+	    console.log("App embeded in iFrame " + inIFrame);
+
+	    return inIFrame;
+ 	}
+
 	readUserLanguage();
 
 	if($location.path() == '/about') {
