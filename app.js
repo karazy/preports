@@ -2,10 +2,24 @@ var http = require('http');
 var express = require('express');
 var reports = require('./routes/reports');
 var crucible = require('./routes/crucible');
+var auth = require('./auth/authstrategy');
+var passport = require('./config/passport');
+var config = require('./config/environment');
 
 var app = express();
 
+//Skip validation if SHELL_NO_CAS == true
+if(process.env.SHELL_NO_CAS == "true") {
+    console.log('Found SHELL_NO_CAS = true. Disabled CAS authentication! Don\'t use for production.');
+    config.authentication.disabled = true;
+}
+
+
+
+
 var App = function() {
+
+    passport.initialize(app);
 
     // Scope
     var self = this;
@@ -62,6 +76,10 @@ var App = function() {
 
 
     //define routes
+    app.get('/login', auth.casAuth, function(req, res) {
+        console.log("route '/login' called ");
+    });
+
     self.app.get('/', function(req, res) {
         console.log('Displaying options');
         res.status(200);
@@ -77,19 +95,20 @@ var App = function() {
         res.end();
     });
 
-//Reports CRUD API
-    self.app.get('/reports', reports.getAll);
-    self.app.get('/reports/names', reports.getProjectNames);
-    self.app.get('/reports/count', reports.getReportsCount);
-    self.app.get('/reports/:id', reports.getById);
-    self.app.get('/reports/:id/images', reports.getReportImages);
-    self.app.post('/reports', reports.createReport);
-    self.app.put('/reports/:id', reports.updateReport);
-    self.app.post('/reports/:id/images', reports.uploadImage);
-    self.app.get('/reports/:id/images/:imgId', reports.getImage);
-    self.app.delete('/reports/:id/images/:imgId', reports.deleteImage);
-    self.app.delete('/reports/:id', reports.deleteReport);
-    self.app.get('/crucible/:id', crucible.getCrucible);
+
+    //Reports CRUD API
+    self.app.get('/reports', auth.ensureAuthenticated, reports.getAll);
+    self.app.get('/reports/names', auth.ensureAuthenticated, reports.getProjectNames);
+    self.app.get('/reports/count', auth.ensureAuthenticated, reports.getReportsCount);
+    self.app.get('/reports/:id', auth.ensureAuthenticated, reports.getById);
+    self.app.get('/reports/:id/images', auth.ensureAuthenticated, reports.getReportImages);
+    self.app.post('/reports', auth.ensureAuthenticated, reports.createReport);
+    self.app.put('/reports/:id', auth.ensureAuthenticated, reports.updateReport);
+    self.app.post('/reports/:id/images', auth.ensureAuthenticated, reports.uploadImage);
+    self.app.get('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.getImage);
+    self.app.delete('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.deleteImage);
+    self.app.delete('/reports/:id', auth.ensureAuthenticated, reports.deleteReport);
+    self.app.get('/crucible/:id', auth.ensureAuthenticated, crucible.getCrucible);
 
 //starting the nodejs server with express
     self.startServer = function() {

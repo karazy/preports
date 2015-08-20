@@ -23,14 +23,21 @@
   "dependencies": {
     "express": "3.4.8",
     "fs-extra": "~0.8.1",
+    "lodash": "^3.10.1",
     "mongodb": "^2.0.39",
     "mv": "1.0.0",
     "node-json2html": "~0.4.1",
-    "pdfkit": "~0.2.7"
+    "node-uuid": "^1.4.3",
+    "passport": "^0.2.2",
+    "passport-cas": "^0.1.0",
+    "pdfkit": "~0.2.7",
+    "winston": "^1.0.1"
   },
   "devDependencies": {},
   "bundleDependencies": [],
   "private": true,
   "main": "app.js",
-  "scripts": {"start" : "app.js"}
+  "scripts": {
+    "start": "app.js"
+  }
 }
