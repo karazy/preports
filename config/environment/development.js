@@ -12,13 +12,11 @@ function getConfigRootPath() {
 	}
 }
 
-console.log("env/development.js");
-
-module.exports = {
+var config = {
 	'ip':    '0.0.0.0',
 
   // Server port
-  	'port':     9000,
+  	'port':     3000,
   	'protocol': 'http',
 	  //MongoDB connection options
 	 'mongo': {
@@ -50,3 +48,6 @@ module.exports = {
       'logFile': getConfigRootPath() + '/shell.log'
     }
 };
+
+
+module.exports = config;

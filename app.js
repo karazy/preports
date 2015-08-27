@@ -6,11 +6,9 @@ var auth = require('./auth/authstrategy');
 var passport = require('./config/passport');
 var config = require('./config/environment');
 
-var app = express();
-
-//Skip validation if SHELL_NO_CAS == true
-if(process.env.SHELL_NO_CAS == "true") {
-    console.log('Found SHELL_NO_CAS = true. Disabled CAS authentication! Don\'t use for production.');
+//Skip validation if DISABLE_CAS == true
+if(process.env.DISABLE_CAS == "true") {
+    console.log('Found DISABLE_CAS = true. Disabled CAS authentication! Don\'t use for production.');
     config.authentication.disabled = true;
 }
 
@@ -18,8 +16,6 @@ if(process.env.SHELL_NO_CAS == "true") {
 
 
 var App = function() {
-
-    passport.initialize(app);
 
     // Scope
     var self = this;
@@ -51,21 +47,26 @@ var App = function() {
 
 
 
-//define usages
+    //define usages
     self.app.configure(function() {
+        //Be sure to stick to the initialization order!
+        //Otherwise problems are likely.
         self.app.use('/', express.static(__dirname + '/www'));
         self.app.use(express.bodyParser({
             keepExtensions: true
         }));
         self.app.use(express.methodOverride());
-        self.app.use(allowCrossDomain);
+        self.app.use(allowCrossDomain);        
+
+        passport.initialize(self.app);
+
         self.app.use(self.app.router);
+
 
         if (typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
             self.dbConnect = "mongodb://" + self.dbHost + ":" + self.dbPort + "/preports";
-
         } else {
-            console.log("logon with user: " + process.env.OPENSHIFT_MONGODB_DB_USERNAME);
+            console.log("mongo logon with user: " + process.env.OPENSHIFT_MONGODB_DB_USERNAME);
             self.dbConnect = "mongodb://" + process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":"
                     + process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@"
                     + self.dbHost + ":" + self.dbPort + "/preports";
@@ -76,7 +77,7 @@ var App = function() {
 
 
     //define routes
-    app.get('/login', auth.casAuth, function(req, res) {
+    self.app.get('/login', auth.casAuth, function(req, res) {
         console.log("route '/login' called ");
     });
 
@@ -86,11 +87,7 @@ var App = function() {
         res.send('<h1>preports - service</h1>' +
                 '<h3>API</h3>'+
                 '<p><a href="/reports">GET /reports</a></p>' +
-                '<p>To retrieve reports in json use accept application/hal+json or application/json</p>'+
-                '<h3>APP</h3>'+
-                '<p>This is the preports service. The app has moved to another URL:</p>'+
-                // '<h2>Frontend</2h>'+
-                '<p><a href="http://preports-reifschneider.paas.pironet-ndh.com">preports app</a></p>'
+                '<p>To retrieve reports in json use accept application/hal+json or application/json</p>'
                 );
         res.end();
     });
@@ -108,6 +105,7 @@ var App = function() {
     self.app.get('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.getImage);
     self.app.delete('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.deleteImage);
     self.app.delete('/reports/:id', auth.ensureAuthenticated, reports.deleteReport);
+
     self.app.get('/crucible/:id', auth.ensureAuthenticated, crucible.getCrucible);
 
 //starting the nodejs server with express
@@ -146,7 +144,7 @@ var App = function() {
 
 };
 
-//make a new express app
+//create the app
 var app = new App();
 
 //call the connectDb function and pass in the start server command
