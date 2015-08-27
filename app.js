@@ -110,6 +110,7 @@ var App = function() {
     self.app.get('/reports/names', auth.ensureAuthenticated, reports.getProjectNames);
     self.app.get('/reports/count', auth.ensureAuthenticated, reports.getReportsCount);
     self.app.get('/reports/:id', auth.ensureAuthenticated, reports.getById);
+    self.app.get('/reports/:id/version', auth.ensureAuthenticated, reports.getReportVersion);
     self.app.get('/reports/:id/images', auth.ensureAuthenticated, reports.getReportImages);
     self.app.post('/reports', auth.ensureAuthenticated, reports.createReport);
     self.app.put('/reports/:id', auth.ensureAuthenticated, reports.updateReport);

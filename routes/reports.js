@@ -509,6 +509,7 @@ exports.createReport = function(req, res) {
 		debugObject(req.body, 'Insert new report');
 
 		reportToSave.lastModified = modifyDate;
+		reportToSave.version = 1;
 
 		//This is a copy report. Assign new image ids.
 		if(reportToSave.copyOf && reportToSave.images) {
@@ -604,8 +605,6 @@ exports.updateReport = function(req, res) {
 
 	function doUpdate(reports) {
 		docToUpdate.lastModified = lastModified;
-
-		// docToUpdate.version = 
 		
 
 		reports.updateOne({'_id': ObjectID.createFromHexString(_id)}, docToUpdate, function(err, numberOfUpdatedDocs) {
@@ -616,23 +615,109 @@ exports.updateReport = function(req, res) {
 				return;
 			}
 
-			reports.updateOne({'_id': ObjectID.createFromHexString(_id)}, { $inc: { version: 1 } }, function(err, numberOfUpdatedDocs) {
-				docToUpdate._id = _id;
-				//save an additional db load and manually increase version
-				if(docToUpdate.version) {
-					docToUpdate.version++;	
+			updateReportVersion(_id, docToUpdate, reports, function(success, reportWIncreasedVersion) {
+
+				if(success) {
+					res.send(200, reportWIncreasedVersion);
+					res.end();	
 				} else {
-					docToUpdate.version = 1;
+					res.send(500);
 				}
 				
-				console.log('Updated ' + _id + '  report. New version ' + docToUpdate.version);
-				res.send(200, docToUpdate);
-				res.end();
 			});
+
+			// reports.updateOne({'_id': ObjectID.createFromHexString(_id)}, { $inc: { version: 1 } }, function(err, numberOfUpdatedDocs) {
+			// 	docToUpdate._id = _id;
+			// 	//save an additional db load and manually increase version
+			// 	if(docToUpdate.version) {
+			// 		docToUpdate.version++;	
+			// 	} else {
+			// 		docToUpdate.version = 1;
+			// 	}
+				
+			// 	console.log('Updated ' + _id + '  report. New version ' + docToUpdate.version);
+			// 	res.send(200, docToUpdate);
+			// 	res.end();
+			// });
 
 			
         });
 	}
+}
+
+/**
+* Increases the version of a given report.
+* 
+*/
+updateReportVersion = function(_id, report, collection, callback) {
+	if(!_id || !report || !collection) {
+		console.log('updateReportVersion: param requirements not met');
+		return;
+	}
+
+	collection.updateOne({'_id': ObjectID.createFromHexString(_id)}, { $inc: { version: 1 } }, function(err, numberOfUpdatedDocs) {
+		report._id = _id;
+		//save an additional db load and manually increase version
+		if(report.version) {
+			report.version++;	
+		} else {
+			report.version = 1;
+		}
+		
+		console.log('Updated ' + _id + '  report. New version ' + report.version);
+		
+		if(!callback) {
+			return;
+		}
+
+		if(!err) {
+			callback(true, report);	
+		} else {
+			console.log(err);
+			callback(false);
+		}
+		
+	});
+
+}
+
+/**
+* Get version of a report.
+*/
+exports.getReportVersion = function(req, res) {
+	var _id = req.params.id;
+	
+	if(!_id) {
+		console.log('updateReportVersion: param requirements not met');
+		return;
+	}
+
+	getReportsCollection(callback);
+
+	function callback(error, reports) {
+		if(error) {
+			res.send(500);
+			res.end();
+			return;
+		}
+
+		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, {'version':1}, function(err, item) {
+			if(err) {
+				console.log(err);
+				res.send(500);
+				return;
+			}
+
+			if(!item) {
+				res.send(404);
+				return;
+			}
+
+			res.send(200, item);
+			res.end();
+		});
+	}
+
 }
 
 exports.deleteReport = function(req, res) {
@@ -935,8 +1020,9 @@ exports.deleteImage = function(req, res) {
 						console.log('deleteImage: file already deleted? ' + err);
 						//continue nevertheless also the file may still exist					
 					}
+					debugger;
 					res.send(200);
-				res.end();
+					res.end();
 				});
 				
 	        });		
