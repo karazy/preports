@@ -2,6 +2,7 @@ var http = require('http');
 var express = require('express');
 var session = require('express-session');
 var reports = require('./routes/reports');
+var logout = require('./routes/logout/logout.controller');
 var crucible = require('./routes/crucible');
 var auth = require('./auth/authstrategy');
 var passport = require('./config/passport');
@@ -87,6 +88,10 @@ var App = function() {
     self.app.get('/login', auth.casAuth, function(req, res) {
         console.log("route '/login' called ");
     });
+
+    //FIXME supported only with express 4.x
+    //self.app.use('/api/logout', require('./routes/logout'));
+    self.app.get('/logout', auth.logOut, logout.index);
 
     self.app.get('/', function(req, res) {
         console.log('Displaying options');

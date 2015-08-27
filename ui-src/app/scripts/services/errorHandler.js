@@ -79,5 +79,5 @@ angular.module('PReports.services').factory('notAuthenticatedInterceptor', ['$lo
 * Add angular.module('PReports.services').notAuthenticatedInterceptor as $http interceptor.
 */
 angular.module('PReports.services').config(['$httpProvider', function($httpProvider) {
-  $httpProvider.responseInterceptors.push('notAuthenticatedInterceptor');
+  //$httpProvider.responseInterceptors.push('notAuthenticatedInterceptor');
 }]);
