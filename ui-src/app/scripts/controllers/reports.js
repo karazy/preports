@@ -865,6 +865,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     					return false;
     				}
     			});
+
+        loadReportVersion($scope.currentReport, function(versionInfo) {
+          $scope.currentReport.version = versionInfo.version;
+        });
+
   		  }).error(errorHandler);
     }
 
@@ -908,8 +913,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
      });
 
      	uploader.bind('completeall', function (event, items) {
-      		//reload report
-            // $scope.loadReport($scope.currentReport._id);
+      		//Update report with latest version.
+          loadReportVersion($scope.currentReport, function(versionInfo) {
+            $scope.currentReport.version = versionInfo.version;
+          });
+        
         });
 
         uploader.bind('error', function( event, xhr, item, response) {
@@ -1171,6 +1179,21 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       //always convert to int before saving
       report.year = parseInt(report.year);
       report.week = parseInt(report.week);
+  }
+
+  /**
+  * Load version information for given report.
+  */
+  function loadReportVersion(report, callback) {
+    if(!report) {
+      console.log('loadReportVersion: no report given');
+      return;
+    }
+    $http.get(config.getCombinedServiceUrl() + report._links.self.href + '/version').success(function(versionInfo) {
+      console.log('Retrieved version ' + versionInfo.version + ' for report id ' + versionInfo._id);
+      callback(versionInfo);
+    }).error(errorHandler);
+    return;
   }
 
   	

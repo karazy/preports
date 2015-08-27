@@ -57,7 +57,7 @@ PReports.NavigationCtrl =  function ($scope, $route, language, config, $location
 	        return true;
 	    }
 
-	    console.log("App embeded in iFrame " + inIFrame);
+	    //console.log("App embeded in iFrame " + inIFrame);
 
 	    return inIFrame;
  	}

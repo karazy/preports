@@ -686,7 +686,7 @@ updateReportVersion = function(_id, report, collection, callback) {
 */
 exports.getReportVersion = function(req, res) {
 	var _id = req.params.id;
-	
+
 	if(!_id) {
 		console.log('updateReportVersion: param requirements not met');
 		return;
@@ -1020,8 +1020,8 @@ exports.deleteImage = function(req, res) {
 						console.log('deleteImage: file already deleted? ' + err);
 						//continue nevertheless also the file may still exist					
 					}
-					debugger;
-					res.send(200);
+
+					res.send(204);
 					res.end();
 				});
 				
