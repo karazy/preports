@@ -9,7 +9,7 @@ preportsweb:
   - db
  environment:
   - NODE_ENV=production
-  - UPLOAD_DIR=/opt/preports-data/upload
+  - UPLOAD_DIR=/var/preports/upload
   - MONGODB_DB_HOST=db
   - DISABLE_CAS=true
  ports:
