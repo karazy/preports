@@ -58,7 +58,11 @@ module.exports = function() {
                     return next(err);
                 }
 
-                //req.session.user = data.user;
+                if(!req.session) {
+                    req.session = {};
+                }
+                
+                req.session.user = data.user;
                 console.log("Cas login successfull for user " + data.user + ". redirecting to /")
                 return res.redirect('/');
             });

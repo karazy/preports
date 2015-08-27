@@ -1,5 +1,6 @@
 var http = require('http');
 var express = require('express');
+var session = require('express-session');
 var reports = require('./routes/reports');
 var crucible = require('./routes/crucible');
 var auth = require('./auth/authstrategy');
@@ -56,8 +57,14 @@ var App = function() {
             keepExtensions: true
         }));
         self.app.use(express.methodOverride());
-        self.app.use(allowCrossDomain);        
+        self.app.use(allowCrossDomain);  
 
+        //use express session management. Needed for passport to work.
+        self.app.use(session(
+            { secret: 'keyboard cat', resave: true, saveUninitialized: true }
+        ));    
+
+        //setup passport (see config/pasport.js)
         passport.initialize(self.app);
 
         self.app.use(self.app.router);
