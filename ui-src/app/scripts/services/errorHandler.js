@@ -49,3 +49,35 @@ angular.module('PReports.services').factory('errorHandler',['$rootScope','$locat
 
 	return handleError;
 }]);
+
+/** 
+*   @constructor
+*   Factory function for the 'notAuthenticatedInterceptor' service.
+*   Returns the service. Acts as an interceptor for http requests.
+* Decreases the requestCount of authErrorService when a new request starts and sets $rootScope.ajaxLoading 
+* 
+*   @author Frederik Reifschneider
+* @inspiredby https://groups.google.com/forum/#!msg/angular/BbZ7lQgd1GI/GJBTXcJLQMkJ
+*/
+angular.module('PReports.services').factory('notAuthenticatedInterceptor', ['$log','$q', '$location', function($log, $q, $location) {
+    return function (promise) {
+            return promise.then(function (response) {
+              	$log.log("notAuthenticatedInterceptor intercepted successful request with status " + response.status);
+                return response;
+
+            }, function (response) {                
+                if (response.status === 401) {
+                	$log.log("Request not authenticated status 401. Redirecting to login!");
+		        	window.location.href = 'http://' + $location.host() + ':' + $location.port() + '/login';
+		        }
+                return $q.reject(response);
+            });
+    };
+}]);
+
+/**
+* Add angular.module('PReports.services').notAuthenticatedInterceptor as $http interceptor.
+*/
+angular.module('PReports.services').config(['$httpProvider', function($httpProvider) {
+  $httpProvider.responseInterceptors.push('notAuthenticatedInterceptor');
+}]);
