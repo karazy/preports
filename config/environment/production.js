@@ -8,20 +8,20 @@ function getConfigRootPath() {
 	if (process.env.SHELL_CONFIG_BASE ) {
 		return process.env.SHELL_CONFIG_BASE;
 	} else {
-		return (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.bisnode-shell';
+		return (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.preports';
 	}
 }
+
 module.exports = {
 	'ip':    '0.0.0.0',
 
   // Server port
-  	'port':     9000,
+  	'port':     3000,
   	'protocol': 'http',
 	  //MongoDB connection options
 	 'mongo': {
 	    'uri': 'mongodb://localhost/trunk-dev'
 	},
-	'defaultMenuIntegrationPath' : '/shell-integration/menu',
 	'authentication': {
 	    'strategy': new casStrategy({
 	        version: 'CAS3.0',
@@ -29,7 +29,7 @@ module.exports = {
 	        ssoBaseURL: 'https://ysr-qa-frontend-01:8443/cas',
 	        //IPM CAS for testing -> direct login in IPM UI works
 	        //ssoBaseURL: 'https://10.49.128.21:8443/cas',
-	        serverBaseURL: 'http://127.0.0.1:3000'
+	        serverBaseURL: 'http://ysr-dev-frontend-01:3000'
 	    }, function(profile, done) {
 	        var login = profile.subscriberId;
 	        return done(null, profile);
@@ -41,7 +41,7 @@ module.exports = {
             maxAge: 60000 * 30
         }
     },
-   'application': {
+	'application': {
       'baseDirectory' : getConfigRootPath() + '/application'
     },
     'logging': {
