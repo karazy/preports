@@ -24,7 +24,7 @@ var App = function() {
 
     // Setup
     self.ipaddr = process.env.OPENSHIFT_NODEJS_IP;
-    self.port = parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 3000;
+    self.port = parseInt(process.env.OPENSHIFT_NODEJS_PORT) || parseInt(config.port) || 3000;
 
     self.dbHost = process.env.MONGODB_DB_HOST || process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost";
     self.dbPort = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017;
@@ -50,7 +50,7 @@ var App = function() {
 
 
     //define usages
-    self.app.configure(function() {
+    //self.app.configure(function() {
         //Be sure to stick to the initialization order!
         //Otherwise problems are likely.
         self.app.use('/', express.static(__dirname + '/www'));
@@ -80,7 +80,7 @@ var App = function() {
                     + self.dbHost + ":" + self.dbPort + "/preports";
         }
         reports.setup(self.dbConnect, self.uploadDir);
-    });
+    //});
 
 
 

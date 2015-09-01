@@ -5,6 +5,6 @@ var controller = require('./logout.controller');
 var Authenticator = require('../../auth/authstrategy');
 var router = express.Router();
 
-router.get('/', Authenticator.logOut, controller.index);
+//router.get('/', Authenticator.logOut, controller.index);
 
 module.exports = router;

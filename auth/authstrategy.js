@@ -26,8 +26,8 @@ module.exports = function() {
             }
             console.log("User not authenticated.");
 
-           var authResult = passport.authenticate('cas')(req, res, next);
-           console.log('AUTH ' + authResult);
+           //var authResult = passport.authenticate('cas')(req, res, next);
+           //console.log('AUTH ' + authResult);
 
 
            return res.status(401).send();
