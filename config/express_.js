@@ -19,6 +19,9 @@ var passport = require('./passport');
 var sessionManagement = require('../components/session');
 
 module.exports = function(app) {
+  //TODO not used currently
+  console.error("Should not be accessed!");
+  return;
   var env = app.get('env');
 
   //app.set('views', config.root + '/server/views');

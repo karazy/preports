@@ -3,10 +3,10 @@ var express = require('express');
 var session = require('express-session');
 var reports = require('./routes/reports');
 var logout = require('./routes/logout/logout.controller');
-var crucible = require('./routes/crucible');
 var auth = require('./auth/authstrategy');
 var passport = require('./config/passport');
 var config = require('./config/environment');
+var cookieParser = require('cookie-parser');
 
 //Skip validation if DISABLE_CAS == true
 if(process.env.DISABLE_CAS == "true") {
@@ -15,26 +15,17 @@ if(process.env.DISABLE_CAS == "true") {
 }
 
 
-
-
 var App = function() {
 
     // Scope
     var self = this;
 
     // Setup
-    self.ipaddr = process.env.OPENSHIFT_NODEJS_IP;
-    self.port = parseInt(process.env.OPENSHIFT_NODEJS_PORT) || parseInt(config.port) || 3000;
 
-    self.dbHost = process.env.MONGODB_DB_HOST || process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost";
-    self.dbPort = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017;
-    self.uploadDir = process.env.UPLOAD_DIR || process.env.OPENSHIFT_DATA_DIR;
+    self.dbHost = process.env.MONGODB_DB_HOST || "localhost";
+    self.dbPort = 27017;
+    self.uploadDir = process.env.UPLOAD_DIR;
 
-
-    if (typeof self.ipaddr === "undefined") {
-        console.warn('No OPENSHIFT_NODEJS_IP environment variable');
-        self.ipaddr = "0.0.0.0";
-    }
 
     var allowCrossDomain = function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
@@ -47,42 +38,37 @@ var App = function() {
 
     self.app = express();
 
+    //Be sure to stick to the initialization order!
+    //Otherwise problems are likely.
+    self.app.use('/', express.static(__dirname + '/www'));
+    self.app.use(express.bodyParser({
+        keepExtensions: true
+    }));
+    self.app.use(express.methodOverride());
+    self.app.use(cookieParser());
+    self.app.use(allowCrossDomain);  
+
+    //use express session management. Needed for passport to work.
+    self.app.use(session(
+        { secret: 'keyboard cat', resave: true, saveUninitialized: true }
+    ));    
+
+    //setup passport (see config/pasport.js)
+    passport.initialize(self.app);
+
+    self.app.use(self.app.router);
 
 
-    //define usages
-    //self.app.configure(function() {
-        //Be sure to stick to the initialization order!
-        //Otherwise problems are likely.
-        self.app.use('/', express.static(__dirname + '/www'));
-        self.app.use(express.bodyParser({
-            keepExtensions: true
-        }));
-        self.app.use(express.methodOverride());
-        self.app.use(allowCrossDomain);  
+    if (typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
+        self.dbConnect = "mongodb://" + self.dbHost + ":" + self.dbPort + "/preports";
+    } else {
+        console.log("mongo logon with user: " + process.env.OPENSHIFT_MONGODB_DB_USERNAME);
+        self.dbConnect = "mongodb://" + process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":"
+                + process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@"
+                + self.dbHost + ":" + self.dbPort + "/preports";
+    }
 
-        //use express session management. Needed for passport to work.
-        self.app.use(session(
-            { secret: 'keyboard cat', resave: true, saveUninitialized: true }
-        ));    
-
-        //setup passport (see config/pasport.js)
-        passport.initialize(self.app);
-
-        self.app.use(self.app.router);
-
-
-        if (typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
-            self.dbConnect = "mongodb://" + self.dbHost + ":" + self.dbPort + "/preports";
-        } else {
-            console.log("mongo logon with user: " + process.env.OPENSHIFT_MONGODB_DB_USERNAME);
-            self.dbConnect = "mongodb://" + process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":"
-                    + process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@"
-                    + self.dbHost + ":" + self.dbPort + "/preports";
-        }
-        reports.setup(self.dbConnect, self.uploadDir);
-    //});
-
-
+    reports.setup(self.dbConnect, self.uploadDir);
 
     //define routes
     self.app.get('/login', auth.casAuth, function(req, res) {
@@ -92,17 +78,6 @@ var App = function() {
     //FIXME supported only with express 4.x
     //self.app.use('/api/logout', require('./routes/logout'));
     self.app.get('/logout', auth.logOut, logout.index);
-
-    self.app.get('/', function(req, res) {
-        console.log('Displaying options');
-        res.status(200);
-        res.send('<h1>preports - service</h1>' +
-                '<h3>API</h3>'+
-                '<p><a href="/reports">GET /reports</a></p>' +
-                '<p>To retrieve reports in json use accept application/hal+json or application/json</p>'
-                );
-        res.end();
-    });
 
 
     //Reports CRUD API
@@ -119,16 +94,12 @@ var App = function() {
     self.app.delete('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.deleteImage);
     self.app.delete('/reports/:id', auth.ensureAuthenticated, reports.deleteReport);
 
-    self.app.get('/crucible/:id', auth.ensureAuthenticated, crucible.getCrucible);
-
-//starting the nodejs server with express
+    //starting the nodejs server with express
     self.startServer = function() {
         self.server = http.createServer(self.app);
 
-        // self.server.listen.apply(server, arguments);
-
-        self.server.listen(self.port, self.ipaddr, function() {
-            console.log('%s: Node server started on %s:%d ...', Date(Date.now()), self.ipaddr, self.port);
+        self.server.listen(config.port, config.ip, function() {
+            console.log('%s: Node server started on %s:%d ...', Date(Date.now()), config.ip, config.port);
         });
 
     };
@@ -160,5 +131,4 @@ var App = function() {
 //create the app
 var app = new App();
 
-//call the connectDb function and pass in the start server command
 app.startServer();
