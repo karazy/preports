@@ -44,6 +44,9 @@ var App = function() {
     self.app.use(express.bodyParser({
         keepExtensions: true
     }));
+    self.app.set('views', config.root + '/server/views');
+    self.app.engine('html', require('ejs').renderFile);
+    self.app.set('view engine', 'html');
     self.app.use(express.methodOverride());
     self.app.use(cookieParser());
     self.app.use(allowCrossDomain);  

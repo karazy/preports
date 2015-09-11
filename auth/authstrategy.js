@@ -41,20 +41,23 @@ module.exports = function() {
      * @return {[type]}        [description]
      */
     myret.casAuth = function(req, res, next) {
-
         console.log('authstrategy: starting cas authentication');
         passport.authenticate('cas', function(err, data, info) {
             console.log('authstrategy: cas callback');
             if (err) {
-                console.log(err, " Cas auth error")
+                console.error(err, " casAuth: error")
                 return next(err);
             }
+
             if (!data) {
-                console.log(" Cas auth error not enogh data. Message: " + info.message)
-                return res.render('/error');
+                console.log(" casAuth: error not enogh data. Message: " + info.message)
+                return res.send(500, 'Error during authentifaction attempt.');
             }
+
             req.login(data, function(err) {
+
                 if (err) {
+                    console.error(err, " casAuth: failed during login call")
                     return next(err);
                 }
 

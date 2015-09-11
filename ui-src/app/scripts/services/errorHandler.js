@@ -68,7 +68,7 @@ angular.module('PReports.services').factory('notAuthenticatedInterceptor', ['$lo
             }, function (response) {                
                 if (response.status === 401) {
                 	$log.log("Request not authenticated status 401. Redirecting to login!");
-		        	window.location.href = 'http://' + $location.host() + ':' + $location.port() + '/login';
+		        	window.location.href = '//' + $location.host() + ':' + $location.port() + '/login';
 		        }
                 return $q.reject(response);
             });
