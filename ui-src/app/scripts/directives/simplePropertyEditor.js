@@ -1,4 +1,4 @@
-angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeout', '$log', 'language', 'helper',  function($timeout, $log, langService, helper) {
+angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeout', '$log', 'language', 'helper', '$filter',  function($timeout, $log, langService, helper, $filter) {
 	var inputType, //type of the input to generate in form
 		required, //if present marks a required field
 		//directive configuration
@@ -66,8 +66,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 						//bind default entity
 					 	'<div class="control-group" ng-class="getFieldInputClass(simplePropertyForm.simpleProperty.$invalid)">'+
 					 		'<div class="controls">'+
-					 			createFormInput(attrs)+
-					 			'<i class="glyphicon glyphicon-remove" ng-click="clearInput()"></i>'+
+					 			createFormInput(attrs)+					 			
 								'<div class="help-inline text-danger" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.required">'+ l('propertyeditor.error.required') +'</span>'+
 									'<span ng-show="simplePropertyForm.simpleProperty.$error.number">'+ l('propertyeditor.error.number') +'</span>'+
@@ -92,7 +91,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					'</div>'+
 					'<div class="row-fluid" style="margin-top: 5px">'+
 						'<button type="button" ng-click="closeDialog()" class="btn" data-dismiss="modal" style="margin-right: 5px;">'+l('cancel')+'</button>'+
-						'<button type="submit" class="btn btn-primary" ng-disabled="simplePropertyForm.$invalid">'+l('save')+'</button>'+
+						'<button type="submit" class="btn btn-primary" ng-disabled="!isValid()">'+l('save')+'</button>'+
 					'</div>'+
 					'</form>'+
 				'</div>';
@@ -105,16 +104,25 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 				pattern = attrs.hasOwnProperty('editorPattern') ? "ng-pattern='"+attrs.editorPattern+"'" : "",
 				editorFieldAttr = attrs.hasOwnProperty('editorField') ? attrs.editorField : null,
 				editorEntityAttr = attrs.hasOwnProperty('editorEntity') ? attrs.editorEntity : null,
+				editorType = attrs.hasOwnProperty('editorType') ? attrs.editorType : "text",
 				html;
 
 			return {
 		        pre: function preLink(scope, iElement, iAttrs, controller) { 
-		        	
+		        	//configure datepicker
+					      scope.dateOptions = {
+					      	'show-button-bar' : false,
+					      	'show-weeks' : true
+					      }
+
+					      scope.status = {
+					      	opened: false
+					      }
 		        },
 		        post: function postLink(scope, iElement, iAttrs, controller) {
 		        	var dialog = iElement.find('div.simple-property-editor'),
 		        		mask = iElement.find('div.simple-property-editor-mask'),
-		        		input = iElement.find('input.property-input, textarea.property-input'),
+		        		input = iElement.find('input.property-input, input.form-control, textarea.property-input, textarea.form-control'),
 		        		ctrl = scope.simplePropertyForm.simpleProperty,
 		        		hasEditorEntity = iAttrs.hasOwnProperty('editorEntity');
 
@@ -130,12 +138,55 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			        				return undefined;
 			        			}	
 			        		}
-			        	});	
+			        	});			        	
 		        	}
-		        	
+
+		        	if(editorType == 'datepicker' && ctrl) {
+		        		//remove existing parser
+		        		ctrl.$parsers.pop();
+		        		//add custom parser to allow invalid date values
+			        	ctrl.$parsers.push(parseDate);
+
+			        		function parseDate(viewValue) {
+					        if (!viewValue) {
+					          ctrl.$setValidity('date', true);
+					          return null;
+					        } else if (angular.isDate(viewValue)) {
+					          ctrl.$setValidity('date', true);
+					          return viewValue;
+					        } else if (angular.isString(viewValue)) {
+					          var date = new Date(viewValue);
+					          if (isNaN(date)) {
+					            ctrl.$setValidity('date', true);
+					            return viewValue;
+					          } else {
+					            ctrl.$setValidity('date', true);
+					            return date;
+					          }
+					        } else {
+					          ctrl.$setValidity('date', false);
+					          return viewValue;
+					        }
+					      }
+
+					      ctrl.$formatters.push(function(value) {
+					      	console.log("Formatting value " + value);
+					      	if(angular.isDate(value)) {
+					      		return $filter('date')(value, 'yyyy-MM-dd');
+					      	}
+					      	
+					      });
+
+					      //configure datepicker
+					      scope.dateOptions = {
+					      	'show-button-bar' : false,
+					      	'show-weeks' : true
+					      }
+			        }	
+
 		        	scope.save = function () {
 		        		//only save when form is valid
-		        		if(scope.simplePropertyForm.$valid && !scope.saved) {
+		        		if(scope.isValid()) {
 
 		        			scope.saved = true;		        			
 
@@ -164,6 +215,10 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			        		mask.hide();
 		        			dialog.hide();
 		        		}
+		        	}
+
+		        	scope.isValid = function() {
+		        		return ((scope.simplePropertyForm.$valid && !scope.saved) || editorType == 'datepicker');
 		        	}
 
 		        	scope.closeDialog = function() {
@@ -206,7 +261,17 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 								return langcodesMap[code].lang;
 							else
 								return code;
-	        	}
+	        		}
+
+					scope.open = function($event) {
+						 $timeout(function() {
+					      scope.status.opened = true;
+					    });
+						
+					};
+					scope.status = {
+					    opened: false
+					};
 		        	
 		        	iElement.find('div.toggler').bind('click', function() {
 		        		if(scope.editorEnabled == true || typeof scope.editorEnabled == 'undefined') {
@@ -343,13 +408,40 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			inputHtml;
 
 		if(type == "textarea") {
-			inputHtml = '<textarea class="property-input" rows="8" cols="100" name="'+ inputName + '" ng-model="' + modelBinding + '" ' + maxLength +' '+required+' '+pattern+' '+placeholder+'></textarea>';
-		} else {
+			inputHtml = 
+			'<p class="input-group">'+					 			
+				'<textarea class="form-control" rows="8" cols="100" name="'+ inputName + '" ng-model="' + modelBinding + '" ' + maxLength +' '+required+' '+pattern+' '+placeholder+'></textarea>'+				
+ 				'<span class="input-group-btn">'+
+                	'<button type="button" class="btn btn-default" ng-click="clearInput()"><i class="glyphicon glyphicon-remove"></i></button>'+
+              	'</span>'+			 								 				
+ 			'</p>';
+		} else if(type == 'datepicker') {
+			 inputHtml = 
+			 '<p class="input-group">'+					 			
+				'<input class="form-control" type="'+type+'" '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" '  + maxLength +' '+required+' '+pattern+' '+repeat+'></input>'+		 				
+ 				'<span class="input-group-btn">'+
+                	'<button type="button" class="btn btn-default" ng-click="clearInput()"><i class="glyphicon glyphicon-remove"></i></button>'+
+              	'</span>'+			 								 				
+ 			'</p>'+
+ 			'<datepicker '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" show-weeks="true"></datepicker>';
+			 //'<span class="input-group-btn">'+
+             //   '<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>'+
+             // '</span>'+ 
+
+			 //'<input type="text" class="form-control" datepicker-popup '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" datepicker-options="dateOptions" is-open="status.opened"  close-text="Close" />'+
+			 			 
+		}else {
 			if(type != "email" && type != "password" && type != "number" && type != "url") {
 				type = "text";
 			}
 
-			inputHtml = '<input class="property-input" type="'+type+'" '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" '  + maxLength +' '+required+' '+pattern+' '+repeat+'></input>';
+			inputHtml = 
+			'<p class="input-group">'+					 			
+				'<input class="form-control" type="'+type+'" '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" '  + maxLength +' '+required+' '+pattern+' '+repeat+'></input>'+		 				
+ 				'<span class="input-group-btn">'+
+                	'<button type="button" class="btn btn-default" ng-click="clearInput()"><i class="glyphicon glyphicon-remove"></i></button>'+
+              	'</span>'+			 								 				
+ 			'</p>';
 		}
 
 		return inputHtml;
