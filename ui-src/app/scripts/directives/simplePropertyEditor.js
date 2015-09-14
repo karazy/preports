@@ -421,13 +421,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
                 	'<button type="button" class="btn btn-default" ng-click="clearInput()"><i class="glyphicon glyphicon-remove"></i></button>'+
               	'</span>'+			 								 				
  			'</p>'+
- 			'<datepicker '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" show-weeks="true"></datepicker>';
-			 //'<span class="input-group-btn">'+
-             //   '<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>'+
-             // '</span>'+ 
-
-			 //'<input type="text" class="form-control" datepicker-popup '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" datepicker-options="dateOptions" is-open="status.opened"  close-text="Close" />'+
-			 			 
+ 			'<datepicker '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" show-weeks="true"></datepicker>';			 			 
 		}else {
 			if(type != "email" && type != "password" && type != "number" && type != "url") {
 				type = "text";
@@ -453,15 +447,6 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			 		'<div class="controls">'+
 			 			createFormInput(attrs, index)+
 			 			'<i class="glyphicon glyphicon-remove" ng-click="clearInput(' + index + ')"></i>'+
-			 			//no validation
-			 			//currently no validations for translations
-						// '<div class="help-inline" ng-show="simplePropertyForm.simpleProperty.$dirty && simplePropertyForm.simpleProperty.$invalid">'+
-						// 	'<span ng-show="simplePropertyForm.simpleProperty.$error.required">'+ l('propertyeditor.error.required') +'</span>'+
-						// 	'<span ng-show="simplePropertyForm.simpleProperty.$error.number">'+ l('propertyeditor.error.number') +'</span>'+
-						// 	'<span ng-show="simplePropertyForm.simpleProperty.$error.pattern" l="{{editorPatternText}}">No valid value.</span>'+
-						// 	'<span ng-show="simplePropertyForm.simpleProperty.$error.custom" l="{{editorValidateText}}">No valid value.</span>'+
-						// 	'<span ng-show="simplePropertyForm.simpleProperty.$error.email" >+'+ l('propertyeditor.error.email')+'</span>'+									
-						// '</div>'+
 					'</div>'+
 				'</div>';
 		});
