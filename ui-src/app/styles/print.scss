@@ -3,6 +3,11 @@
   @page {
     size: landscape;
     margins: 3cm;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body: {
+    -webkit-print-color-adjust: exact;
   }
 
   .file-area, .simple-property-placeholder, button {
@@ -12,6 +17,10 @@
   .no-print {
     display: none !important;
   }
+
+  .print-block {
+    display: block !important;
+  }  
 
   .images-section {
     page-break-before: always;

@@ -8,6 +8,11 @@ PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ###Release Notes
 
+####v1.3.0 Grumpy Giraffe
+- Added Datepicker for easy date selection.
+- Added CAS support
+- Several Bugfixes
+
 ####v1.2.0
 - Readded UI into this project since it is easier to use.
 - Added Dockerfiles for deployment.

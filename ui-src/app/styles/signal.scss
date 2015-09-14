@@ -25,15 +25,15 @@ $signal-radius: 50%;
 		margin: 3px 0 3px 0;
 
 		&.red {
-			background-color: red;
+			background-color: red !important;
 		}
 
 		&.yellow {
-			background-color: yellow;
+			background-color: yellow !important;
 		}
 
 		&.green {
-			background-color: green;
+			background-color: green !important;
 		}
 
 		input {
