@@ -411,9 +411,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			inputHtml = 
 			'<p class="input-group">'+					 			
 				'<textarea class="form-control" rows="8" cols="100" name="'+ inputName + '" ng-model="' + modelBinding + '" ' + maxLength +' '+required+' '+pattern+' '+placeholder+'></textarea>'+				
- 				'<span class="input-group-btn">'+
-                	'<button type="button" class="btn btn-default" ng-click="clearInput()"><i class="glyphicon glyphicon-remove"></i></button>'+
-              	'</span>'+			 								 				
+                	'<span type="button" class="btn btn-default input-group-addon" style="background-color: white;" ng-click="clearInput();"><i class="glyphicon glyphicon-remove"></i></span>'+
  			'</p>';
 		} else if(type == 'datepicker') {
 			 inputHtml = 
