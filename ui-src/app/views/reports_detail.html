@@ -115,7 +115,7 @@
 				<tbody>
 					<tr>
 						<th l="report.time.time.title">Time</th>
-						<td>
+						<td class="reports-time">
 						<div simple-property-editor editor-title="report.time.plan" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="timePlanned" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-placeholder="report.time.plan.ph" editor-type="datepicker">			
 								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
 								<span l="report.time.plan.ph" ng-hide="currentReport.timePlanned" class="simple-property-placeholder">GoLive planned</span>		
@@ -123,7 +123,7 @@
 								</p>
 							</div>
 						</td>
-						<td>
+						<td class="reports-time">
 							<div simple-property-editor editor-title="report.time.current" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="timeCurrent" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-placeholder="report.time.current.ph" editor-type="datepicker">			
 								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
 								<span l="report.time.current.ph" ng-hide="currentReport.timeCurrent" class="simple-property-placeholder">Current time</span>		

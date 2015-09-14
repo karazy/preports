@@ -290,6 +290,12 @@ body {
     }
 }
 
-table td {
-  cursor: pointer;
+table {
+  td {
+    cursor: pointer;
+  }
+
+  td.reports-time {
+    min-width: 120px;
+  }
 }
