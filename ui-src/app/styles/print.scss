@@ -6,8 +6,9 @@
     -webkit-print-color-adjust: exact;
   }
 
-  body: {
-    -webkit-print-color-adjust: exact;
+  body {
+    padding: 0px;
+    margin: 0px;
   }
 
   .file-area, .simple-property-placeholder, button {
@@ -72,10 +73,6 @@
     width: 8.333333333333332%;
    }   
 
-   body {
-    padding: 0px;
-    margin: 0px;
-  }
 
   .section {
     /*border: 1px solid gray;*/
@@ -83,6 +80,19 @@
     /*border-radius: 3px;*/
     page-break-inside: avoid;
     margin-bottom: 15px;
+  }
+
+  .report-image {
+
+    img {
+        max-height: 120mm;
+        max-width: 100%; 
+        width: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        page-break-after: always;
+    }
   }
 
 }
