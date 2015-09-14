@@ -170,10 +170,17 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					      }
 
 					      ctrl.$formatters.push(function(value) {
+					      	var d;
 					      	console.log("Formatting value " + value);
-					      	if(angular.isDate(value)) {
+					      	
+					      	if(!value) {
+					      		return;
+					      	}	
+
+					      	d = new Date(value);
+					      	if(helper.isValidDate(d)) {
 					      		return $filter('date')(value, 'yyyy-MM-dd');
-					      	}
+					      	} else return value;
 					      	
 					      });
 

@@ -56,7 +56,13 @@ angular.module('PReports.services').factory('helper', function() {
   		}
 
   		return false;
-  	}
+  	},
+  	
+  	isValidDate: function(d) {
+	  if ( Object.prototype.toString.call(d) !== "[object Date]" )
+	    return false;
+	  return !isNaN(d.getTime());
+	}
   };
 
   return helperFunctions;
