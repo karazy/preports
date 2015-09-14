@@ -124,10 +124,10 @@
 							</div>
 						</td>
 						<td>
-							<div simple-property-editor editor-title="report.time.current" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="timeCurrent" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-placeholder="report.time.current.ph">			
+							<div simple-property-editor editor-title="report.time.current" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="timeCurrent" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-placeholder="report.time.current.ph" editor-type="datepicker">			
 								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
 								<span l="report.time.current.ph" ng-hide="currentReport.timeCurrent" class="simple-property-placeholder">Current time</span>		
-									{{currentReport.timeCurrent}}
+									{{currentReport.timeCurrent | date:'yyyy-MM-dd'}}
 								</p>
 							</div>							
 						</td>
