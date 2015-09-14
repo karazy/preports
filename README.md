@@ -8,6 +8,9 @@ PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ###Release Notes
 
+####v1.3.1 Grumpy Giraffe
+- Fixed issue in simple property editor not displaying the saved value when type datepicker is used.
+
 ####v1.3.0 Grumpy Giraffe
 - Added Datepicker for easy date selection.
 - Added CAS support
