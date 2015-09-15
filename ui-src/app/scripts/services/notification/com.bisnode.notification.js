@@ -44,7 +44,8 @@ angular.module('PReports.services').factory('com-bisnode-notification',
 			return;
 		}
 
-		var notification = notificationRequest.notifications[0].rawNotification;
+		var notification = notificationRequest.notifications[0].rawNotification,
+			handle = false;
 
 		notification.subject = subject;
 		notification.content = content;
@@ -55,10 +56,12 @@ angular.module('PReports.services').factory('com-bisnode-notification',
 				notification.recipients.push({
 					'emailRecipient': r.email
 				});
+				handle = true;
 			}			
 		});
 		
-		$http.post(_service.config.url, notificationRequest)
+		if(handle) {
+			$http.post(_service.config.url, notificationRequest)
 			.success(function(response) {
 				if(helper.isFunction(callback)) {
 					callback(true);
@@ -69,6 +72,8 @@ angular.module('PReports.services').factory('com-bisnode-notification',
 					callback(false, response);
 				}
 			});
+		}
+		
 	}
 
 	_service.isLive = true;

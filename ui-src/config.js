@@ -15,8 +15,8 @@ angular.module('PReports.services').provider('config', function() {
 		'serviceUrl' : '{serviceUrl}',
 		'servicePort' : '{servicePort}',
 		'version' : '{version}',
-		//the notification(emails) provider to use
-		'notificationProvider' : '{notificationProvider}',
+		//the notification providers to use
+		'notificationProviders' : ['com-bisnode-notification', 'com-slack-notification'],
 		'notificationUrl' : '{notificationUrl}',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {

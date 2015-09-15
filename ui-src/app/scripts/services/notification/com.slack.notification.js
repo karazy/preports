@@ -55,9 +55,11 @@ angular.module('PReports.services').factory('com-slack-notification',
 				status.usersToNotify++;
 
 				var slackNotification = angular.copy(notification);
-				slackNotification.channel = '@' + r;
-
-				$http.post(_service.config.url, notification)
+				slackNotification.channel = '@' + r.email;
+//'Access-Control-Allow-Headers', 'X-Requested-With, Content-Type'
+				$http.post(_service.config.url, notification, {'headers':{
+					'Access-Control-Allow-Headers' : ''
+				}})
 				.success(function(response) {
 					status.send++;
 					//if(helper.isFunction(callback)) {

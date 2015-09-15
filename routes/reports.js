@@ -1,72 +1,20 @@
-var mongo = require('mongodb'),
-	test = require('assert'),
+var mongodb = require('mongodb'),
+	mongo = require('../database/mongo'),
 	fs = require('fs-extra'),
 	mv = require('mv'),
 	queryString = require('querystring'),
 	pathHelper = require('path'),
 	htmlExport = require('./exporter/html'),
-	Db,
-	Connection,
-	Server,
-	ObjectID,
 	db;
+
+ObjectID = mongodb.ObjectID;
 
 //constants
 var DB_DEFAULT_RESULT_LIMIT = 25,
 	DATA_UPLOAD_PATH = '.preports';
 
-//setup mongo variables
-Db = mongo.Db;
-Connection = mongo.Connection;
-Server = mongo.Server;
-BSON = mongo.BSON;
-ObjectID = mongo.ObjectID;
-MongoClient = mongo.MongoClient; 
 
-
-
-connect = function(connectUrl) {
-
-    MongoClient.connect(connectUrl, function(err, _db) {
-        test.equal(null, err); 
-        test.ok(_db != null);
-        console.log("Connected to 'project report' database");
-        db = _db;
-
-        createIndexes();
-    });
-};
-
-/**
-* Creates all indexes used by preports.
-*/
-function createIndexes() {
-	getReportsCollection(doCreate)
-
-
-	function doCreate(err, col) {
-		if(err) {
-			 console.log('createIndexes: ' + err);
-			 return;
-		}		
-
-		col.createIndex('searchIndex',{
-			'year' : 1,
-			'name' : 1
-		}, function(err, indexName) {
-			if(err) {
-				 console.log('createIndexes: failed to create index ' + err);
-				 return;
-			}	
-			console.log('createIndexes: created index ' + indexName);
-		});
-
-	}
-}
-
-exports.setup = function(connectionUrl, uploadDirectory) {
-    console.log("connecting to db: " + connectionUrl);
-    connect(connectionUrl);
+exports.setup = function(uploadDirectory) {
     console.log("directory for upload: " + uploadDirectory);
     uploadDir = uploadDirectory;
 };
@@ -338,7 +286,7 @@ function findReport(id, callback) {
 
 	getReportsCollection(loadReport);
 
-	function loadReport(error, reports) {
+	function loadReport(error, reports) {		
 		if(error) {
 			callback(500);
 			return;
@@ -1142,17 +1090,17 @@ function copyReportImages(srcDirId, destDirId, callback) {
 }
 
 getReportsCollection = function(callback) {
-	 db.collection('reports', function(error, reports_collection) {
+	 getDB().collection('reports', function(error, collection) {
     	if( error ) {
-    		console.log('getReportsCollection: error');
+    		console.log('getReportsCollection: failed ' + error);
     		callback(error);
-    	} else if(!reports_collection) {
+    	} else if(!collection) {
     		console.log('getReportsCollection: creating collection reports');
-    		db.createCollection('reports', function(_err, _collection) {
+    		getDB().createCollection('reports', function(_err, _collection) {
     			callback(_err, _collection);
     		});
     	} else {
-    		callback(null, reports_collection);
+    		callback(null, collection);
     	}
  	 });
 }
@@ -1190,4 +1138,8 @@ function getUploadPath() {
     } else {
         return uploadDir;
     }
+}
+
+function getDB() {
+	return mongo.getDB();
 }

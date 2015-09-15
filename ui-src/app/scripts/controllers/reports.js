@@ -831,13 +831,23 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       content = $interpolate(language.translate('notification.content.template'));
       content = content(templateData);
 
-      notification.send(subject, content, $scope.currentReport.settings.notification.recipients, callback);
+      //notification.send(subject, content, $scope.currentReport.settings.notification.recipients, callback);
 
-      function callback(success, response) {
-        if(!success) {
-            errorHandler(response);
-          }
-      }
+      //notification.send($scope.currentReport.id, callback);
+
+      $http.post(config.getCombinedServiceUrl() + '/reports/' + reportId +  '/notifications')
+      .success(function(response) {
+        })
+        .error(function(response) {
+          $log.error("Failed so send notification " + response.message);
+          errorHandler(response);
+      });
+
+      // function callback(success, response) {
+      //   if(!success) {
+      //       errorHandler(response);
+      //     }
+      // }
     }
 
     /**

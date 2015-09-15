@@ -2,11 +2,13 @@ var http = require('http');
 var express = require('express');
 var session = require('express-session');
 var reports = require('./routes/reports');
+var notifications = require('./routes/notifications');
 var logout = require('./routes/logout/logout.controller');
 var auth = require('./auth/authstrategy');
 var passport = require('./config/passport');
 var config = require('./config/environment');
 var cookieParser = require('cookie-parser');
+var mongo = require('./database/mongo');
 
 //Skip validation if DISABLE_CAS == true
 if(process.env.DISABLE_CAS == "true") {
@@ -71,7 +73,9 @@ var App = function() {
                 + self.dbHost + ":" + self.dbPort + "/preports";
     }
 
-    reports.setup(self.dbConnect, self.uploadDir);
+    //Create mongodb connection
+    mongo.connect(self.dbConnect);
+    reports.setup(self.uploadDir);
 
     //define routes
     self.app.get('/login', auth.casAuth, function(req, res) {
@@ -96,6 +100,7 @@ var App = function() {
     self.app.get('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.getImage);
     self.app.delete('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.deleteImage);
     self.app.delete('/reports/:id', auth.ensureAuthenticated, reports.deleteReport);
+    self.app.post('/reports/:id/notifications', auth.ensureAuthenticated, notifications.sendNotifications);
 
     //starting the nodejs server with express
     self.startServer = function() {

@@ -44,6 +44,14 @@ var config = {
     },
     'logging': {
       'logFile': getConfigRootPath() + '/shell.log'
+    },
+    'notificationProviders': {
+    	'slack' : {
+    		'url' : 'https://hooks.slack.com/services/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'
+    	},
+    	'bisnode' : {
+    		'url' : ''
+    	}
     }
 };
 

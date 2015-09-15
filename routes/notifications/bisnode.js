@@ -1,0 +1,1 @@
+//'http://ysr-dev-service-01:8181/rest/notification-service'
