@@ -724,7 +724,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     /**
     * Adds a recipient to currentReport.settings.notification.recipients.
-    * Recipients listed there can be send a notification email.
+    * Recipients listed there can be send a notification.
     */
     $scope.addRecipient = function() {
       var updateCommand = {};

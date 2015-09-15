@@ -1,6 +1,5 @@
 /**
 * Services that interacts with Bisnode NotificationService.
-* Currently in a beta state. Authentification is not supported ath the moment.
 *
 */
 angular.module('PReports.services').factory('com-bisnode-notification',
@@ -52,9 +51,11 @@ angular.module('PReports.services').factory('com-bisnode-notification',
 		notification.recipients = [];
 
 		angular.forEach(recipients, function(r) {
-			notification.recipients.push({
-				'emailRecipient': r
-			});
+			if(r.type == _service.type && r.email) {
+				notification.recipients.push({
+					'emailRecipient': r.email
+				});
+			}			
 		});
 		
 		$http.post(_service.config.url, notificationRequest)
@@ -71,6 +72,7 @@ angular.module('PReports.services').factory('com-bisnode-notification',
 	}
 
 	_service.isLive = true;
+	_service.type = 'email';
 
 	/**
 	* Check if service is online.

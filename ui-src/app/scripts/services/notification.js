@@ -4,36 +4,68 @@
 angular.module('PReports.services')
 	.factory('notification',['$http', 'errorHandler', 'language', '$injector', 'config', '$log',  function($http, errorHandler, language, $injector, config, $log) {
 
-	var service = {
-			initialized: false
-		},
+	var service = {}, //the service itself
+		services = [], //notification providers
 		notificationConfig;
 
+
 	setupNotificationConfig();
+	setupProviders();
 
 	/**
-	* Will be overriden from valid notification provider.
-	* Define dummy send function when no valid provider was found.
+	* Send notifications to all registered providers.
 	*/
-	service.send = function() {
-		alert('No notification provider configured.');
-		$log.log('PReports.services.notification.send: no valid notificationProvider to delegate send to');
+	service.send = function(subject, content, recipients, callback) {
+		if(!services || services.length == 0) {
+			alert('No notification provider configured.');
+			$log.log('PReports.services.notification.send: no valid notificationProvider to delegate send to');	
+			return;
+		}
+
+
+		//Hand over all arguments to each service and let him handle only the ones he is interested in
+		angular.forEach(services, function(service) {
+			service.send(subject, content, recipients, callback);
+		});		
 	}
 
-	if(!config.notificationProvider) {
-		$log.log('PReports.services.notification: no notificationProvider configured. Cancel initialization.');
-		return service;
+	function setupProviders() {
+		if(!config.notificationProviders) {
+			$log.log('PReports.services.notification: no notificationProviders configured. Cancel initialization.');
+			return service;
+		}
+
+		var providers;
+
+		if(!angular.isArray(config.notificationProviders)) {
+			providers = [config.notificationProviders];
+		} else {
+			providers = config.notificationProviders;
+		}
+
+		angular.forEach(config.notificationProviders, function(provider) {
+			var service;
+			
+			$log.log("Setup notification provider " + provider);
+			
+			try {
+				service = $injector.get(provider);
+				//TODO provider specific config
+				if(provider == 'com-bisnode-notification') {
+					service.config = notificationConfig;					
+				}
+				
+			} catch(e) {
+				$log.error('PReports.services.notification: '+ provider +' is not a valid notificationProvider.\n' + e);
+				return service;
+			}
+			service.initialized = true;	
+			services.push(service);
+		});
+
 	}
 
-	try {
-		service = $injector.get(config.notificationProvider);
-		service.config = notificationConfig;
-	} catch(e) {
-		$log.error('PReports.services.notification: '+ config.notificationProvider +' is not a valid notificationProvider.\n' + e);
-		return service;
-	}
 
-	service.initialized = true;	
 
 	function setupNotificationConfig() {
 		notificationConfig = {};
