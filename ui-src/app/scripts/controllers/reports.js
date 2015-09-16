@@ -835,7 +835,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
       //notification.send($scope.currentReport.id, callback);
 
-      $http.post(config.getCombinedServiceUrl() + '/reports/' + reportId +  '/notifications')
+      $http.post(config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id +  '/notifications')
       .success(function(response) {
         })
         .error(function(response) {

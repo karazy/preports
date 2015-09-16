@@ -1,16 +1,17 @@
 var config = require('../../config/environment'),
 	clone = require('clone'),
-	http = require('http');
+	https = require('https');
 
 var //the json object consumed by slack.
 	payload = {
-		    "text" : "",
+		    "text" : "Technical report for {{name}} - CW {{week}}|{{year}} is available under"+
+			" {{url}} This is an automatically generated notification from preports.",
 		    "icon_url": "https://www.bisnode.de/wp-content/themes/bisnode/images/logo.png",
 		    "channel": "",
 		    "username":"PReports"
 		},
 	isLive = true;
-	providerType = 'slack';
+	PROVIDER_TYPE = 'slack';
     config;
 
 	//https://hooks.slack.com/services/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
@@ -19,52 +20,75 @@ var //the json object consumed by slack.
 	* Send notification.
 	*
 	*/
-	exports.send = function(subject, content, recipients, callback) {
+	exports.send = function(report, callback) {
+		//subject, content, recipients, callback
 
 		var errors = [],
 			notification,
+			//keep track of number of users this is send to as well as the successful calls
 			status = {
 				usersToNotify: 0,
 				send: 0
 			},
-			slackApiUrl;
+			slackWebhookUrl,
+			recipients;
 
 		if(!config) {
-			$log.log('slack.send: config missing')
+			console.log('slack.send: config missing');
 			return;
 		}
 
-		if(!config.notificationProviders.slack.url) {
-			$log.log('slack.send: config has no url')
+		if(!report) {
+			console.log('slack.send: Missing report.');
 			return;
 		}
 
-		slackApiUrl = config.notificationProviders.slack.url;
+		if(!config.notificationProviders.slack.host) {
+			console.log('slack.send: config has no url');
+			return;
+		}
+
+		//Url for slack webhook
+		slackWebhookHost = config.notificationProviders.slack.host;
+		slackWebhookPath = config.notificationProviders.slack.path;
+
+		recipients = report.settings.notification.recipients;
+
+		if(!recipients || !recipients.length) {
+			console.log('slack.send: report has no recipients');
+			return;
+		}
 
 		notification = payload;
 
 		//TODO parse and encapsulate urls for Slack messages
-		notification.text = content;		
+		//notification.text = content;		
 
 
 		//create one notification for each recipient and send it
 		recipients.forEach(function(r) {
-			if(r.type == providerType && r.email) {
+			if(r.type == PROVIDER_TYPE && r.email) {
 				status.usersToNotify++;
 
 				var slackNotification = clone(notification);
+
 				slackNotification.channel = '@' + r.email;
 
 				//make the call
 				var options = {
-				  hostname: slackApiUrl,
-				  method: 'POST'
+				  'host': slackWebhookHost,
+				  'path': slackWebhookPath,
+				  'method': 'POST',
+				  'headers': {
+				    'Content-Type': 'application/json'
+				    //'Content-Length': postData.length
+				  }
 				};
 
-				var req = http.request(options, function(res) {
+				var req = https.request(options, function(res) {
 				  res.setEncoding('utf8');
 				  res.on('data', function (chunk) {
-				    console.log('BODY: ' + chunk);				    
+				    console.log('BODY: ' + chunk);			    
 				  });
 				  res.on('end', function() {
 				    console.log('No more data in response.');
@@ -83,7 +107,7 @@ var //the json object consumed by slack.
 				req.on('error', function(e) {
 				  console.log('problem with request: ' + e.message);
 				  //$log.error("Failed so send slack notification for user " + r + ". Status: " + response.status);
-					errors.push(response);
+					errors.push(e.message);
 					status.send++;
 					if(status.send == status.usersToNotify) {
 						formatErrors(errors);
@@ -92,10 +116,10 @@ var //the json object consumed by slack.
 				});
 
 				// write data to request body
-				req.write(slackNotification);
+				req.write(JSON.stringify(slackNotification));
 				req.end();
 
-				$http.post(slackApiUrl, notification)
+				/*$http.post(slackWebhookUrl, notification)
 				.success(function(response) {
 					status.send++;
 					if(status.send == status.usersToNotify) {
@@ -111,7 +135,7 @@ var //the json object consumed by slack.
 					if(status.send == status.usersToNotify) {
 						formatErrors(errors);
 					}					
-				});
+				});*/
 
 
 			}

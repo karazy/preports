@@ -43,14 +43,15 @@ var config = {
       'baseDirectory' : getConfigRootPath() + '/application'
     },
     'logging': {
-      'logFile': getConfigRootPath() + '/shell.log'
+      'logFile': getConfigRootPath() + '/preports.log'
     },
     'notificationProviders': {
     	'slack' : {
-    		'url' : 'https://hooks.slack.com/services/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'
+    		'host' : 'hooks.slack.com',
+    		'path' : '/services/T09JE4DST/B0AKK58JW/ellqoXgP3wiQRk4RdXIXWQ8n'
     	},
     	'bisnode' : {
-    		'url' : ''
+    		'url' : 'ysr-dev-service-01:8181/rest/notification-service'
     	}
     }
 };
