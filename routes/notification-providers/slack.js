@@ -13,8 +13,7 @@ var //the json object consumed by slack.
 	isLive = true,
 	PROVIDER_TYPE = 'slack',
 	TEMPLATE = 'Technical report for {name} - CW {week}|{year} is available under'+
-			' <{reportUrl}> This is an automatically generated notification from preports.',
-    config;
+			' <{reportUrl}> This is an automatically generated notification from preports.';
 
 	//https://hooks.slack.com/services/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
 
@@ -123,30 +122,14 @@ var //the json object consumed by slack.
 				// write data to request body
 				req.write(JSON.stringify(slackNotification));
 				req.end();
-
-				/*$http.post(slackWebhookUrl, notification)
-				.success(function(response) {
-					status.send++;
-					if(status.send == status.usersToNotify) {
-						if(errors.length > 0) {
-							formatErrors(errors);
-						}	
-					}
-				})
-				.error(function(response) {
-					$log.error("Failed so send slack notification for user " + r + ". Status: " + response.status);
-					errors.push(response);
-					status.send++;
-					if(status.send == status.usersToNotify) {
-						formatErrors(errors);
-					}					
-				});*/
-
-
 			}
 
 
 		});
+	}
+
+	exports.getProviderType = function() {
+		return PROVIDER_TYPE;
 	}
 
 	/**

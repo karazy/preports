@@ -26,18 +26,21 @@ exports.sendNotifications = function(req, res) {
 		var providers,
 			providerCallFinished = 0,
 			errors = [],
-			reportUrl = createReportUrl(req, data);
+			reportUrl;
 
 		if(status != 200) {
 			res.send(status, data);
 			res.end();
+			return;
 		}
 
 		providers = providerManager.getProviders();
+		reportUrl = createReportUrl(req, data);
 
 		//send via registered providers
 		providers.forEach(function(p) {
 			providerCallFinished++;
+			console.log('Calling provider ' + p.getProviderType());
 			p.send(data, evaluateStatus, reportUrl);
 		});
 

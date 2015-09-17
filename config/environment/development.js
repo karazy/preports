@@ -51,7 +51,9 @@ var config = {
     		'path' : '/services/T09JE4DST/B0AKK58JW/ellqoXgP3wiQRk4RdXIXWQ8n'
     	},
     	'bisnode' : {
-    		'url' : 'ysr-dev-service-01:8181/rest/notification-service'
+    		'host': 'ysr-dev-service-01',
+    		'path': '/rest/notification-service',
+        'port': 8181
     	}
     }
 };
