@@ -122,7 +122,7 @@ var config = require('../../config/environment'),
 				});
 
 				// write data to request body
-				req.write(JSON.stringify(notification));
+				req.write(JSON.stringify(notificationRequest));
 				req.end();
 			} else {
 				console.log('bisnode.send: No handlers found.');

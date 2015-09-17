@@ -817,29 +817,28 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         return;
       }
 
-      templateData = {
+     /* templateData = {
         name: $scope.currentReport.name,
         week: $scope.currentReport.week,
         year: $scope.currentReport.year,
         url: location.href
       }
-
+*/
       //setup notification content
-      subject = $interpolate(language.translate('notification.subject.template'));
-      subject = subject(templateData);
+      //subject = $interpolate(language.translate('notification.subject.template'));
+      //subject = subject(templateData);
 
-      content = $interpolate(language.translate('notification.content.template'));
-      content = content(templateData);
+      //content = $interpolate(language.translate('notification.content.template'));
+      //content = content(templateData);
 
       //notification.send(subject, content, $scope.currentReport.settings.notification.recipients, callback);
 
       //notification.send($scope.currentReport.id, callback);
 
       $http.post(config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id +  '/notifications')
-      .success(function(response) {
-        })
-        .error(function(response) {
-          $log.error("Failed so send notification " + response.message);
+      .success(angular.noop)
+      .error(function(response) {
+          $log.error("Failed so send notifications " + response.message);
           errorHandler(response);
       });
 

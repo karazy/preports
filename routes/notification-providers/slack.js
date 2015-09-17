@@ -12,10 +12,7 @@ var //the json object consumed by slack.
 		},
 	isLive = true,
 	PROVIDER_TYPE = 'slack',
-	TEMPLATE = 'Technical report for {name} - CW {week}|{year} is available under'+
-			' <{reportUrl}> This is an automatically generated notification from preports.';
-
-	//https://hooks.slack.com/services/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
+	TEMPLATE = 'Technical report for {name} - CW {week}|{year} is available under <{reportUrl}>';
 
 	/**
 	* Send notification.
