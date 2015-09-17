@@ -307,12 +307,12 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Add emails of people you want to notify."
 		},
 		"report.notification.title" : {
-			"DE" : "E-Mail senden",
-			"EN" : "Send email"
+			"DE" : "Benachrichtigung senden",
+			"EN" : "Send notification"
 		},
 		"report.notification.text" : {
-			"DE" : "<strong>BETA Feature</strong><br>E-Mail an eingetragene Empfänger mit Link zu diesem Report schicken?",
-			"EN" : "<strong>BETA Feature</strong><br>Send an email to recipients with a link to this report?"
+			"DE" : "Benachrichtigung an eingetragene Empfänger mit Link zu diesem Report schicken?",
+			"EN" : "Send a notification to recipients with a link to this report?"
 		},
 		"notification.subject.template" : {
 			"DE" : "Technischer Report {{name}} KW {{week}}|{{year}}",
