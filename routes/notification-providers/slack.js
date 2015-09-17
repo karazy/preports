@@ -12,7 +12,7 @@ var //the json object consumed by slack.
 		},
 	isLive = true,
 	PROVIDER_TYPE = 'slack',
-	TEMPLATE = 'Technical report for {name} - CW {week}|{year} is available under <{reportUrl}>';
+	TEMPLATE = 'Project report for {name} - CW {week}|{year} is available under <{reportUrl}>';
 
 	/**
 	* Send notification.

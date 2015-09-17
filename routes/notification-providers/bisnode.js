@@ -32,8 +32,8 @@ var config = require('../../config/environment'),
 	    subjectLangKey = "notification.subject.template",
 	    isLive = true,
 		PROVIDER_TYPE = 'email',
-		SUBJECT_TPL = 'Technical report {name} CW {week}|{year}',
-		TEMPLATE = 'Technical report for {name} - CW {week}|{year} is available under'+
+		SUBJECT_TPL = 'Project report {name} CW {week}|{year}',
+		TEMPLATE = 'Project report for {name} - CW {week}|{year} is available under'+
 			' {reportUrl} This is an automatically generated notification from preports.';
 
 	/**
