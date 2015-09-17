@@ -25,7 +25,8 @@ exports.sendNotifications = function(req, res) {
 	function doSend(status, data) {
 		var providers,
 			providerCallFinished = 0,
-			errors = [];
+			errors = [],
+			reportUrl = createReportUrl(req, data);
 
 		if(status != 200) {
 			res.send(status, data);
@@ -37,7 +38,7 @@ exports.sendNotifications = function(req, res) {
 		//send via registered providers
 		providers.forEach(function(p) {
 			providerCallFinished++;
-			p.send(data, evaluateStatus);
+			p.send(data, evaluateStatus, reportUrl);
 		});
 
 		function evaluateStatus(success, message) {
@@ -60,6 +61,14 @@ exports.sendNotifications = function(req, res) {
 				}
 			}
 		}		
+	}
+
+	function createReportUrl(request, report) {
+		var url;
+
+		url ='http://' + request.headers.host + '#/reports/' + report._id;
+
+		return url;
 	}
 
 }

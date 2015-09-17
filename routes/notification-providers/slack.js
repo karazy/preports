@@ -1,17 +1,19 @@
 var config = require('../../config/environment'),
 	clone = require('clone'),
-	https = require('https');
+	https = require('https'),
+	strTpl = require("string-template");
 
 var //the json object consumed by slack.
 	payload = {
-		    "text" : "Technical report for {{name}} - CW {{week}}|{{year}} is available under"+
-			" {{url}} This is an automatically generated notification from preports.",
+		    "text" : "",
 		    "icon_url": "https://www.bisnode.de/wp-content/themes/bisnode/images/logo.png",
 		    "channel": "",
 		    "username":"PReports"
 		},
-	isLive = true;
-	PROVIDER_TYPE = 'slack';
+	isLive = true,
+	PROVIDER_TYPE = 'slack',
+	TEMPLATE = 'Technical report for {name} - CW {week}|{year} is available under'+
+			' <{reportUrl}> This is an automatically generated notification from preports.',
     config;
 
 	//https://hooks.slack.com/services/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
@@ -20,7 +22,7 @@ var //the json object consumed by slack.
 	* Send notification.
 	*
 	*/
-	exports.send = function(report, callback) {
+	exports.send = function(report, callback, reportUrl) {
 		//subject, content, recipients, callback
 
 		var errors = [],
@@ -32,6 +34,8 @@ var //the json object consumed by slack.
 			},
 			slackWebhookUrl,
 			recipients;
+
+		report.reportUrl = reportUrl;
 
 		if(!config) {
 			console.log('slack.send: config missing');
@@ -60,6 +64,7 @@ var //the json object consumed by slack.
 		}
 
 		notification = payload;
+		notification.text = strTpl(TEMPLATE, report);
 
 		//TODO parse and encapsulate urls for Slack messages
 		//notification.text = content;		
