@@ -21,6 +21,11 @@ $tertiary-color: #06799F;
   font-style: normal;
 }
 
+/*See https://docs.angularjs.org/api/ng/directive/ngCloak */
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 [class^="icon-"], [class*=" icon-"] {
   font-family: 'preports-icons';
   speak: none;
