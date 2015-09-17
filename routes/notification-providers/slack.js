@@ -62,10 +62,6 @@ var //the json object consumed by slack.
 		notification = payload;
 		notification.text = strTpl(TEMPLATE, report);
 
-		//TODO parse and encapsulate urls for Slack messages
-		//notification.text = content;		
-
-
 		//create one notification for each recipient and send it
 		recipients.forEach(function(r) {
 			if(r.type == PROVIDER_TYPE && r.email) {
@@ -82,17 +78,12 @@ var //the json object consumed by slack.
 				  'method': 'POST',
 				  'headers': {
 				    'Content-Type': 'application/json'
-				    //'Content-Length': postData.length
 				  }
 				};
 
 				var req = https.request(options, function(res) {
 				  res.setEncoding('utf8');
-				  res.on('data', function (chunk) {
-				    console.log('BODY: ' + chunk);			    
-				  });
 				  res.on('end', function() {
-				    console.log('No more data in response.');
 				    status.send++;
 					if(status.send == status.usersToNotify) {
 						if(errors.length > 0) {

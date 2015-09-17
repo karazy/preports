@@ -1,7 +1,7 @@
 'use strict';
 
 PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, 
-  errorHandler, $rootScope, language, $timeout, $interval, notification, $interpolate,
+  errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
   helper) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
@@ -1253,6 +1253,5 @@ PReports.ReportCtrl.$inject = [
   'language', 
   '$timeout', 
   '$interval',
-  'notification',
   '$interpolate',
   'helper'];

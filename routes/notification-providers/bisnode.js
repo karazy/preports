@@ -79,18 +79,6 @@ var config = require('../../config/environment'),
 		
 		if(handle) {
 			console.log('Sending bisnode notification.');
-			/*$http.post(_service.config.url, notificationRequest)
-			.success(function(response) {
-				if(helper.isFunction(callback)) {
-					callback(true);
-				}
-			})
-			.error(function(response) {
-				if(helper.isFunction(callback)) {
-					callback(false, response);
-				}
-			});
-		*/
 
 				//make the call
 				var options = {

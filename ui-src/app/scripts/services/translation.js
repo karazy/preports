@@ -314,23 +314,23 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "Benachrichtigung an eingetragene Empfänger mit Link zu diesem Report schicken?",
 			"EN" : "Send a notification to recipients with a link to this report?"
 		},
-		"notification.subject.template" : {
-			"DE" : "Technischer Report {{name}} KW {{week}}|{{year}}",
-			"EN" : "Technical report {{name}} CW {{week}}|{{year}}"
-		},
-		"notification.content.template" : {
-			"DE" : "Der technische Report fuer {{name}} - KW {{week}}|{{year}} ist verfuegbar unter"+
-			" {{url}} Dies ist eine automatisch generierte Benachrichtigung von preports.",
-			"EN" : "Technical report for {{name}} - CW {{week}}|{{year}} is available under"+
-			" {{url}} This is an automatically generated notification from preports."
-		},
+		// "notification.subject.template" : {
+		// 	"DE" : "Technischer Report {{name}} KW {{week}}|{{year}}",
+		// 	"EN" : "Technical report {{name}} CW {{week}}|{{year}}"
+		// },
+		// "notification.content.template" : {
+		// 	"DE" : "Der technische Report fuer {{name}} - KW {{week}}|{{year}} ist verfuegbar unter"+
+		// 	" {{url}} Dies ist eine automatisch generierte Benachrichtigung von preports.",
+		// 	"EN" : "Technical report for {{name}} - CW {{week}}|{{year}} is available under"+
+		// 	" {{url}} This is an automatically generated notification from preports."
+		// },
 		"report.notification.recipient" : {
 			"DE" : "Empfänger",
 			"EN" : "Recipient"
 		},
 		"report.notification.recipient.ph" : {
-			"DE" : "E-Mail eingeben",
-			"EN" : "Enter email"
+			"DE" : "E-Mail oder Username eingeben",
+			"EN" : "Enter email or username"
 		},
 		"report.signal.budget" : {
 			"DE" : "Budget",
