@@ -18,10 +18,10 @@ mongodump --host $MONGO_HOST --port $MONGO_PORT --db preports --out $DB_BACKUP_P
 
 echo 'Zipping mongo dump'
 
-zip -r $DB_BACKUP_PATH/db.zip $DB_BACKUP_PATH/preports
+tar -zcvf $DB_BACKUP_PATH/db.tar.gz $DB_BACKUP_PATH/preports
 
 echo 'Backing up report attachments'
 
-zip -r $ATT_BACKUP_PATH/attachements.zip $PREPORTS_ATTACHEMENTS
+tar -zcvf $ATT_BACKUP_PATH/attachements.tar.gz $PREPORTS_ATTACHEMENTS
 
 echo 'Preports backup complete'

@@ -27,9 +27,7 @@ module.exports = {
 	        version: 'CAS3.0',
 	        validateURL: '/serviceValidate',
 	        ssoBaseURL: 'https://ysr-qa-frontend-01:8443/cas',
-	        //IPM CAS for testing -> direct login in IPM UI works
-	        //ssoBaseURL: 'https://10.49.128.21:8443/cas',
-	        serverBaseURL: 'http://ysr-dev-frontend-01:3000'
+	        serverBaseURL: 'http://ysr-qa-frontend-01:3000'
 	    }, function(profile, done) {
 	        var login = profile.subscriberId;
 	        return done(null, profile);
