@@ -5,10 +5,10 @@
 
 # Storage folder where to move backup files
 # Must contain backup.monthly backup.weekly backup.daily folders
-storage=/your/backup/folder
+storage=/opt/preports-backup
 
 # Mail for notification if failed 
-TARGET_MAIL=foo@bar.de
+TARGET_MAIL=bi-dev-support-products@bisnode.de
 
 
 # Source folder where files are backed
@@ -33,7 +33,7 @@ mkdir -p $storage/backup.weekly
 mkdir -p $storage/backup.monthly
 
 # Check if there are any files in the backup folder
-test "$(ls -A $source)" || ((echo "Please check your backup" | mail $TARGET_MAIL -s "[Backup] Daily backup failed! Backup folder is empty.") && exit 1)
+#test "$(ls -A $source)" || ((echo "Please check your backup" | mail $TARGET_MAIL -s "[Backup] Daily backup failed! Backup folder is empty.") && exit 1)
 
 # It is logical to run this script daily. We take files from source folder and move them to
 # appropriate destination folder

@@ -42,7 +42,7 @@ var App = function() {
 
     //Be sure to stick to the initialization order!
     //Otherwise problems are likely.
-    self.app.use('/', express.static(__dirname + '/www'));
+    self.app.use('/', express.static(__dirname + '/dist'));
     self.app.use(express.bodyParser({
         keepExtensions: true
     }));

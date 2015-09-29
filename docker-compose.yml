@@ -11,7 +11,7 @@ preportsweb:
   - NODE_ENV=development
   - UPLOAD_DIR=/var/preports/upload
   - MONGODB_DB_HOST=db
-  - DISABLE_CAS=false
+  - DISABLE_CAS=true
  ports:
   - "0.0.0.0:3000:3000"
  net: "bridge"
