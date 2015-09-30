@@ -168,8 +168,20 @@
 		</div>
 		<div class="col-md-6">
 			<p l="report.week" class="section-header">Calendar week</p>
-			<select ng-model="currentReport.week" ng-change="updateReportWeek(currentReport.week, '{{currentReport.week}}');" ng-options="c.week as c.week for c in weeks"  class="form-control hidden-print" style="width: 100px;" ng-disabled="currentReport.locked">
-			</select>
+			<form class="form-inline" style="width:178px;">
+  				<div class="form-group">
+  					<div class="input-group">
+	  					<div class="input-group-btn">
+							<button class="btn btn-default" ng-click="incrementalUpdateReportWeek('dec')"><i class="glyphicon glyphicon-minus"></i></button>
+						</div>
+						<select class="form-control" ng-model="currentReport.week" ng-change="updateReportWeek(currentReport.week, '{{currentReport.week}}');" ng-options="c.week as c.week for c in weeks"  class="form-control hidden-print" ng-disabled="currentReport.locked">
+						</select>
+						<span class="input-group-btn">
+							<button class="btn btn-default" ng-click="incrementalUpdateReportWeek('inc')"><i class="glyphicon glyphicon-plus"></i></button>
+						</span>
+					</div>
+				</div>
+			</form>
 			<p class="visible-print">{{currentReport.week}}</p>
 		</div>
 	</div>

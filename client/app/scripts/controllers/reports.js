@@ -423,6 +423,16 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       $scope.updateReport('week', parseInt(oldWeek), false);
     }
 
+    $scope.incrementalUpdateReportWeek = function(direction) {
+      var oldWeek = $scope.currentReport.week;
+      if(direction == 'dec') {
+        $scope.currentReport.week--;
+      } else if(direction == 'inc') {
+        $scope.currentReport.week++;  
+      }
+      
+      $scope.updateReportWeek($scope.currentReport.week, oldWeek);
+    }
 
   	$scope.deleteReport = function(report) {
       $scope.reportToDelete = report || $scope.currentReport;
