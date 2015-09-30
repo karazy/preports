@@ -12,9 +12,9 @@ angular.module('PReports.services').provider('config', function() {
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : 'http://127.0.0.1',
-		'servicePort' : '3000',
-		'version' : '1.3.1 Grumpy Giraffe',
+		'serviceUrl' : '',
+		'servicePort' : '',
+		'version' : '1.3.2 Grumpy Giraffe',
 		//the notification providers to use
 		'notificationProviders' : ['com-bisnode-notification', 'com-slack-notification'],
 		'notificationUrl' : 'http://ysr-dev-service-01:8181/rest/notification-service',
