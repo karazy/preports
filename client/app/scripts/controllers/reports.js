@@ -1228,14 +1228,17 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	
     //initially load reports or report entity based on url
-    if($routeParams.reportId) {
-      unregisterWatchForSearch();
-      $scope.loadReport($routeParams.reportId);      
-    } else {
-      $scope.loadReports();
-      loadProjectNames();
-      registerWatchForSearch();
-    }  
+    $timeout(function() {
+      if($routeParams.reportId) {
+        unregisterWatchForSearch();
+        $scope.loadReport($routeParams.reportId);      
+      } else {
+        $scope.loadReports();
+        loadProjectNames();
+        registerWatchForSearch();
+      } 
+    }, 50);
+ 
 
    /**
    * Handles errors during report update.
