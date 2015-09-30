@@ -172,12 +172,12 @@
   				<div class="form-group">
   					<div class="input-group">
 	  					<div class="input-group-btn">
-							<button class="btn btn-default" ng-click="incrementalUpdateReportWeek('dec')"><i class="glyphicon glyphicon-minus"></i></button>
+							<button class="btn btn-default" ng-click="incrementalUpdateReportWeek('dec')" ng-disabled="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>
 						</div>
 						<select class="form-control" ng-model="currentReport.week" ng-change="updateReportWeek(currentReport.week, '{{currentReport.week}}');" ng-options="c.week as c.week for c in weeks"  class="form-control hidden-print" ng-disabled="currentReport.locked">
 						</select>
 						<span class="input-group-btn">
-							<button class="btn btn-default" ng-click="incrementalUpdateReportWeek('inc')"><i class="glyphicon glyphicon-plus"></i></button>
+							<button class="btn btn-default" ng-click="incrementalUpdateReportWeek('inc')" ng-disabled="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
 						</span>
 					</div>
 				</div>
