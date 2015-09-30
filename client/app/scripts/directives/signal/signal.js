@@ -10,7 +10,7 @@ var //directive configuration
 		transclude: true,
 		priority: 100,
 		scope: {
-			title: '@',
+			signalTitle: '@',
 			onSignalChange: '&',
 			signalField: '@',
 			signalEntity: '=',
@@ -24,13 +24,16 @@ var //directive configuration
 		        	
 		        },
 		        post: function postLink(scope, iElement, iAttrs, controller) {
-		        	var dialog = iElement.find('.signal-body');
+		        	var dialog = iElement.find('.signal-body'),
+		        		prevValue;
 
-		        	scope.signalValue = scope.signalEntity[scope.signalField];
+		        	//scope.signalValue = scope.signalEntity[scope.signalField];
 	
 		        	scope.switchSignal = function (state) {	
 
 		        		if(scope.signalEnabled == true || typeof scope.signalEnabled == 'undefined') {
+
+		        			prevValue = scope.signalEntity[scope.signalField];
 
 			        		switch(state) {
 			        			case 'red':
@@ -44,7 +47,10 @@ var //directive configuration
 			        				break;
 			        		}
 
-			        		scope.onSignalChange();
+			        		scope.onSignalChange({
+			        			'modifiedProperty': scope.signalField, 
+			        			'prevValue': prevValue
+			        		});
 
 							console.log("Set state to " +scope.signalField);
 						}

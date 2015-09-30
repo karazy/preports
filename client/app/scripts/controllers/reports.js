@@ -26,6 +26,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
   	
   	$scope.weeks = [];
+    $scope.years = [2014, 2015, 2016, 2017];
 
   	$scope.config = config;
 
@@ -411,6 +412,16 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
       storeAndExecute(updateCommand);
   	}
+
+    $scope.updateReportYear = function(newYear, oldYear) {
+      $log.log("Updating report year from " + oldYear + " to " + newYear);
+      $scope.updateReport('year', parseInt(oldYear), false);
+    }
+
+    $scope.updateReportWeek = function(newWeek, oldWeek) {
+      $log.log("Updating report week from " + oldWeek + " to " + newWeek);
+      $scope.updateReport('week', parseInt(oldWeek), false);
+    }
 
 
   	$scope.deleteReport = function(report) {
