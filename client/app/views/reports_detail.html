@@ -232,24 +232,24 @@
 				</p>			
 			</div>
 			<div class="row section-row" ng-show="currentReport.milestones.length > 0">
-				<div class="col-md-3 section-info" l="date">
+				<div class="col-md-4 section-info" l="date">
 					Date
 				</div>
-				<div class="col-md-7 section-info" l="milestone">
+				<div class="col-md-6 section-info" l="milestone">
 					Milestone
 				</div>				
 			</div>
 			<div ng-repeat="m in currentReport.milestones" style="margin-bottom: 15px;">
 				<div class="row section-row">
-					<div class="col-md-3">
-						<div simple-property-editor editor-title="report.milestones.end" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="date" editor-field="end" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
+					<div class="col-md-4">
+						<div simple-property-editor editor-title="report.milestones.end" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="date" editor-field="end" editor-entity="currentReport.milestones[$index]" editor-enabled="!currentReport.locked" editor-type="datepicker">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
 								<span l="date" ng-hide="currentReport.milestones[$index].end" class="simple-property-placeholder" >date</span>
-								{{m.end}}
+								{{m.end | date:'yyyy-MM-dd'}}
 							</p>
 						</div>
 					</div>
-					<div class="col-md-7">	
+					<div class="col-md-6">	
 						<div simple-property-editor editor-title="report.milestones" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="report.milestones.ph" editor-required editor-field="name" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
 							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">{{m.name}}</p>
 						</div>
