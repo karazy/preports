@@ -54,7 +54,8 @@ PReports = angular.module('PReports', [
   'PReports.translations',
   'PReports.filters',
   'angularFileUpload',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ui.sortable'
 ]).config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
     $routeProvider
       .when('/reports', {

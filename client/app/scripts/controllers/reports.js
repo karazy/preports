@@ -40,6 +40,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
      */
      $scope.commands = [];
 
+     /**
+     * Options used for sortable elements.
+     *
+     */
+     $scope.reportSortableOptions = {
+        disabled: false,
+        update: function(event) {
+          $scope.updateReport();
+        }
+    };
+
+    jQuery('[data-toggle="tooltip"]').tooltip();
+
 
     //Report Structure
 
@@ -1238,6 +1251,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         registerWatchForSearch();
       } 
     }, 50);
+
  
 
    /**

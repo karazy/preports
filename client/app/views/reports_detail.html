@@ -51,8 +51,8 @@
 			<div simple-property-editor editor-title="report.name" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.name" editor-required editor-field="name" editor-entity="currentReport" editor-enabled="!currentReport.locked">				
 				<h1 ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}">				
 					{{currentReport.name}}
-				</h1>				
-			</div>			
+				</h1>								
+			</div>
 		</div>
 		<!-- <i class="glyphicon glyphicon-arrow-left"></i>  -->		
 	</div>
@@ -229,7 +229,8 @@
 			<div style="margin-bottom: 15px;">			
 				<button class="btn btn-primary btn-sm pull-right" ng-click="addMilestone();" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
 				<p l="report.milestones" class="section-header">Milestones
-				</p>			
+				</p>
+				<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Drag & Drop milestones to rearrange" data-placement="top"></i>			
 			</div>
 			<div class="row section-row" ng-show="currentReport.milestones.length > 0">
 				<div class="col-md-4 section-info" l="date">
@@ -239,6 +240,7 @@
 					Milestone
 				</div>				
 			</div>
+			<div ui-sortable="reportSortableOptions" ng-model="currentReport.milestones">
 			<div ng-repeat="m in currentReport.milestones" style="margin-bottom: 15px;">
 				<div class="row section-row">
 					<div class="col-md-4">
@@ -266,6 +268,7 @@
 						<button class="btn btn-warning btn-xs pull-right" ng-click="removeMilestone($index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>
 					</div>
 				</div>
+			</div>
 			</div>
 		</div>
 	</div>
