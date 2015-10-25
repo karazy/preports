@@ -4,7 +4,7 @@ preportsweb:
   #mount the app from the current folder
   - .:/opt/yukon/node
   #Upload directory for images
-  - /opt/preports-data/upload:/var/preports/upload
+  - /Users/fred/Dev/preports-data/upload:/var/preports/upload
  links:
   - db
  environment:
@@ -20,6 +20,6 @@ db:
  image: mongo:3.0.6
  ports:
   - "0.0.0.0:27018:27017"
- volumes:
-  - /opt/preports-data/db:/data/db
+# volumes:
+#  - /Users/fred/Dev/preports-data/db:/data/db
  privileged: true
