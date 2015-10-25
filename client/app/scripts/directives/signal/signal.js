@@ -59,7 +59,7 @@ var //directive configuration
 
 		        	scope.isActive = function(state) {
 
-		        		if(scope.signalEntity[scope.signalField] == state) {
+		        		if(scope.signalEntity && scope.signalEntity[scope.signalField] == state) {
 		        			return true;
 		        		} else {
 		        			return false;
