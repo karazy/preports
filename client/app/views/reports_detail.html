@@ -29,21 +29,7 @@
 		</div>
 		<!-- Action bar -->
 		<div class="col-md-8">
-			<div id="actionBar" class="btn-toolbar pull-right" role="toolbar">
-				<button type="button" class="btn btn-info btn-sm" ng-click="removeAndUndoLastCommand();" style="margin-top: 0px;" ng-disabled="commands.length == 0 || ajaxLoading" ng-hide="currentReport.locked"><i class="icon-undo"></i> x {{commands.length}}</button>
-				<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(currentReport)" dialog-confirm-button="copy">
-					<button class="btn btn-primary btn-info copy-button btn-sm" style="margin-top: 0px;"><i class="icon-copy"></i></button>
-				</span>
-				<button type="button" class="btn btn-sm btn-info" ng-click="printReport();" style="margin-top: 0px;"><i class="glyphicon glyphicon-print"></i></button>
-				<span simple-confirm-dialog dialog-title="report.notification.title" dialog-text="report.notification.text" dialog-on-confirm="sendNotifications()" dialog-confirm-button="send">
-					<button type="button" class="btn btn-info btn-sm" style="margin-top: 0px;" ng-disabled="!currentReport.settings.notification || currentReport.settings.notification.recipients.length == 0"><i class="glyphicon glyphicon-envelope"></i></button>
-				</span>
-				<button class="btn btn-primary btn-info btn-sm" style="margin-top: 0px;" ng-click="toggleReportLock();"><i ng-class="{'icon-unlock':!currentReport.locked, 'icon-lock':currentReport.locked}"></i></button>
-				<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport()" dialog-confirm-button="delete" dialog-confirm-btn-cls="btn-danger">
-					<button type="button" class="btn btn-danger btn-sm" style="margin-top: 0px;"><i class="glyphicon glyphicon-trash" ></i></button>
-					<!-- ng-click="deleteReport()" -->
-				</span>	
-			</div>		
+			<div ng-include src="'views/reports_detail/actionbar.html'"></div>
 		</div>
 	</div>
 	<div class="row section">
@@ -174,7 +160,7 @@
 	  					<div class="input-group-btn">
 							<button class="btn btn-default" ng-click="incrementalUpdateReportWeek('dec')" ng-disabled="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>
 						</div>
-						<select class="form-control" ng-model="currentReport.week" ng-change="updateReportWeek(currentReport.week, '{{currentReport.week}}');" ng-options="c.week as c.week for c in weeks"  class="form-control hidden-print" ng-disabled="currentReport.locked">
+						<select class="form-control" ng-model="currentReport.week" ng-change="updateReportWeek(currentReport.week, '{{currentReport.week}}');" ng-options="c.week as c.week for c in weeks"  class="form-control hidden-print" style="width: 100px;" ng-disabled="currentReport.locked">
 						</select>
 						<span class="input-group-btn">
 							<button class="btn btn-default" ng-click="incrementalUpdateReportWeek('inc')" ng-disabled="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
@@ -228,9 +214,9 @@
 		<div class="col-md-12">
 			<div style="margin-bottom: 15px;">			
 				<button class="btn btn-primary btn-sm pull-right" ng-click="addMilestone();" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
-				<p l="report.milestones" class="section-header">Milestones
-				</p>
-				<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Drag & Drop milestones to rearrange" data-placement="top"></i>			
+				<p class="section-header"><span l="report.milestones">Milestones</span>
+				<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Drag & Drop milestones to rearrange" data-placement="top"></i>
+				</p>							
 			</div>
 			<div class="row section-row" ng-show="currentReport.milestones.length > 0">
 				<div class="col-md-4 section-info" l="date">

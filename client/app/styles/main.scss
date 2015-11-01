@@ -1,6 +1,9 @@
-$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+/*$icon-font-path: "/bower_components/sass-bootstrap/fonts/";*/
 
-@import 'sass-bootstrap/lib/bootstrap';
+/*@import 'sass-bootstrap/lib/bootstrap';*/
+$icon-font-path: '../bower_components/bootstrap-sass/assets/fonts/bootstrap/';
+@import "../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "../bower_components/bootstrap-sass/assets/stylesheets/bootstrap-compass";
 
 @import 'signal';
 
