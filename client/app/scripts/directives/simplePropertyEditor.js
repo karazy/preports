@@ -169,7 +169,10 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					        }
 					      }
 
-					      ctrl.$formatters.push(function(value) {
+					      ctrl.$formatters.push(dateFormatter);	
+					      
+
+					      function dateFormatter(value) {
 					      	var d;
 					      	console.log("Formatting value " + value);
 					      	
@@ -182,7 +185,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					      		return $filter('date')(value, 'yyyy-MM-dd');
 					      	} else return value;
 					      	
-					      });
+					      }
 
 					      //configure datepicker
 					      scope.dateOptions = {

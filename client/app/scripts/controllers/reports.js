@@ -48,8 +48,28 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
          */
          $scope.reportSortableOptions = {
             disabled: $scope.isReportLocked(),
-            update: function(event) {
-              $scope.updateReport();
+            axis: 'y',
+            update: function(event, ui) {
+              var updateCommand = {},
+                  oldOrder = angular.copy($scope.currentReport.milestones);
+
+              updateCommand.execute = function() {
+                $scope.currentReport.$update();
+              }
+
+              updateCommand.undo = function() {
+                //arraymove($scope.currentReport.milestones,)
+                $scope.currentReport.milestones = oldOrder;
+                $scope.currentReport.$update();
+              }
+
+              function arraymove(arr, fromIndex, toIndex) {
+                  var element = arr[fromIndex];
+                  arr.splice(fromIndex, 1);
+                  arr.splice(toIndex, 0, element);
+              }
+
+              storeAndExecute(updateCommand);
             }
         };
      }
@@ -356,23 +376,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       }
 
       if(isArray && typeof index == 'number' && arrayName) {
-        // var props = arrayName.split('.'),
-        //     nestedObject;
-        // if(props.length > 0) {
-        //   val = $scope.currentReport;
-        //   for (var i = 0; i < props.length; i++) {
-        //     val = val[props[i]];
-        //   }
-
-          
-
-        //   updateCommand.nV = nestedObject[index][updateCommand.mP];
-        // } else {
           var nestedObject = getNestedObject($scope.currentReport, arrayName);
           updateCommand.nV = nestedObject[index][updateCommand.mP];
-          // updateCommand.nV = $scope.currentReport[arrayName][index][updateCommand.mP];  
-        // }
-        
       } else {
         updateCommand.nV = $scope.currentReport[updateCommand.mP];  
       }
