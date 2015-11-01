@@ -40,16 +40,20 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
      */
      $scope.commands = [];
 
-     /**
-     * Options used for sortable elements.
-     *
-     */
-     $scope.reportSortableOptions = {
-        disabled: false,
-        update: function(event) {
-          $scope.updateReport();
-        }
-    };
+
+    function updateSortableOptions() {
+        /**
+         * Options used for sortable elements.
+         *
+         */
+         $scope.reportSortableOptions = {
+            disabled: $scope.isReportLocked(),
+            update: function(event) {
+              $scope.updateReport();
+            }
+        };
+     }
+
 
     jQuery('[data-toggle="tooltip"]').tooltip();
 
@@ -212,6 +216,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
       $scope.currentReport = Report.get({'id':id}, function() {      	
       	setupFileUpload();
+        updateSortableOptions();
       }, function(httpResponse) {
       	$scope.reportNotFound = true;
       	errorHandler(httpResponse);
@@ -383,7 +388,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           $scope.currentReport[updateCommand.mP] = updateCommand.nV;  
         }
 
-        $scope.currentReport.$update(angular.noop, handleUpdateError);  
+        $scope.currentReport.$update(angular.noop, handleUpdateError);          
       }
 
       //only add update command when a modified property exists
@@ -424,6 +429,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       }   
 
       storeAndExecute(updateCommand);
+
+      updateSortableOptions();
   	}
 
     $scope.updateReportYear = function(newYear, oldYear) {
@@ -1013,6 +1020,14 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
     $scope.updateReport();
     
+  }
+
+  $scope.isReportLocked = function() {
+    if(!$scope.currentReport) {
+      return false;
+    }
+
+    return $scope.currentReport.locked;
   }
 
 
