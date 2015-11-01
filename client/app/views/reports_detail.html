@@ -227,34 +227,26 @@
 				</div>				
 			</div>
 			<div ui-sortable="reportSortableOptions" ng-model="currentReport.milestones">
-			<div ng-repeat="m in currentReport.milestones" style="margin-bottom: 15px;">
-				<div class="row section-row">
-					<div class="col-md-4">
-						<div simple-property-editor editor-title="report.milestones.end" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="date" editor-field="end" editor-entity="currentReport.milestones[$index]" editor-enabled="!currentReport.locked" editor-type="datepicker">
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
-								<span l="date" ng-hide="currentReport.milestones[$index].end" class="simple-property-placeholder" >date</span>
-								{{m.end | date:'yyyy-MM-dd'}}
-							</p>
+				<div ng-repeat="m in currentReport.milestones" style="margin-bottom: 15px;">
+					<div class="row section-row">
+						<div class="col-md-4">
+							<div simple-property-editor editor-title="report.milestones.end" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="date" editor-field="end" editor-entity="currentReport.milestones[$index]" editor-enabled="!currentReport.locked" editor-type="datepicker">
+								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
+									<span l="date" ng-hide="currentReport.milestones[$index].end" class="simple-property-placeholder" >date</span>
+									{{m.end | date:'yyyy-MM-dd'}}
+								</p>
+							</div>
 						</div>
-					</div>
-					<div class="col-md-6">	
-						<div simple-property-editor editor-title="report.milestones" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="report.milestones.ph" editor-required editor-field="name" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">{{m.name}}</p>
+						<div class="col-md-6">	
+							<div simple-property-editor editor-title="report.milestones" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="report.milestones.ph" editor-required editor-field="name" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
+								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">{{m.name}}</p>
+							</div>
 						</div>
-					</div>
-				<!-- 	<div class="col-md-3">
-						<div simple-property-editor editor-title="report.milestones.start" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="start" editor-field="start" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
-								<span l="start" ng-hide="currentReport.milestones[$index].start" class="simple-property-placeholder" >Start</span>
-								{{m.start}}
-							</p>
+						<div class="col-md-2">
+							<button class="btn btn-warning btn-xs pull-right" ng-click="removeMilestone($index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>
 						</div>
-					</div> -->
-					<div class="col-md-2">
-						<button class="btn btn-warning btn-xs pull-right" ng-click="removeMilestone($index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>
 					</div>
 				</div>
-			</div>
 			</div>
 		</div>
 	</div>
