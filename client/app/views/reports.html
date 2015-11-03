@@ -11,7 +11,7 @@
 			<div class="input-group">
 				<input type="text" class="form-control" l="reports.new" l-attribute="placeholder" placeholder="New report" ng-model="newReportName" typeahead="name for name in projectNames | filter:$viewValue | limitTo:8"></input>
 				<span class="input-group-btn">
-					<button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> <span l="reports.new.button">New Report</span>
+					<button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> <span l="reports.new.button">New Report</span>					
 				</button>	 
 				</span>
 			</div>
@@ -32,9 +32,15 @@
 			</div>
 		</div>
 		<div class="form-group col-md-2">
-			<select ng-model="search.week" ng-options="c.week as c.week for c in weeks"  class="form-control" >		
-				<option value="" l="all">all</option>
-			</select>
+			<div class="input-group">			  
+				<select ng-model="search.week" ng-options="c.week as c.week for c in weeks"  class="form-control" >	
+					<option value="" l="all">all</option>
+				</select>
+				<span class="input-group-btn">
+			  		<button class="btn btn-default" type="button" ng-click="search.week = currentCalWeek;"><i class="glyphicon glyphicon-screenshot"></i></button>
+			  		<button class="btn btn-default" type="button" ng-click="search.week = '';"><i class="glyphicon glyphicon-resize-vertical"></i></button>
+			  </span>
+			</div>
 		</div>		
 		<div class="form-group col-md-2">
 			<select ng-model="search.year" class="form-control"  >
@@ -53,7 +59,6 @@
 <div class="col-md-12" style="margin-top:20px;">	
 	<table class="table table-hover">
 		<thead>
-			<!-- <th>_id</th> -->
 			<th l="reports.table.name">Project name</th>
 			<th l="reports.table.week">Week</th>
 			<th l="reports.table.year">Year</th>
@@ -61,10 +66,7 @@
 			<th l="reports.table.actions">Actions</th>
 		</thead>
 		<tbody>
-			<!-- | filter:{name: search.name} -->
-			<!-- | orderBy:['year','week', 'name'] -->
 			<tr ng-repeat="r in reports | orderBy:['year','week']" ng-click="showReport(r._id, $event)">
-				<!-- <td>{{r._id}}</td> -->
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>

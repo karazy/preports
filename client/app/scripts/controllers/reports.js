@@ -15,6 +15,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
   	$scope.reports = [];
 
     $scope.currentReport = null;
+    /*
+    * Current calendar week.
+    */
+    $scope.currentCalWeek = (new Date).getWeek();
 
     //initialize global search parameters if they don't exist on $rootScope
   	$rootScope.search = $rootScope.search || {};
