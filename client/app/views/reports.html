@@ -57,43 +57,45 @@
 </div> 
 <div class="row">
 <div class="col-md-12" style="margin-top:20px;">	
-	<table class="table table-hover">
-		<thead>
-			<th l="reports.table.name">Project name</th>
-			<th l="reports.table.week">Week</th>
-			<th l="reports.table.year">Year</th>
-			<th><i class="glyphicon glyphicon-piggy-bank"></i></th>
-			<th><i class="glyphicon glyphicon-hourglass"></i></th>
-			<th><i class="glyphicon glyphicon-thumbs-up"></i></th>			
-			<th><i class="glyphicon glyphicon-picture"></i></th>
-			<th l="reports.table.actions">Actions</th>
-		</thead>
-		<tbody>
-			<tr ng-repeat="r in reports | orderBy:['year','week']" ng-click="showReport(r._id, $event)">
-				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
-				<td>{{r.week}}</td>
-				<td>{{r.year}}</td>
-				<td>
-					<div class="state-marker" ng-class="getStateColor(r.budgetState)"></div>
-				</td>
-				<td>
-				<div class="state-marker" ng-class="getStateColor(r.qualityState)"></div>
-				</td>
-				<td>
-				<div class="state-marker" ng-class="getStateColor(r.timeState)"></div>
-				</td>
-				<td>{{r.images.length}}</td>
-				<td>
-					<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(r)" dialog-confirm-button="copy">
-						<button class="btn btn-primary btn-xs copy-button"><i class="icon-copy"></i></button>
-					</span>
-					<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport(r)" dialog-confirm-button="delete" dialog-confirm-btn-cls="btn-danger">
-						<button type="button" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></button>
-					</span>	
-				</td>
-			</tr>			
-		</tbody>
-	</table>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<th l="reports.table.name">Project name</th>
+				<th l="reports.table.week">Week</th>
+				<th l="reports.table.year">Year</th>
+				<th><i class="glyphicon glyphicon-piggy-bank"></i></th>
+				<th><i class="glyphicon glyphicon-hourglass"></i></th>
+				<th><i class="glyphicon glyphicon-thumbs-up"></i></th>			
+				<th><i class="glyphicon glyphicon-picture"></i></th>
+				<th l="reports.table.actions">Actions</th>
+			</thead>
+			<tbody>
+				<tr ng-repeat="r in reports | orderBy:['year','week']" ng-click="showReport(r._id, $event)">
+					<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
+					<td>{{r.week}}</td>
+					<td>{{r.year}}</td>
+					<td>
+						<div class="state-marker" ng-class="getStateColor(r.budgetState)"></div>
+					</td>
+					<td>
+					<div class="state-marker" ng-class="getStateColor(r.qualityState)"></div>
+					</td>
+					<td>
+					<div class="state-marker" ng-class="getStateColor(r.timeState)"></div>
+					</td>
+					<td>{{r.images.length}}</td>
+					<td>
+						<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(r)" dialog-confirm-button="copy">
+							<button class="btn btn-primary btn-xs copy-button"><i class="icon-copy"></i></button>
+						</span>
+						<span simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport(r)" dialog-confirm-button="delete" dialog-confirm-btn-cls="btn-danger">
+							<button type="button" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></button>
+						</span>	
+					</td>
+				</tr>			
+			</tbody>
+		</table>
+	</div>
 	<div>
 		<ul class="pager">
 		  <li class="previous"><a href="" ng-show="reportsWrapper._links.prev" ng-click="loadReports('prev')"><i class="glyphicon glyphicon-chevron-left"></i></a></li>
