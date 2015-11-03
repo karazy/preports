@@ -8,6 +8,11 @@ PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ###Release Notes
 
+####v1.4.0 Herculean Hedgehog
+- Milestones are dragable for easy rearrangement.
+- Migrated to Bootstrap 3.3.5.
+- Minor fixes and tweaks.
+
 ####v1.3.1 Grumpy Giraffe
 - Fixed issue in simple property editor not displaying the saved value when type datepicker is used.
 
