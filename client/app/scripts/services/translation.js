@@ -393,12 +393,12 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Internal iQuest"
 		},
 		"report.ordernumber.title": {
-			"DE" : "#Order",
-			"EN" : "#Order"
+			"DE" : "#Projekt Nr.",
+			"EN" : "#Project No."
 		},
 		"report.ordernumber.ph": {
-			"DE" : "SAP Nummer eingeben",
-			"EN" : "Enter SAP number"
+			"DE" : "Projektnummer eingeben",
+			"EN" : "Enter project number"
 		},
 		"report.time.plan.title": {
 			"DE" : "Plan",

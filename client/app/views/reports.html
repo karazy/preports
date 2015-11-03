@@ -18,9 +18,9 @@
 		</div>		
 	</form>		
 </div>
-<div class="row">	
+<div class="row" style="margin-bottom: 20px;">	
 	<form role="form">	
-		<div class="form-group col-md-7">
+		<div class="form-group col-md-6">
 			<div class="input-group">
 			  <span class="input-group-addon">
 			  	<i class="glyphicon glyphicon-search"></i>
@@ -31,7 +31,7 @@
 			  </span>
 			</div>
 		</div>
-		<div class="form-group col-md-2">
+		<div class="form-group col-md-3">
 			<div class="input-group">			  
 				<select ng-model="search.week" ng-options="c.week as c.week for c in weeks"  class="form-control" >	
 					<option value="" l="all">all</option>
@@ -56,7 +56,7 @@
 	</form>	
 </div> 
 <div class="row">
-<div class="col-md-12" style="margin-top:20px;">	
+<div class="col-md-12">	
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
