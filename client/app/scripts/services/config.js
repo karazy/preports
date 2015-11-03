@@ -12,8 +12,8 @@ angular.module('PReports.services').provider('config', function() {
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : '',
-		'servicePort' : '',
+		'serviceUrl' : 'http://192.168.99.100',
+		'servicePort' : '3000',
 		'version' : '1.4.0 Herculean Hedgehog',
 		//the notification providers to use
 		'notificationProviders' : ['com-bisnode-notification', 'com-slack-notification'],
