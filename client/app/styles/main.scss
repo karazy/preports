@@ -310,6 +310,9 @@ table {
 
 $state-size: 15px;
 $state-radius: 50%;
+$state-color-yellow: #F4E544;
+$state-color-red: #AE1E21;
+$state-color-green: green;
 
 .state-marker {
     width: $state-size;
@@ -319,17 +322,17 @@ $state-radius: 50%;
     margin: 3px 0 3px 0;
 
     &.red {
-      background-color: red !important;
-      border-color: darken(red, 10%);
+      background-color: $state-color-red !important;
+      border-color: darken($state-color-red, 10%);
     }
 
     &.yellow {
-      background-color: yellow !important;
-      border-color: darken(yellow, 10%);
+      background-color: $state-color-yellow !important;
+      border-color: darken($state-color-yellow, 10%);
     }
 
     &.green {
-      background-color: green !important;
-      border-color: darken(green, 10%);
+      background-color: $state-color-green !important;
+      border-color: darken($state-color-green, 10%);
     }
 }

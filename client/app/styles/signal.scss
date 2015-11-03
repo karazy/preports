@@ -1,5 +1,9 @@
 $signal-size: 40px;
 $signal-radius: 50%;
+$signal-color-yellow: #F4E544;
+$signal-color-red: #AE1E21;
+$signal-color-green: green;
+
 
 .signal {
 	float: left;
@@ -25,18 +29,18 @@ $signal-radius: 50%;
 		margin: 3px 0 3px 0;
 
 		&.red {
-			background-color: red !important;
-			border-color: darken(red, 10%);
+			background-color: $signal-color-red !important;
+			border-color: darken($signal-color-red, 10%);
 		}
 
 		&.yellow {
-			background-color: yellow !important;
-			border-color: darken(yellow, 10%);
+			background-color: $signal-color-yellow !important;
+			border-color: darken($signal-color-yellow, 10%);
 		}
 
 		&.green {
-			background-color: green !important;
-			border-color: darken(green, 10%);
+			background-color: $signal-color-green !important;
+			border-color: darken($signal-color-green, 10%);
 		}
 
 		input {

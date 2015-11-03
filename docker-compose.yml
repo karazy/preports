@@ -5,6 +5,7 @@ preportsweb:
   - .:/opt/yukon/node
   #Upload directory for images
   - /Users/fred/Dev/preports-data/upload:/var/preports/upload
+  - /Users/fred/Dev/preports-data/upload:/var/preports/upload
  links:
   - db
  environment:
