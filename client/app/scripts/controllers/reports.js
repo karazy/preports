@@ -1224,6 +1224,22 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     return helper.isZero(value);
   }
 
+  $scope.getStateColor = function(state) {
+    var color = "";
+
+    if(!state) {
+      return "";
+    }
+
+    switch(state) {
+      case 1: color = "red"; break;
+      case 2: color = "yellow"; break;
+      case 3: color = "green"; break;
+    }
+
+    return color;
+  }
+
  	function loadProjectNames() {
  		$http.get($scope.config.getCombinedServiceUrl() + '/reports', {
       headers: {

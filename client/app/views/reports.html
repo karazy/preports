@@ -62,7 +62,10 @@
 			<th l="reports.table.name">Project name</th>
 			<th l="reports.table.week">Week</th>
 			<th l="reports.table.year">Year</th>
-			<th l="reports.table.images">Images</th>
+			<th><i class="glyphicon glyphicon-piggy-bank"></i></th>
+			<th><i class="glyphicon glyphicon-hourglass"></i></th>
+			<th><i class="glyphicon glyphicon-thumbs-up"></i></th>			
+			<th><i class="glyphicon glyphicon-picture"></i></th>
 			<th l="reports.table.actions">Actions</th>
 		</thead>
 		<tbody>
@@ -70,6 +73,15 @@
 				<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 				<td>{{r.week}}</td>
 				<td>{{r.year}}</td>
+				<td>
+					<div class="state-marker" ng-class="getStateColor(r.budgetState)"></div>
+				</td>
+				<td>
+				<div class="state-marker" ng-class="getStateColor(r.qualityState)"></div>
+				</td>
+				<td>
+				<div class="state-marker" ng-class="getStateColor(r.timeState)"></div>
+				</td>
 				<td>{{r.images.length}}</td>
 				<td>
 					<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(r)" dialog-confirm-button="copy">

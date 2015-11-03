@@ -307,3 +307,26 @@ table {
     min-width: 120px;
   }
 }
+
+$state-size: 15px;
+$state-radius: 50%;
+
+.state-marker {
+    width: $state-size;
+    height: $state-size;
+    border-radius: $state-radius;
+    border: 1px solid #c3c3c3;
+    margin: 3px 0 3px 0;
+
+    &.red {
+      background-color: red !important;
+    }
+
+    &.yellow {
+      background-color: yellow !important;
+    }
+
+    &.green {
+      background-color: green !important;
+    }
+}
