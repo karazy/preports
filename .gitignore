@@ -3,3 +3,4 @@ node_modules
 .preports
 .directory
 .bash_history
+preports-local.yml
