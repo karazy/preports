@@ -1,7 +1,4 @@
 preportsweb:
- extends:
-  file: preports-local.yml
-  service: web
  build: .
  volumes:
   #mount the app from the current folder
@@ -20,9 +17,6 @@ preportsweb:
  privileged: true
 db:
  image: mongo:3.0.6
- extends:
-  file: preports-local.yml
-  service: db
  ports:
   - "0.0.0.0:27018:27017"
  volumes:

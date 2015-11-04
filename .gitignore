@@ -4,3 +4,4 @@ node_modules
 .directory
 .bash_history
 preports-local.yml
+docker-compose.override.yml
