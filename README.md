@@ -1,7 +1,7 @@
 preports-service
 ========
 
-project reports - create and manage weekly it project reports
+project reports - create and manage weekly project reports
 
 
 PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
@@ -10,6 +10,7 @@ PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ####v1.4.0 Herculean Hedgehog
 - Milestones are dragable for easy rearrangement.
+- See project status in overview.
 - Migrated to Bootstrap 3.3.5.
 - Minor fixes and tweaks.
 
@@ -88,9 +89,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-
-
-The OpenShift `nodejs` cartridge documentation can be found at:
-
-https://github.com/openshift/origin-server/tree/master/cartridges/openshift-origin-cartridge-nodejs/README.md

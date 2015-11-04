@@ -3,18 +3,16 @@
   "description": "project reports | reports at a glance",
   "version": "1.1.0",
   "keywords": [
-    "OpenShift",
     "Node.js",
-    "application",
-    "openshift"
+    "application"
   ],
   "author": {
     "name": "Frederik Reifschneider",
-    "email": "frederik.reifschneider@bisnode.de"
+    "email": "frederik.reifschneider@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/BisnodeInformatics/preports"
+    "url": "https://github.com/karazy/preports"
   },
   "engines": {
     "node": ">= 0.10.0",
