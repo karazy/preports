@@ -12,7 +12,7 @@ angular.module('PReports.services').provider('config', function() {
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : 'http://192.168.99.100',
+		'serviceUrl' : 'http://127.0.0.1',
 		'servicePort' : '3000',
 		'version' : '1.4.0 Herculean Hedgehog',
 		//the notification providers to use

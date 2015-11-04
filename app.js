@@ -11,7 +11,7 @@ var cookieParser = require('cookie-parser');
 var mongo = require('./database/mongo');
 
 //Skip validation if DISABLE_CAS == true
-if(process.env.DISABLE_CAS == "true") {
+if(process.env.DISABLE_CAS == 'true' && process.env.NODE_ENV != 'production') {
     console.log('Found DISABLE_CAS = true. Disabled CAS authentication! Don\'t use for production.');
     config.authentication.disabled = true;
 }

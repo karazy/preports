@@ -1,8 +1,8 @@
 preportsweb:
- build: .
  extends:
   file: preports-local.yml
   service: web
+ build: .
  volumes:
   #mount the app from the current folder
   - .:/opt/yukon/node
@@ -22,7 +22,7 @@ db:
  image: mongo:3.0.6
  extends:
   file: preports-local.yml
-  service: dbconfig
+  service: db
  ports:
   - "0.0.0.0:27018:27017"
  volumes:
