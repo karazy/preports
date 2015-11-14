@@ -24,7 +24,7 @@ var App = function() {
 
     // Setup
 
-    self.dbHost = process.env.MONGODB_DB_HOST || "localhost";
+    self.dbHost = process.env.MONGODB_DB_HOST || process.env.MONGOLAB_URI || "localhost";
     self.dbPort = 27017;
     self.uploadDir = process.env.UPLOAD_DIR;
 
@@ -63,8 +63,10 @@ var App = function() {
 
     self.app.use(self.app.router);
 
-
-    if (typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
+    if(typeof process.env.MONGOLAB_URI !== "undefined") {
+        console.log("Connecting to mongolab");
+        self.dbConnect = process.env.MONGOLAB_URI;
+    } else if (typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
         self.dbConnect = "mongodb://" + self.dbHost + ":" + self.dbPort + "/preports";
     } else {
         console.log("mongo logon with user: " + process.env.OPENSHIFT_MONGODB_DB_USERNAME);
