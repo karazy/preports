@@ -41,6 +41,6 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "app.js"
+    "start": "node app.js"
   }
 }
