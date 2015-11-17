@@ -28,6 +28,11 @@ var App = function() {
     self.dbPort = 27017;
     self.uploadDir = process.env.UPLOAD_DIR;
 
+    //Check if a port (from Heroku) is set and use it!
+    if(process.env.PORT) {
+        config.port = process.env.PORT;
+    }
+
 
     var allowCrossDomain = function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
