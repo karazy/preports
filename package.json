@@ -40,6 +40,7 @@
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
     "node-embedded-mongodb": "0.0.2",
+    "pow-mongodb-fixtures": "^0.13.0",
     "sinon": "^1.17.2",
     "supertest": "^1.1.0"
   },

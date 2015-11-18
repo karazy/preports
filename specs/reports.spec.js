@@ -3,10 +3,13 @@
 var app = require('../app').app,
 	mongoHelper = require('./helpers/mongo'),
 	mongo = require('../database/mongo'),
-	chai = require('chai'),
+	expect = require('chai').expect,
 	http = require('http'),
 	request = require('supertest'),
-	sinon = require('sinon');
+	sinon = require('sinon'),
+	fixtures = require('pow-mongodb-fixtures').connect('preports');
+
+
 
 
 before(function(done) {
@@ -18,11 +21,23 @@ before(function(done) {
 		if(mongo.getDB() == null) {
 			setTimeout(checkDbConnection, 50);
 		} else {
-			done();
+			//Files
+			console.log('Database is running... starting tests');
+			fixtures.load(__dirname + '/helpers/fixtures.js', function() {
+				console.log('Loaded fixtures');
+				done();	
+			});			
 		}
 	}
-
 });
+
+after(function(done) {
+	fixtures.clear(function(err) {
+	   console.log('Database cleaned.');
+	   done();
+	});
+});
+
 
 describe('When loading all reports', function() {
 	beforeEach(function() {
@@ -34,21 +49,17 @@ describe('When loading all reports', function() {
 	});
 
 	it('should return a 200', function(done) {
-	/*	var req = {
-			accepts: 'application/json'
-		};
 
-		req.query = {
-			limit: 25,
-			page: 0,
-			year: 2015
-		}
-*/
-//console.log(app);
 	request(app)
       .get('/reports')
+      .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(200, done);
+      .expect(200)
+      .end(function(err, res){
+    	if (err) throw err;
+    		expect(res.body.reports).to.have.length(2);
+    		done();
+  		});
 
 	});
 });
