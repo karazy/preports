@@ -1,17 +1,18 @@
 'use strict';
 
 exports.reports = [
-{
+    {
+      // "_id": "564cf41ef110b5ef6846f8db",
       "year": 2015,
       "week": 47,
       "name": "Test Report",
       "milestones": [],
-      "lastModified": 1447881956451,
-      "version": 8,
-      "createdOn": "2015-11-18T21:25:36.000Z",
+      "lastModified": 1447883813587,
+      "version": 5,
+      "createdOn": "2015-11-18T21:56:46.000Z",
       "_links": {
         "self": {
-          "href": "/reports/564cecd00759e7fc656fdaeb"
+          "href": "/reports/564cf41ef110b5ef6846f8db"
         },
         "collection": {
           "href": "/reports"
@@ -20,35 +21,39 @@ exports.reports = [
       "budgetState": 3,
       "timeState": 2,
       "qualityState": 1,
-      "executiveSponsor": "Frederik Reifschneider",
-      "partner": "Fred Inc",
-      "projectManagers": "Fredster",
-      "leadDevelopers": "Freddev"
+      "leadDevelopers": "Fred"
     },
     {
+      // "_id": "564cf435f110b5ef6846f8dc",
       "year": 2015,
       "week": 47,
-      "name": "Test Report 2",
+      "name": "Report with missing file",
       "milestones": [],
-      "lastModified": 1447882016896,
+      "lastModified": 1447883843607,
       "version": 2,
-      "createdOn": "2015-11-18T21:26:53.000Z",
+      "images": [
+        {
+          "filename": "26863-10sg1g3.jpg",
+          "name": "HEI12EW012000_0547.jpg",
+          "_id": "564cf443f110b5ef6846f8dd",
+          "_links": {
+            "self": {
+              "href": "/reports/564cf435f110b5ef6846f8dc/images/564cf443f110b5ef6846f8dd"
+            },
+            "collection": {
+              "href": "/reports/564cf435f110b5ef6846f8dc/images"
+            }
+          }
+        }
+      ],
+      "createdOn": "2015-11-18T21:57:09.000Z",
       "_links": {
         "self": {
-          "href": "/reports/564ced1d0759e7fc656fdaec"
+          "href": "/reports/564cf435f110b5ef6846f8dc"
         },
         "collection": {
           "href": "/reports"
         }
-      },
-      "budgetState": 3,
-      "timeState": 2,
-      "qualityState": 1,
-      "executiveSponsor": "Frederik Reifschneider",
-      "partner": "Fred Inc",
-      "projectManagers": "Fredster",
-      "leadDevelopers": "Freddev",
-      "copyOf": "564cecd00759e7fc656fdaeb",
-      "locked": false
+      }
     }
 ]
