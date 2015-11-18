@@ -141,9 +141,13 @@ var App = function() {
 
     ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT', 'SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGPIPE', 'SIGTERM'].forEach(self.terminatorSetup);
 
+    //needed for testing with supertest
+    exports.app = self.app;
 };
 
 //create the app
 var app = new App();
 
 app.startServer();
+
+

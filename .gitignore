@@ -3,5 +3,6 @@ node_modules
 .preports
 .directory
 .bash_history
+.tmp
 preports-local.yml
 docker-compose.override.yml

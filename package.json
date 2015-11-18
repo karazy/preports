@@ -39,13 +39,15 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
-    "sinon": "^1.17.2"
+    "node-embedded-mongodb": "0.0.2",
+    "sinon": "^1.17.2",
+    "supertest": "^1.1.0"
   },
   "bundleDependencies": [],
   "private": true,
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "./node_modules/mocha/bin/mocha specs"
+    "test": "NODE_ENV=development DISABLE_CAS=true ./node_modules/mocha/bin/mocha specs"
   }
 }
