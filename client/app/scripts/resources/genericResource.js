@@ -48,8 +48,8 @@ angular.module('PReports.resources').factory('genericResource',['$resource','con
 	       		me.setSaving(false);
 	       		success(record, responseHeaders);
 	       	}, function(_response, _status, _headers, _config) {
-	       		me.setSaving(false);
-	       		handleError(_response, _status, _headers, _config);
+	       		me.setSaving(false);	       		
+	       		error(_response, _status, _headers, _config);
 	       	});
 	    };
 

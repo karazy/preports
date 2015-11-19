@@ -26,6 +26,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "Es gibt ein Problem mit der Verbindung zum Service.",
 			"EN" : "There has been a connection problem."
 		},
+		"error.report.clone": {
+			"DE" : "Beim Kopieren traten Fehler auf. Eventuell konnten Bilder nicht kopiert werden.",
+			"EN" : "Error during copy. Eventually images could not be copied."
+		},
 		"error.appengine" : {
 		   "DE" : "Es liegt eine Serverstörung vor. Wir arbeiten an einer Lösung.",
 	       "EN" : "The service has been temporarily interrupted. We are working on a solution."

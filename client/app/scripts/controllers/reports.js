@@ -549,7 +549,18 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           $location.path('reports/' + resource._id)
           
         }, function(response) {
-          alert('could not save report')
+          if(response.status == 409) {
+            response.data.errorKey = 'error.report.clone';            
+          }
+          
+          errorHandler(response);
+
+          if(response.status == 409) {
+            //jump to copied report also some problems exist
+            $scope.newReportName = null;
+            $location.path('reports/' + response.data._id)
+          }
+                   
         });
         
       }
