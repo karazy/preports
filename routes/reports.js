@@ -5,6 +5,7 @@ var mongodb = require('mongodb'),
 	queryString = require('querystring'),
 	pathHelper = require('path'),
 	htmlExport = require('./exporter/html'),
+	config = require('../config/environment'),
 	db;
 
 ObjectID = mongodb.ObjectID;
@@ -762,6 +763,14 @@ exports.uploadImage = function(req, res) {
 		uploadPath =  getUploadPath(),
 		pathDelim = pathHelper.sep,
 		image;
+
+	//no file upload in demo mode
+	if(config.demo === true) {
+		console.log('uploadImage: no upload in demo mode');
+		res.send(403, "error.demo");
+		res.end();
+		return;
+	}
 
     //debugObject(req.files.image, 'uploadImage: req.files.image');
 	if(!req.files || !req.files.image) {

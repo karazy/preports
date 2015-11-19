@@ -22,6 +22,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "Ungültige Zugangsdaten oder keine Zugriffsrechte.",
 			"EN" : "Invalid credentials or insufficient access rights."
 		},
+		"error.demo" : {
+			"DE" : "Dieses Feature ist in der Demo nicht verfügbar.",
+			"EN" : "This feature is not available in demo."
+		},
 		"error.general" : {
 			"DE" : "Es gibt ein Problem mit der Verbindung zum Service.",
 			"EN" : "There has been a connection problem."

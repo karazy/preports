@@ -9,7 +9,8 @@ var app = require('../app').app,
 	sinon = require('sinon'),
 	fs = require('fs-extra'),
 	fixtures = require('pow-mongodb-fixtures').connect('preports'),
-	id = require('pow-mongodb-fixtures').createObjectId;
+	id = require('pow-mongodb-fixtures').createObjectId,
+	config = require('../config/environment');
 
 
 before(function(done) {
@@ -326,5 +327,24 @@ describe('When deleting a report image', function() {
     		
     		done();
   		});
+	});
+});
+
+describe('When deleting a report image', function() {
+	beforeEach(function(done) {
+		populateDB(done);
+		config.demo = true;
+	});
+
+	afterEach(function(done) {
+		cleanDB(done);
+		config.demo = false;
+	});
+	
+	it('should be rejected in demo mode', function(done) {
+		request(app)
+		    .post('/reports/564cf41ef110b5ef6846f8db/images/')
+			.attach('image', 'specs/data/images/avatar.png')
+		    .expect(403, done);
 	});
 });

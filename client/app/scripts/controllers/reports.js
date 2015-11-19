@@ -975,6 +975,11 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
      uploader.bind('complete', function( event, xhr, item, response ) {
         $log.log(response);
+        
+        if(xhr.status != 200) {
+          return;
+        }
+
         if(!$scope.currentReport.images) {
           $scope.currentReport.images = [];
         }
@@ -994,7 +999,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         	console.log('setupFileUpload: upload failed');
         	//show global error. for more information have a look inside the errorHandler
         	$rootScope.error = true;
-        	$rootScope.errorMessage = language.translate('error.image.upload') || 
+        	$rootScope.errorMessage = language.translate(xhr.response) || 
+            language.translate('error.image.upload') || 
         		language.translate('error.general') || 
         		"Error during communication with service.";
         });

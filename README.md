@@ -5,6 +5,8 @@ project reports - create and manage weekly project reports
 
 [![Build Status](https://travis-ci.org/karazy/preports.svg?branch=development)](https://travis-ci.org/karazy/preports)
 
+[Try it on heroku](https://preports.herokuapp.com)
+
 
 PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 

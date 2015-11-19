@@ -1,6 +1,6 @@
 'use strict';
 
-// Development specific configuration
+// Heroku specific configuration
 // ==================================
 
 var casStrategy = require('passport-cas').Strategy;
@@ -13,10 +13,10 @@ function getConfigRootPath() {
 }
 
 var config = {
-    'demo': false,
+    'demo': true,
 	'ip':    '0.0.0.0',
     // Server port
-  	'port':     3000,
+  	'port':     3000,    
   	'protocol': 'http',
 	'authentication': {
 	    'strategy': new casStrategy({
@@ -49,7 +49,7 @@ var config = {
     	'bisnode' : {
     		'host': 'ysr-dev-service-01',
     		'path': '/rest/notification-service',
-            'port': 8181
+        'port': 8181
     	}
     }
 };
