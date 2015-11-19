@@ -455,7 +455,7 @@ exports.createReport = function(req, res) {
 			return;
 		}
 
-		debugObject(req.body, 'Insert new report');
+		//debugObject(req.body, 'Insert new report');
 
 		reportToSave.lastModified = modifyDate;
 		reportToSave.version = 1;
@@ -472,7 +472,6 @@ exports.createReport = function(req, res) {
 				console.log('createReport: copy images');
 				for (var i = 0; i < reportToSave.images.length; i++) {
 					//set a new object Id
-					//Reusing the old id didn't work. Maybe mongodb creates an index. Sherlock investigate!
 					reportToSave.images[i]._id = (new ObjectID()).toString();
 					console.log('createReport: copied report! Assigning new id to image ' + reportToSave.images[i]._id);
 				};
@@ -480,8 +479,7 @@ exports.createReport = function(req, res) {
 				console.log('createReport: Cannot clone images. srcDir does not exist.');
 				reportToSave.images = null;
 				status = 409;
-			}
-			
+			}			
 		}
 
 		reports.insertOne(reportToSave, function(err, writeOpResult) {
@@ -1088,6 +1086,10 @@ function copyReportImages(srcDirId, destDirId, callback) {
 	});
 }
 
+/**
+* Returns the reports collection.
+* Creates it if it does not exist.
+*/
 getReportsCollection = function(callback) {
 	 getDB().collection('reports', function(error, collection) {
     	if( error ) {
