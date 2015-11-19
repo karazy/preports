@@ -1,8 +1,9 @@
 'use strict';
+var id = require('pow-mongodb-fixtures').createObjectId;
 
 exports.reports = [
     {
-      // "_id": "564cf41ef110b5ef6846f8db",
+      "_id": id("564cf41ef110b5ef6846f8db"),
       "year": 2015,
       "week": 47,
       "name": "Test Report",
@@ -24,7 +25,7 @@ exports.reports = [
       "leadDevelopers": "Fred"
     },
     {
-      // "_id": "564cf435f110b5ef6846f8dc",
+      "_id": id("564cf435f110b5ef6846f8dc"),
       "year": 2015,
       "week": 47,
       "name": "Report with missing file",

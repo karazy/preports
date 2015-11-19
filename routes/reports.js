@@ -712,21 +712,7 @@ exports.deleteReport = function(req, res) {
 				});
         	}
 		});
-		//each operates on the cursor but report object was always null.
-		// .each(function(report) {
-		// 	console.log('IMAGE DELETE BLABLA ' + report);
-		// 	debugObject(report, 'IMAGE DELETE BLABLA');
-		// 	if(report && report.images) {
-  //       		for (var h = 0; h < report.images.length; h++) {
-  //   				imgToDelete = report.images[h];
-  //   				fs.unlink(imgToDelete.path, function(err) {
-		// 				if(err) {
-		// 					console.log('deleteReport: deleting image at ' + imgToDelete.path);				
-		// 				}
-		// 			});
-  //       		}
-  //       	}
-		// });
+
 
 		reports.remove({'_id': ObjectID.createFromHexString(_id)}, function(err, numberOfRemovedDocs) {
 			if(err) {
