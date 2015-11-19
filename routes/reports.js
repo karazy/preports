@@ -964,7 +964,9 @@ exports.deleteImage = function(req, res) {
 		}
 
 		imgId = img._id;
-		imgPath = pathHelper.join(uploadPath, _id, img.GG);
+		debugObject(img, "IMAGE");
+		
+		imgPath = pathHelper.join(uploadPath, _id, img.filename);
 		
 		col.update({'_id': ObjectID.createFromHexString(_id)},
 			{ 

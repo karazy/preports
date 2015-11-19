@@ -13,7 +13,7 @@ var app = require('../app').app,
 
 
 before(function(done) {
-	//mongo.start();
+	// mongo.start();
 
 	checkDbConnection();
 

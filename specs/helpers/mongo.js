@@ -12,7 +12,7 @@ console.log("embeddedMongoDB " + embeddedMongoDB.silentMode);
 
 
 exports.start = function(callback) {
-	embeddedMongoDB.start(null, null, function(err) {
+	embeddedMongoDB.start(dbPath, logPath, function(err) {
 		console.log('Started mongo for testing');
 		callback(err);
 		// mongodb://localhost:27017 is UP
