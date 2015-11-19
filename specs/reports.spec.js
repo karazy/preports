@@ -298,6 +298,7 @@ describe('When cloning a report', function() {
 	      .end(function(err, res) {
 	    	if (err) throw err;
 	    		expect(res.body.images).to.have.length(1);
+	    		expect(res.body.images[0].filename).to.equal('30598-13qh5fr.png');
 	    		done();
 	  		});
 	})
