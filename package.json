@@ -49,6 +49,6 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "NODE_ENV=development DISABLE_CAS=true ./node_modules/mocha/bin/mocha specs"
+    "test": "NODE_ENV=development DISABLE_CAS=true UPLOAD_DIR=${PWD}/.tmp/.preports/ ./node_modules/mocha/bin/mocha specs"
   }
 }

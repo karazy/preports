@@ -7,16 +7,20 @@ var app = require('../app').app,
 	http = require('http'),
 	request = require('supertest'),
 	sinon = require('sinon'),
+	fs = require('fs-extra'),
 	fixtures = require('pow-mongodb-fixtures').connect('preports'),
 	id = require('pow-mongodb-fixtures').createObjectId;
-
-
 
 
 before(function(done) {
 	//mongo.start();
 
 	checkDbConnection();
+
+	fs.mkdirsSync('.tmp/.preports');
+	fs.copySync('./specs/data', '.tmp/.preports/', function (err) {
+	  console.log('Copied test files');
+	});
 
 	function checkDbConnection() {
 		if(mongo.getDB() == null) {
@@ -29,6 +33,11 @@ before(function(done) {
 });
 
 after(function(done) {
+	fs.removeSync('.tmp/', function (err) {
+	  if (err) return console.error(err)
+
+	  console.log('Removed test files!')
+	});
 	done();
 });
 
@@ -66,7 +75,7 @@ describe('When loading all reports', function() {
       .expect(200)
       .end(function(err, res){
     	if (err) throw err;
-    		expect(res.body.reports).to.have.length(2);
+    		expect(res.body.reports).to.have.length(3);
     		done();
   		});
 	});
@@ -194,7 +203,7 @@ describe('When cloning a report', function() {
 	      .expect(200, done);
 	});
 
-	it('should create clone with missing files and throw 409', function(done) {
+	it('should create clone with missing files directory and throw 409', function(done) {
 	
 	request(app)
       .post('/reports')
@@ -241,6 +250,57 @@ describe('When cloning a report', function() {
     		done();
   		});
 	});
+
+	it('should create clone when some files are missing and throw 409', function(done) {
+		request(app)
+	      .post('/reports')
+	      .send(
+	      {
+		      "copyOf": id("564da94cfa2a698677b0cc61"),
+		      "year": 2015,
+		      "week": 47,
+		      "name": "Report with missing file",
+		      "milestones": [],
+		      "lastModified": 1447930197110,
+		      "version": 3,
+		      "images": [
+		        {
+		          "filename": "30598-13qh5fr.png",
+		          "name": "Upload_1.png",
+		          "_id": "564da955fa2a698677b0cc62",
+		          "_links": {
+		            "self": {
+		              "href": "/reports/564da94cfa2a698677b0cc61/images/564da955fa2a698677b0cc62"
+		            },
+		            "collection": {
+		              "href": "/reports/564da94cfa2a698677b0cc61/images"
+		            }
+		          }
+		        },
+		        {
+		          "filename": "30598-1yjcv7s.png",
+		          "name": "Upload_2.png",
+		          "_id": "564da955fa2a698677b0cc63",
+		          "_links": {
+		            "self": {
+		              "href": "/reports/564da94cfa2a698677b0cc61/images/564da955fa2a698677b0cc63"
+		            },
+		            "collection": {
+		              "href": "/reports/564da94cfa2a698677b0cc61/images"
+		            }
+		          }
+		        }
+		       ]
+		    })
+	      .set('Content-Type', 'application/json')
+	      .set('Accept', 'application/json')
+	      .expect(409)
+	      .end(function(err, res) {
+	    	if (err) throw err;
+	    		expect(res.body.images).to.have.length(1);
+	    		done();
+	  		});
+	})
 });
 
 

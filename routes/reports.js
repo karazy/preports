@@ -470,11 +470,27 @@ exports.createReport = function(req, res) {
 
 			if(validDir) {
 				console.log('createReport: copy images');
+				var invalidImages = [];
 				for (var i = 0; i < reportToSave.images.length; i++) {
-					//set a new object Id
-					reportToSave.images[i]._id = (new ObjectID()).toString();
-					console.log('createReport: copied report! Assigning new id to image ' + reportToSave.images[i]._id);
-				};
+					var fileToCheck = pathHelper.join(getUploadPath(), reportToSave.copyOf+ '/' + reportToSave.images[i].filename);
+
+					if(isFile(fileToCheck)) {
+						//set a new object Id
+						reportToSave.images[i]._id = (new ObjectID()).toString();
+						console.log('createReport: copied report! Assigning new id to image ' + reportToSave.images[i]._id);	
+					} else {
+						//File does not exist or is not a file
+						status = 409;
+						invalidImages.push(i);						
+						console.log("createReport: remove image with id  " + reportToSave.images[i]._id + " since its file could not be found");
+					}										
+				}
+
+				//remove invalid images
+				for (var h = 0; h < invalidImages.length; h++) {
+					reportToSave.images = reportToSave.images.splice(invalidImages[h], 1);
+				}
+
 			} else {
 				console.log('createReport: Cannot clone images. srcDir does not exist.');
 				reportToSave.images = null;
@@ -878,11 +894,18 @@ exports.getImage = function(req, res) {
 
 		imgPath = pathHelper.join(getUploadPath(), _id , image.filename);
 		console.log('getImage: loaded from path ' + imgPath);
-		img = fs.readFileSync(imgPath);
-		res.contentLength = img.size;
-		res.contentType = 'image/jpeg';
-		res.status(200);
-        res.end(img, 'binary');
+		if(isFile(imgPath)) {
+			img = fs.readFileSync(imgPath);
+			res.contentLength = img.size;
+			res.contentType = 'image/jpeg';
+			res.status(200);
+	        res.end(img, 'binary');
+		} else {
+			res.send(404);
+			res.end();
+			return;
+		}
+		
 	}
 }
 
@@ -941,7 +964,7 @@ exports.deleteImage = function(req, res) {
 		}
 
 		imgId = img._id;
-		imgPath = pathHelper.join(uploadPath, _id, img.filename);
+		imgPath = pathHelper.join(uploadPath, _id, img.GG);
 		
 		col.update({'_id': ObjectID.createFromHexString(_id)},
 			{ 
@@ -1157,9 +1180,28 @@ function isDirectory(dir) {
 	try {
 		dirStats = fs.statSync(dir);
 	} catch(e) {
-		console.log("isDirectory: dir does not exist");
+		console.log("isDirectory: dir "+dir+" does not exist");
 		return false;
 	}
 
 	return dirStats.isDirectory();
+}
+
+/**
+* Checks if given path is a file.
+* @return 
+*	true if it is a file.
+* 	false if it is not a file or does not exists at all
+*/
+function isFile(file) {
+	var stats;
+
+	try {
+		stats = fs.statSync(file);
+	} catch(e) {
+		console.log("isFile: file "+file+" does not exist");
+		return false;
+	}
+
+	return stats.isFile();
 }

@@ -56,5 +56,42 @@ exports.reports = [
           "href": "/reports"
         }
       }
-    }
+    },
+    {
+      "_id": id("564da94cfa2a698677b0cc61"),
+      "year": 2015,
+      "week": 47,
+      "name": "Report with missing file",
+      "milestones": [],
+      "lastModified": 1447930197110,
+      "version": 3,
+      "images": [
+        {
+          "filename": "30598-13qh5fr.png",
+          "name": "Upload_1.png",
+          "_id": "564da955fa2a698677b0cc62",
+          "_links": {
+            "self": {
+              "href": "/reports/564da94cfa2a698677b0cc61/images/564da955fa2a698677b0cc62"
+            },
+            "collection": {
+              "href": "/reports/564da94cfa2a698677b0cc61/images"
+            }
+          }
+        },
+        {
+          "filename": "30598-1yjcv7s.png",
+          "name": "Upload_2.png",
+          "_id": "564da955fa2a698677b0cc63",
+          "_links": {
+            "self": {
+              "href": "/reports/564da94cfa2a698677b0cc61/images/564da955fa2a698677b0cc63"
+            },
+            "collection": {
+              "href": "/reports/564da94cfa2a698677b0cc61/images"
+            }
+          }
+        }
+    ]
+  }
 ]
