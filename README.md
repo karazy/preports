@@ -3,6 +3,8 @@ preports-service
 
 project reports - create and manage weekly project reports
 
+[![Build Status](https://travis-ci.org/karazy/preports.svg?branch=development)](https://travis-ci.org/karazy/preports)
+
 
 PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
