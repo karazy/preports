@@ -446,7 +446,8 @@ exports.createReport = function(req, res) {
     getReportsCollection(callback);
 
 	function callback(error, reports) {
-		var _report;
+		var _report,
+			status = 200;
 
 		if(error) {
 			res.send(404);
@@ -461,14 +462,26 @@ exports.createReport = function(req, res) {
 
 		//This is a copy report. Assign new image ids.
 		if(reportToSave.copyOf && reportToSave.images) {
-			console.log('createReport: create a copy');
 
-			for (var i = 0; i < reportToSave.images.length; i++) {
-				//set a new object Id
-				//Reusing the old id didn't work. Maybe mongodb creates an index. Sherlock investigate!
-				reportToSave.images[i]._id = (new ObjectID()).toString();
-				console.log('createReport: copied report! Assigning new id to image ' + reportToSave.images[i]._id);
-			};
+			var dirToCheck = pathHelper.join(getUploadPath(), reportToSave.copyOf+''),
+				validDir;
+
+			validDir = isDirectory(dirToCheck);
+
+			if(validDir) {
+				console.log('createReport: copy images');
+				for (var i = 0; i < reportToSave.images.length; i++) {
+					//set a new object Id
+					//Reusing the old id didn't work. Maybe mongodb creates an index. Sherlock investigate!
+					reportToSave.images[i]._id = (new ObjectID()).toString();
+					console.log('createReport: copied report! Assigning new id to image ' + reportToSave.images[i]._id);
+				};
+			} else {
+				console.log('createReport: Cannot clone images. srcDir does not exist.');
+				reportToSave.images = null;
+				status = 409;
+			}
+			
 		}
 
 		reports.insertOne(reportToSave, function(err, writeOpResult) {
@@ -489,7 +502,7 @@ exports.createReport = function(req, res) {
 				console.log("Save success");
 				debugObject(writeOpResult.ops[0], 'Saved record');
 				//writeOpResult.ops is an array
-				res.send(200, writeOpResult.ops[0]);
+				res.send(status, writeOpResult.ops[0]);
 				res.end();
 			}
 
@@ -1128,4 +1141,23 @@ function getUploadPath() {
 
 function getDB() {
 	return mongo.getDB();
+}
+
+/**
+* Checks if given path is a directory.
+* @return 
+*	true if it is a directory.
+* 	false if it is not a directory or does not exists at all
+*/
+function isDirectory(dir) {
+	var dirStats;
+
+	try {
+		dirStats = fs.statSync(dir);
+	} catch(e) {
+		console.log("isDirectory: dir does not exist");
+		return false;
+	}
+
+	return dirStats.isDirectory();
 }
