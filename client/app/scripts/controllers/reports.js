@@ -1071,8 +1071,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     var updateCommand = {
       prev: {
         hoursExternal: $scope.currentReport.hoursExternal,
-        hoursInternalBI: $scope.currentReport.hoursInternalBI,
-        hoursInternalIQuest: $scope.currentReport.hoursInternalIQuest,
+        hoursInternal: $scope.currentReport.hoursInternal,
+        hoursNearshoring: $scope.currentReport.hoursNearshoring,
         costsCurrent: $scope.currentReport.costsCurrent,
         // costsRest: $scope.currentReport.costsRest,
         costsDelta: $scope.currentReport.costsDelta
@@ -1089,14 +1089,14 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
             currentCosts = $scope.config.COST_EXTERNAL * $scope.temp.costs.hoursExternal;  
           }
 
-          if($scope.temp.costs.hoursInternalBI) {
-            $scope.currentReport.hoursInternalBI = $scope.temp.costs.hoursInternalBI;
-            currentCosts += $scope.config.COST_INTERNAL_BI * $scope.temp.costs.hoursInternalBI;  
+          if($scope.temp.costs.hoursInternal) {
+            $scope.currentReport.hoursInternal = $scope.temp.costs.hoursInternal;
+            currentCosts += $scope.config.COST_INTERNAL_BI * $scope.temp.costs.hoursInternal;  
           }
 
-          if($scope.temp.costs.hoursInternalIQuest) {
-            $scope.currentReport.hoursInternalIQuest = $scope.temp.costs.hoursInternalIQuest;
-            currentCosts += $scope.config.COST_NEARSHORE * $scope.temp.costs.hoursInternalIQuest;  
+          if($scope.temp.costs.hoursNearshoring) {
+            $scope.currentReport.hoursNearshoring = $scope.temp.costs.hoursNearshoring;
+            currentCosts += $scope.config.COST_NEARSHORE * $scope.temp.costs.hoursNearshoring;  
           } 
 
           //Adjust for display in k€
@@ -1122,8 +1122,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       console.log('calculateCosts: undo');
       //restore previous values
       $scope.currentReport.hoursExternal = updateCommand.prev.hoursExternal;
-      $scope.currentReport.hoursInternalBI = updateCommand.prev.hoursInternalBI;
-      $scope.currentReport.hoursInternalIQuest = updateCommand.prev.hoursInternalIQuest;
+      $scope.currentReport.hoursInternal = updateCommand.prev.hoursInternal;
+      $scope.currentReport.hoursNearshoring = updateCommand.prev.hoursNearshoring;
       $scope.currentReport.costsCurrent =  updateCommand.prev.costsCurrent;
       // $scope.currentReport.costsRest =  updateCommand.prev.costsRest;
       $scope.currentReport.costsDelta =  updateCommand.prev.costsDelta;
@@ -1152,8 +1152,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     //needed to provide undo functionality
     $scope.temp.costs = {
       hoursExternal: $scope.currentReport.hoursExternal,
-      hoursInternalBI: $scope.currentReport.hoursInternalBI,
-      hoursInternalIQuest: $scope.currentReport.hoursInternalIQuest
+      hoursInternal: $scope.currentReport.hoursInternal,
+      hoursNearshoring: $scope.currentReport.hoursNearshoring
     }
 
     if(!$scope.currentReport.locked) {
