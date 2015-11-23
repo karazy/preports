@@ -4,6 +4,7 @@ node_js:
 before_script:
 - npm install -g bower grunt-cli
 - gem install sass
+- gem install compass
 -  sh -c "cd client && npm install && bower install"
 services: mongodb
 before_deploy:
