@@ -13,7 +13,7 @@ function getConfigRootPath() {
 }
 
 var config = {
-    'demo': true,
+    'demo': false,
 	'ip':    '0.0.0.0',
     // Server port
   	'port':     3000,
