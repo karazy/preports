@@ -8,7 +8,7 @@
 */
 angular.module("PReports.translations", [], ["$provide", function($provide) {
 	//holds all translations
-	var map = {		
+	var map = {
 		//common error messages
 		"error.image.upload" : {
 			"DE" : "Bild hochladen fehlgeschlagen.",
@@ -380,6 +380,14 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "Aktuelle Kosten",
 			"EN" : "Current costs"
 		},
+		"report.costs.rest" : {
+			"DE" : "Verbleibende Kosten",
+			"EN" : "Remaining costs"
+		},
+		"report.costs.rest.ph" : {
+			"DE" : "Verbleibend",
+			"EN" : "Remaining"
+		},
 		"report.costs.dialog.title": {
 			"DE" : "Kostenberechnung in Projektstunden",
 			"EN" : "Costs calculations in project hours"
@@ -393,12 +401,12 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "External"
 		},
 		"report.dialog.costs.internal.bi" : {
-			"DE" : "Intern BI",
-			"EN" : "Internal BI"
+			"DE" : "Intern",
+			"EN" : "Internal"
 		},
-		"report.dialog.costs.internal.iquest" : {
-			"DE" : "Intern iQuest",
-			"EN" : "Internal iQuest"
+		"report.dialog.costs.nearshore" : {
+			"DE" : "Nearshoring",
+			"EN" : "Nearshoring"
 		},
 		"report.ordernumber.title": {
 			"DE" : "#Projekt Nr.",
@@ -486,8 +494,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Copy"
 		},
 		"error.title" : {
-			"DE" :  "Ein Fehler ist aufgetreten",
-			"EN" : "An error occured"
+			"DE" :  "Fehler",
+			"EN" : "Error"
 		},
 		"undo" : {
 			"DE" :  "Rückgängig"

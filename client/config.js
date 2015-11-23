@@ -25,7 +25,7 @@ angular.module('PReports.services').provider('config', function() {
 		},
 		'COST_EXTERNAL' : 85,
 		'COST_INTERNAL_BI' : 68,
-		'COST_INTERNAL_IQUEST': 45
+		'COST_NEARSHORE': 45
 	}
 
 	/**

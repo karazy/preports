@@ -87,7 +87,14 @@
 						  	{{currentReport.costsCurrent}}
 						</p>
 						</td>
-						<td>{{currentReport.costsRest}}</td>
+						<td>
+							<div simple-property-editor editor-title="report.costs.rest" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="costsRest" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-placeholder="report.costs.rest.ph">			
+								<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
+								<span l="report.costs.rest.ph" ng-hide="currentReport.costsRest" class="simple-property-placeholder">Remaining</span>		
+									{{currentReport.costsRest}}
+								</p>
+							</div>
+						</td>
 						<td>{{currentReport.costsDelta}}</td>
 					</tr>
 				</tbody>

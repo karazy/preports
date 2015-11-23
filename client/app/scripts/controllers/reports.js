@@ -1074,7 +1074,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         hoursInternalBI: $scope.currentReport.hoursInternalBI,
         hoursInternalIQuest: $scope.currentReport.hoursInternalIQuest,
         costsCurrent: $scope.currentReport.costsCurrent,
-        costsRest: $scope.currentReport.costsRest,
+        // costsRest: $scope.currentReport.costsRest,
         costsDelta: $scope.currentReport.costsDelta
       }
     };
@@ -1096,7 +1096,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
           if($scope.temp.costs.hoursInternalIQuest) {
             $scope.currentReport.hoursInternalIQuest = $scope.temp.costs.hoursInternalIQuest;
-            currentCosts += $scope.config.COST_INTERNAL_IQUEST * $scope.temp.costs.hoursInternalIQuest;  
+            currentCosts += $scope.config.COST_NEARSHORE * $scope.temp.costs.hoursInternalIQuest;  
           } 
 
           //Adjust for display in k€
@@ -1105,10 +1105,10 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           $scope.currentReport.costsCurrent = Math.round(currentCosts);
 
           if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
-            $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
+            // $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
             $scope.currentReport.costsDelta =  calcCostsDelta($scope.currentReport.costsCurrent, $scope.currentReport.costsPlanned);
           } else {
-            $scope.currentReport.costsRest = null;
+            // $scope.currentReport.costsRest = null;
             $scope.currentReport.costsDelta = null;
           }
           
@@ -1125,7 +1125,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       $scope.currentReport.hoursInternalBI = updateCommand.prev.hoursInternalBI;
       $scope.currentReport.hoursInternalIQuest = updateCommand.prev.hoursInternalIQuest;
       $scope.currentReport.costsCurrent =  updateCommand.prev.costsCurrent;
-      $scope.currentReport.costsRest =  updateCommand.prev.costsRest;
+      // $scope.currentReport.costsRest =  updateCommand.prev.costsRest;
       $scope.currentReport.costsDelta =  updateCommand.prev.costsDelta;
       
       $scope.currentReport.$update(angular.noop, handleUpdateError); 

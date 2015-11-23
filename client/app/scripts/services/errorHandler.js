@@ -25,7 +25,7 @@ angular.module('PReports.services').factory('errorHandler',['$rootScope','$locat
 			
 		}
 
-		var errorKey = response.data['errorKey'],
+		var errorKey = response.data['errorKey'] || response.data,
 			responseMessage = response.data['message'];
 
 		$rootScope.error = true;

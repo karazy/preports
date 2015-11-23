@@ -12,8 +12,8 @@ angular.module('PReports.services').provider('config', function() {
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : '',
-		'servicePort' : '',
+		'serviceUrl' : 'http://127.0.0.1',
+		'servicePort' : '3000',
 		'version' : '1.5.0-SNAPSHOT Ignorant Ibis',
 		//the notification providers to use
 		'notificationProviders' : ['com-bisnode-notification', 'com-slack-notification'],
@@ -25,7 +25,7 @@ angular.module('PReports.services').provider('config', function() {
 		},
 		'COST_EXTERNAL' : 85,
 		'COST_INTERNAL_BI' : 68,
-		'COST_INTERNAL_IQUEST': 45
+		'COST_NEARSHORE': 45
 	}
 
 	/**
