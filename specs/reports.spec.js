@@ -330,7 +330,7 @@ describe('When deleting a report image', function() {
 	});
 });
 
-describe('When deleting a report image', function() {
+describe('When demo mode is active', function() {
 	beforeEach(function(done) {
 		populateDB(done);
 		config.demo = true;
@@ -341,10 +341,11 @@ describe('When deleting a report image', function() {
 		config.demo = false;
 	});
 	
-	it('should be rejected in demo mode', function(done) {
+	it('image upload should be rejected', function(done) {
 		request(app)
 		    .post('/reports/564cf41ef110b5ef6846f8db/images/')
 			.attach('image', 'specs/data/images/avatar.png')
 		    .expect(403, done);
 	});
+
 });

@@ -48,6 +48,12 @@ var //the json object consumed by slack.
 			return;
 		}
 
+		if(!report.settings || !report.settings.notification) {
+			console.log('slack.send: no notification settings exist');
+			callback(true);
+			return;
+		}
+
 		//Url for slack webhook
 		slackWebhookHost = config.notificationProviders.slack.host;
 		slackWebhookPath = config.notificationProviders.slack.path;
@@ -98,7 +104,6 @@ var //the json object consumed by slack.
 
 				req.on('error', function(e) {
 				  console.log('problem with request: ' + e.message);
-				  //$log.error("Failed so send slack notification for user " + r + ". Status: " + response.status);
 					errors.push(e.message);
 					status.send++;
 					if(status.send == status.usersToNotify) {

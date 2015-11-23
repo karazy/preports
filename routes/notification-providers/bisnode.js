@@ -43,12 +43,18 @@ var config = require('../../config/environment'),
 	exports.send = function(report, callback, reportUrl) {
 
 		if(!config) {
-			$log.log('PReports.services.com-bisnode-notification.send: config missing')
+			console.log('PReports.services.com-bisnode-notification.send: config missing')
 			return;
 		}
 
 		if(!config.notificationProviders.bisnode) {
-			$log.log('PReports.services.com-bisnode-notification.send: config has no url')
+			console.log('PReports.services.com-bisnode-notification.send: config has no url')
+			return;
+		}
+
+		if(!report.settings || !report.settings.notification) {
+			console.log('PReports.services.com-bisnode-notification.send: no notification settings exist');
+			callback(true);
 			return;
 		}
 

@@ -1,6 +1,6 @@
 
 var providerManager = require('./notification-providers'),
-	//bisnode = require('./notification-providers/bisnode'),
+	config = require('../config/environment'),
 	report = require('./reports');
 
 
@@ -15,6 +15,14 @@ exports.sendNotifications = function(req, res) {
 	if(!_id) {
 		console.log('sendNotifications: no id given');
 		res.send(500, "Missing report id.");
+		return;
+	}
+
+	//no sending of notifications
+	if(config.demo === true) {
+		console.log('sendNotifications: disabled in demo mode');
+		res.send(403, "error.demo");
+		res.end();
 		return;
 	}
 
