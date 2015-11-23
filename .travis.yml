@@ -6,7 +6,7 @@ before_script:
 - gem install sass
 services: mongodb
 before_deploy:
- -  sh -c "cd client && grunt build"
+ -  sh -c "cd client && grunt build --force"
 deploy:
   provider: heroku
   api_key:
