@@ -1091,7 +1091,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
 
           if($scope.temp.costs.hoursInternal) {
             $scope.currentReport.hoursInternal = $scope.temp.costs.hoursInternal;
-            currentCosts += $scope.config.COST_INTERNAL_BI * $scope.temp.costs.hoursInternal;  
+            currentCosts += $scope.config.COST_INTERNAL * $scope.temp.costs.hoursInternal;  
           }
 
           if($scope.temp.costs.hoursNearshoring) {
