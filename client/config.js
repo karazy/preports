@@ -3,7 +3,6 @@
 * 	Provider for the 'config' service.
 * 	Returns configuration object used in all services.
 * 
-* 	@author Nils Weiher
 */
 angular.module('PReports.services').provider('config', function() {
 	var self = this;
@@ -15,9 +14,6 @@ angular.module('PReports.services').provider('config', function() {
 		'serviceUrl' : '{serviceUrl}',
 		'servicePort' : '{servicePort}',
 		'version' : '{version}',
-		//the notification providers to use
-		'notificationProviders' : ['com-bisnode-notification', 'com-slack-notification'],
-		'notificationUrl' : '{notificationUrl}',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {
 			'EUR': '$1,$2 €',

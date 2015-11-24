@@ -383,14 +383,6 @@ module.exports = function (grunt) {
             {
               pattern: '{version}',
               replacement: '<%= pkg.version %> <%= pkg.versionName %>'
-            },
-            {
-              pattern: '{notificationProvider}',
-              replacement: 'com-bisnode-notification'
-            },
-            {
-              pattern: '{notificationUrl}',
-              replacement: 'http://ysr-dev-service-01:8181/rest/notification-service'
             }
           ]
         }
@@ -412,30 +404,10 @@ module.exports = function (grunt) {
             {
               pattern: '{version}',
               replacement: '<%= pkg.version %> <%= pkg.versionName %>'
-            },
-            {
-              pattern: '{notificationProvider}',
-              replacement: 'com-bisnode-notification'
-            },
-            {
-              pattern: '{notificationUrl}',
-              replacement: 'http://ysr-dev-service-01:8181/rest/notification-service'
             }
           ]
         }
       }
-      // inline: {
-      //   options: {
-      //     replacements: [
-      //       // place files inline example
-      //       {
-      //           pattern: '<script src='js/async.min.js'></script>',
-      //           replacement: '<script><%= grunt.file.read('path/to/source/js/async.min.js') %></script>'
-      //       }
-      //     ]
-      //   },
-      //   files: {...}
-      // }
     }
   });
 

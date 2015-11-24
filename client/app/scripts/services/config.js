@@ -3,7 +3,6 @@
 * 	Provider for the 'config' service.
 * 	Returns configuration object used in all services.
 * 
-* 	@author Nils Weiher
 */
 angular.module('PReports.services').provider('config', function() {
 	var self = this;
@@ -15,9 +14,6 @@ angular.module('PReports.services').provider('config', function() {
 		'serviceUrl' : 'http://127.0.0.1',
 		'servicePort' : '3000',
 		'version' : '1.5.0-SNAPSHOT Ignorant Ibis',
-		//the notification providers to use
-		'notificationProviders' : ['com-bisnode-notification', 'com-slack-notification'],
-		'notificationUrl' : 'http://ysr-dev-service-01:8181/rest/notification-service',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {
 			'EUR': '$1,$2 €',
