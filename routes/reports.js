@@ -1125,18 +1125,20 @@ function copyReportImages(srcDirId, destDirId, callback) {
 * Creates it if it does not exist.
 */
 getReportsCollection = function(callback) {
-	 getDB().collection('reports', function(error, collection) {
+	 getDB(function(db) {
+	 	db.collection('reports', function(error, collection) {
     	if( error ) {
     		console.log('getReportsCollection: failed ' + error);
     		callback(error);
     	} else if(!collection) {
     		console.log('getReportsCollection: creating collection reports');
-    		getDB().createCollection('reports', function(_err, _collection) {
+    		db.createCollection('reports', function(_err, _collection) {
     			callback(_err, _collection);
     		});
     	} else {
     		callback(null, collection);
     	}
+ 	 });
  	 });
 }
 
@@ -1175,8 +1177,15 @@ function getUploadPath() {
     }
 }
 
-function getDB() {
-	return mongo.getDB();
+function getDB(cb) {
+	if(cb) {
+		mongo.getDB(function(db) {
+			cb(db);
+		});	
+	} else {
+		return mongo.getDB();
+	}
+	
 }
 
 /**

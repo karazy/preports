@@ -34,10 +34,16 @@ exports.connect = function(connectionUrl) {
     });
 };
 
-exports.getDB = function() {
+exports.getDB = function(cb) {
 	var retryCount = 0;
 
-	if(!db) {
+	if(db) {
+		if(cb) {
+			cb(db);
+		} else {
+			return db;
+		}
+	} else {
 		waitForConnect();
 	}
 
@@ -50,13 +56,19 @@ exports.getDB = function() {
 				retryCount++;
 				waitForConnect();
 			}, 1000);
+		} else {
+			if(cb) {
+				cb(db);
+			} else {
+				return db;
+			}
 		}
 		
 	}
 
-	if(!db && retryCount >= MAX_RETRIES) {
-		throw new "No connection to database";
-	}
+	//if(!db && retryCount >= MAX_RETRIES) {
+	//	throw new "No connection to database";
+	//}
 
 	return db;
 }
