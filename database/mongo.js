@@ -7,7 +7,8 @@ var mongo = require('mongodb'),
 	Connection,
 	Server,
 	ObjectID,
-	db;
+	db,
+	MAX_RETRIES = 10;
 
 //setup mongo variables
 Db = mongo.Db;
@@ -24,6 +25,7 @@ exports.connect = function(connectionUrl) {
 	console.log("Connecting to db: " + connectionUrl);
 
     MongoClient.connect(connectionUrl, function(err, _db) {
+    	//TODO add retry loop
         test.equal(null, err); 
         test.ok(_db != null);
         console.log("Connected to 'project report' database");
@@ -33,6 +35,29 @@ exports.connect = function(connectionUrl) {
 };
 
 exports.getDB = function() {
+	var retryCount = 0;
+
+	if(!db) {
+		waitForConnect();
+	}
+
+	//Wait for a connection to the database for MAX_RETRIES
+	function waitForConnect() {		
+		if(!db && retryCount <= MAX_RETRIES) {
+			console.log("Waiting for DB connection. Count=" + retryCount);
+
+			setTimeout(function() {
+				retryCount++;
+				waitForConnect();
+			}, 1000);
+		}
+		
+	}
+
+	if(!db && retryCount >= MAX_RETRIES) {
+		throw new "No connection to database";
+	}
+
 	return db;
 }
 

@@ -25,7 +25,7 @@ before(function(done) {
 
 	function checkDbConnection() {
 		if(mongo.getDB() == null) {
-			setTimeout(checkDbConnection, 50);
+			setTimeout(checkDbConnection, 500);
 		} else {
 			console.log('Database is running... starting tests');
 			done();
