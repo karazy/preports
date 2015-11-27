@@ -1,16 +1,20 @@
 preports-service
 ========
 
-project reports - create and manage weekly project reports
+project reports - create and manage weekly IT project reports
 
 [![Build Status](https://travis-ci.org/karazy/preports.svg?branch=development)](https://travis-ci.org/karazy/preports)
 
-[Try it on heroku](https://preports.herokuapp.com)
+[Try it!](https://preports.herokuapp.com) (development branch)
 
 
 PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ###Release Notes
+
+####v1.4.1 Herculean Hedgehog
+- Minor changes
+- Bugfixes & Cleanups
 
 ####v1.4.0 Herculean Hedgehog
 - Milestones are dragable for easy rearrangement.
