@@ -1,7 +1,6 @@
 "use strict";
 
 var app = require('../app').app,
-	mongoHelper = require('./helpers/mongo'),
 	mongo = require('../database/mongo'),
 	expect = require('chai').expect,
 	http = require('http'),
@@ -14,7 +13,6 @@ var app = require('../app').app,
 
 
 before(function(done) {
-	// mongo.start();
 
 	checkDbConnection();
 
