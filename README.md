@@ -1,4 +1,4 @@
-preports-service
+preports
 ========
 
 project reports - create and manage weekly IT project reports
