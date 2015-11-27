@@ -1,6 +1,9 @@
 language: node_js
 node_js:
 - '0.12'
+branches:
+ only:
+  - development
 before_script:
 - npm install -g bower grunt-cli
 - gem install sass
