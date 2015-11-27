@@ -7,9 +7,6 @@ ENV APP_TYPE node
 ENV NODE_ENV production
 ENV USER_NAME bi-yukon
 
-# set Bisnode npm registry
-#RUN npm set registry http://npmregistry/
-
 RUN mkdir -p /opt/yukon/node
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
@@ -19,8 +16,6 @@ RUN npm -v
 # install necessary npm packages
 RUN npm install forever -g
 
-# set Bisnode npm registry
-#RUN npm set registry http://npmregistry/
 
 # assign home
 ENV HOME /opt/yukon/${APP_TYPE}

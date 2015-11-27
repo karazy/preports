@@ -6,7 +6,6 @@ var config = require('../../config/environment'),
 var //the json object consumed by slack.
 	payload = {
 		    "text" : "",
-		    "icon_url": "https://www.bisnode.de/wp-content/themes/bisnode/images/logo.png",
 		    "channel": "",
 		    "username":"PReports"
 		},

@@ -2,8 +2,6 @@ FROM mongo:3.0.6
 
 MAINTAINER Frederik Reifschneider
 
-# set Bisnode npm registry
-#RUN npm set registry http://npmregistry/
 
 RUN mkdir -p /opt/yukon/node
 
@@ -14,8 +12,6 @@ RUN npm -v
 # install necessary npm packages
 RUN npm install forever -g
 
-# set Bisnode npm registry
-#RUN npm set registry http://npmregistry/
 
 # assign home
 ENV HOME /opt/yukon/${APP_TYPE}

@@ -14,7 +14,7 @@ angular.module('PReports.services').factory('language', ['$log', 'translation', 
 	function getBrowserLang() {
 		var userLang = (navigator.language) ? navigator.language : navigator.userLanguage,
 			_lang,
-			languageKey = "com.bisnode.preports.user.language";
+			languageKey = "preports.user.language";
 
 		//use user pref if set
 		if(window.localStorage) {

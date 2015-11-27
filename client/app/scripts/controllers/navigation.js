@@ -2,7 +2,7 @@
 
 PReports.NavigationCtrl =  function ($scope, $route, language, config, $location, $http, $log, $rootScope) {
 
-	var languageKey = "com.bisnode.preports.user.language";
+	var languageKey = "preports.user.language";
 
 	$scope.user = {};
 
