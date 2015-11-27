@@ -68,16 +68,12 @@ var App = function() {
 
     self.app.use(self.app.router);
 
+    //Mongolab connection when deployed on Heroku
     if(typeof process.env.MONGOLAB_URI !== "undefined") {
         console.log("Connecting to mongolab");
         self.dbConnect = process.env.MONGOLAB_URI;
-    } else if (typeof process.env.OPENSHIFT_MONGODB_DB_USERNAME === "undefined") {
-        self.dbConnect = "mongodb://" + self.dbHost + ":" + self.dbPort + "/preports";
     } else {
-        console.log("mongo logon with user: " + process.env.OPENSHIFT_MONGODB_DB_USERNAME);
-        self.dbConnect = "mongodb://" + process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":"
-                + process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@"
-                + self.dbHost + ":" + self.dbPort + "/preports";
+        self.dbConnect = "mongodb://" + self.dbHost + ":" + self.dbPort + "/preports";
     }
 
     //Create mongodb connection
