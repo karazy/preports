@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('PReports', []).controller('ReportCtrl',[ '$scope', 
+angular.module('PReports').controller('ReportCtrl',[ '$scope', 
   '$location', 
   '$routeParams', 
   'Report', '$log', 

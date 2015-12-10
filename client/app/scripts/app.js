@@ -1,7 +1,7 @@
 'use strict';
 
 /* PReports namespace. Create if not exists.*/
-var PReports = PReports || {};
+//var PReports = PReports || {};
 
 //define resources module
 angular.module('PReports.resources', []);
@@ -60,11 +60,11 @@ angular.module('PReports', [
     $routeProvider
       .when('/reports', {
         templateUrl: 'views/reports.html',
-        controller: 'PReports.ReportCtrl'
+        controller: 'ReportCtrl'
       })
        .when('/reports/:reportId', {
         templateUrl: 'views/reports_detail.html',
-        controller: 'PReports.ReportCtrl'
+        controller: 'ReportCtrl'
       })
        .when('/about', {
         templateUrl: 'views/about.html'

@@ -5,7 +5,7 @@
 * 
 * 	@author Frederik Reifschneider
 */
-angular.module('PReports.services').factory('language', ['$log', 'translation', function($log, translation) {
+angular.module('PReports').factory('language', ['$log', 'translation', function($log, translation) {
 	/**
 	* @private
 	* Retrieve browser language.
