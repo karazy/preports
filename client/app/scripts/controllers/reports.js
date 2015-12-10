@@ -1,6 +1,19 @@
 'use strict';
 
-PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, 
+angular.module('PReports', []).controller('ReportCtrl',[ '$scope', 
+  '$location', 
+  '$routeParams', 
+  'Report', '$log', 
+  '$http', 
+  '$fileUploader', 
+  'config', 
+  'errorHandler', 
+  '$rootScope', 
+  'language', 
+  '$timeout', 
+  '$interval',
+  '$interpolate',
+  'helper',  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, 
   errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
   helper) {
 
@@ -12,7 +25,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     */
     $scope.COMMAND_QUEUE_SIZE = 20;
 
-  	$scope.reports = [];
+    $scope.reports = [];
 
     $scope.currentReport = null;
     /*
@@ -21,22 +34,22 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     $scope.currentCalWeek = (new Date).getWeek();
 
     //initialize global search parameters if they don't exist on $rootScope
-  	$rootScope.search = $rootScope.search || {};
+    $rootScope.search = $rootScope.search || {};
     $rootScope.search.year = ($rootScope.search.hasOwnProperty('year')) ? $rootScope.search.year : (new Date()).getFullYear();
     $rootScope.search.week = ($rootScope.search.hasOwnProperty('week')) ? $rootScope.search.week : (new Date()).getWeek();
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
     $rootScope.search.limit = PAGINATION_LIMIT;
     $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
 
-  	
-  	$scope.weeks = [];
+    
+    $scope.weeks = [];
     $scope.years = [2014, 2015, 2016, 2017];
 
-  	$scope.config = config;
+    $scope.config = config;
 
-  	$scope.projectNames = [];
+    $scope.projectNames = [];
 
-  	//show 404 message
+    //show 404 message
      $scope.reportNotFound = false;
 
      /**
@@ -119,18 +132,18 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       }
     */
 
-  	//fill calendar weeks
-  	for (var i = 1; i < 53; i++) {
-  		$scope.weeks.push({
-  			'week' : i
-  		});
-  	};
+    //fill calendar weeks
+    for (var i = 1; i < 53; i++) {
+      $scope.weeks.push({
+        'week' : i
+      });
+    };
 
 
-  	$scope.loadReports = function(direction) {
+    $scope.loadReports = function(direction) {
       var page,
           limit;
-  		console.log('loadReports');
+      console.log('loadReports');
 
       if($scope.reportsWrapper && $scope.reportsWrapper._links) {
         if(direction== 'next' && $scope.reportsWrapper._links.next) {
@@ -150,19 +163,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         }
       }
        
-  		$scope.reportsWrapper = Report.query({
-  			'year': $rootScope.search.year,
-  			'week' : $rootScope.search.week,
+      $scope.reportsWrapper = Report.query({
+        'year': $rootScope.search.year,
+        'week' : $rootScope.search.week,
         'name' : $rootScope.search.name,
         'page' : $rootScope.search.page,
         'limit' : PAGINATION_LIMIT
-  		},
+      },
       function(value) {
         $scope.reports = $scope.reportsWrapper.reports;
         //page is  based
         $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
       }, errorHandler);
-  	}
+    }
 
     /**
     * Registers change listeners for search form.
@@ -238,12 +251,12 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       //show 404 message
       $scope.reportNotFound = false;
 
-      $scope.currentReport = Report.get({'id':id}, function() {      	
-      	setupFileUpload();
+      $scope.currentReport = Report.get({'id':id}, function() {        
+        setupFileUpload();
         updateSortableOptions();
       }, function(httpResponse) {
-      	$scope.reportNotFound = true;
-      	errorHandler(httpResponse);
+        $scope.reportNotFound = true;
+        errorHandler(httpResponse);
       });
     }
 
@@ -341,8 +354,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       $location.path('reports/' + id);
     }
 
-  	$scope.createNewReport = function() {
-  		var newReport = {},
+    $scope.createNewReport = function() {
+      var newReport = {},
           date = new Date();
 
       newReport.year = date.getFullYear();
@@ -352,7 +365,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       newReport.milestones = [];
 
       saveReport(newReport);
-  	}
+    }
 
     /**
     * Update $scope.currentReport by persisting changes.
@@ -362,13 +375,13 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     *   Previous value used for undo.
     * TODO document all param
     */
-  	$scope.updateReport = function(modifiedProperty, prevValue, isArray, index, arrayName) {
+    $scope.updateReport = function(modifiedProperty, prevValue, isArray, index, arrayName) {
       var updateCommand;
 
-  		if(!$scope.currentReport) {
-  			console.log('updateReport: no current report');
-  			return;
-  		}
+      if(!$scope.currentReport) {
+        console.log('updateReport: no current report');
+        return;
+      }
 
       //prepare command
       updateCommand = {
@@ -385,7 +398,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       } else {
         updateCommand.nV = $scope.currentReport[updateCommand.mP];  
       }
-  		
+      
       //always convert to int before saving
       convertYearAndWeekToInt($scope.currentReport);
 
@@ -440,7 +453,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       storeAndExecute(updateCommand);
 
       updateSortableOptions();
-  	}
+    }
 
     $scope.updateReportYear = function(newYear, oldYear) {
       $log.log("Updating report year from " + oldYear + " to " + newYear);
@@ -463,13 +476,13 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       $scope.updateReportWeek($scope.currentReport.week, oldWeek);
     }
 
-  	$scope.deleteReport = function(report) {
+    $scope.deleteReport = function(report) {
       $scope.reportToDelete = report || $scope.currentReport;
 
-  		if(!$scope.reportToDelete) {
-  			console.log('deleteReport: no report to delete');
-  			return;
-  		}
+      if(!$scope.reportToDelete) {
+        console.log('deleteReport: no report to delete');
+        return;
+      }
 
       $scope.remainingSecondsBeforeDoomsday = Math.round(REPORT_DELETE_TIMEOUT/1000);
       $scope.deleteTimer = true;      
@@ -516,8 +529,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
           $scope.deleteTimer = false;
           killTheReport();
         }  
-      }  		
-  	}
+      }      
+    }
 
      $scope.delayDoomsday = function() {
       $scope.deleteTimer = false;
@@ -572,14 +585,14 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     $scope.addMilestone = function() {
       var updateCommand = {};
 
-    	if(!$scope.currentReport) {
-  			console.log('addMilestone: no current report');
-  			return;
-  		}
+      if(!$scope.currentReport) {
+        console.log('addMilestone: no current report');
+        return;
+      }
 
-  		if(!$scope.currentReport.milestones) {
-  			$scope.currentReport.milestones = [];
-  		}
+      if(!$scope.currentReport.milestones) {
+        $scope.currentReport.milestones = [];
+      }
 
       convertYearAndWeekToInt($scope.currentReport);
 
@@ -607,20 +620,20 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       var updateCommand = {},
           milestoneToRemove;
 
-    	if(!$scope.currentReport) {
-  			console.log('addMilestone: no current report');
-  			return;
-  		}
+      if(!$scope.currentReport) {
+        console.log('addMilestone: no current report');
+        return;
+      }
 
-  		if(!index && index !== 0) {
-  			console.log('addMilestone: no index given');
-  			return;
-  		}
+      if(!index && index !== 0) {
+        console.log('addMilestone: no index given');
+        return;
+      }
 
-  		if(!$scope.currentReport.milestones || $scope.currentReport.milestones.length == 0 || !$scope.currentReport.milestones[index]) {
-  			return;
-  		}
-  		
+      if(!$scope.currentReport.milestones || $scope.currentReport.milestones.length == 0 || !$scope.currentReport.milestones[index]) {
+        return;
+      }
+      
 
       convertYearAndWeekToInt($scope.currentReport);
 
@@ -646,14 +659,14 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     $scope.addCodeReview = function() {
       var updateCommand = {};
 
-    	if(!$scope.currentReport) {
-  			console.log('addCodeReview: no current report');
-  			return;
-  		}
+      if(!$scope.currentReport) {
+        console.log('addCodeReview: no current report');
+        return;
+      }
 
-  		if(!$scope.currentReport.codeReviews) {
-  			$scope.currentReport.codeReviews = [];
-  		}
+      if(!$scope.currentReport.codeReviews) {
+        $scope.currentReport.codeReviews = [];
+      }
 
       convertYearAndWeekToInt($scope.currentReport);
 
@@ -681,19 +694,19 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
       var updateCommand = {},
           codeReviewToRemove;
 
-    	if(!$scope.currentReport) {
-  			console.log('removeCodeReview: no current report');
-  			return;
-  		}
+      if(!$scope.currentReport) {
+        console.log('removeCodeReview: no current report');
+        return;
+      }
 
-  		if(!index && index !== 0) {
-  			console.log('removeCodeReview: no index given');
-  			return;
-  		}
+      if(!index && index !== 0) {
+        console.log('removeCodeReview: no index given');
+        return;
+      }
 
-  		if(!$scope.currentReport.codeReviews || $scope.currentReport.codeReviews.length == 0 || !$scope.currentReport.codeReviews[index]) {
-  			return;
-  		}
+      if(!$scope.currentReport.codeReviews || $scope.currentReport.codeReviews.length == 0 || !$scope.currentReport.codeReviews[index]) {
+        return;
+      }
 
       convertYearAndWeekToInt($scope.currentReport);
 
@@ -917,30 +930,30 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     *
     */
     $scope.deleteReportImage = function(image) {
-    	if(!image) {
-    		console.log('deleteReportImage: no image given');
-    		return;
-    	}
+      if(!image) {
+        console.log('deleteReportImage: no image given');
+        return;
+      }
 
-    	if(!$scope.currentReport) {
-  			console.log('deleteReportImage: no current report');
-  			return;
-  		}
+      if(!$scope.currentReport) {
+        console.log('deleteReportImage: no current report');
+        return;
+      }
 
-    	$http.delete(config.getCombinedServiceUrl() + image._links.self.href).
-      	success(function(data, status, headers, config) {
-    			angular.forEach($scope.currentReport.images, function(object, index) {
-    				if(object._id  == image._id) {
-    					$scope.currentReport.images.splice(index, 1);
-    					return false;
-    				}
-    			});
+      $http.delete(config.getCombinedServiceUrl() + image._links.self.href).
+        success(function(data, status, headers, config) {
+          angular.forEach($scope.currentReport.images, function(object, index) {
+            if(object._id  == image._id) {
+              $scope.currentReport.images.splice(index, 1);
+              return false;
+            }
+          });
 
         loadReportVersion($scope.currentReport, function(versionInfo) {
           $scope.currentReport.version = versionInfo.version;
         });
 
-  		  }).error(errorHandler);
+        }).error(errorHandler);
     }
 
     /**
@@ -967,8 +980,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
             filters: [
                 function (item) {
                     var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
-		            type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
-		            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+                type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
+                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
                 }
             ]
         });
@@ -987,8 +1000,8 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         $scope.currentReport.images.push(response);
      });
 
-     	uploader.bind('completeall', function (event, items) {
-      		//Update report with latest version.
+       uploader.bind('completeall', function (event, items) {
+          //Update report with latest version.
           loadReportVersion($scope.currentReport, function(versionInfo) {
             $scope.currentReport.version = versionInfo.version;
           });
@@ -996,35 +1009,35 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
         });
 
         uploader.bind('error', function( event, xhr, item, response) {
-        	console.log('setupFileUpload: upload failed');
-        	//show global error. for more information have a look inside the errorHandler
-        	$rootScope.error = true;
-        	$rootScope.errorMessage = language.translate(xhr.response) || 
+          console.log('setupFileUpload: upload failed');
+          //show global error. for more information have a look inside the errorHandler
+          $rootScope.error = true;
+          $rootScope.errorMessage = language.translate(xhr.response) || 
             language.translate('error.image.upload') || 
-        		language.translate('error.general') || 
-        		"Error during communication with service.";
+            language.translate('error.general') || 
+            "Error during communication with service.";
         });
- 	}
+   }
 
- 	$scope.copyReport = function(reportToCopy, $event) {
+   $scope.copyReport = function(reportToCopy, $event) {
     var date = new Date();
 
- 		if(!reportToCopy) {
-    		console.log('copyReport: no reportToCopy given');
-    		return;
-    	}
+     if(!reportToCopy) {
+        console.log('copyReport: no reportToCopy given');
+        return;
+      }
 
-    	//link to original report
-    	reportToCopy.copyOf = reportToCopy._id;
-    	delete reportToCopy._id;
+      //link to original report
+      reportToCopy.copyOf = reportToCopy._id;
+      delete reportToCopy._id;
 
-    	reportToCopy.name = reportToCopy.name +'_copy';
+      reportToCopy.name = reportToCopy.name +'_copy';
       reportToCopy.week = date.getWeek();
       reportToCopy.year = date.getFullYear();
       reportToCopy.locked = false;
 
-    	saveReport(reportToCopy);
- 	}
+      saveReport(reportToCopy);
+   }
 
   /**
   * Locks currently edited report to prevnt accidential edits.
@@ -1257,15 +1270,15 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     return color;
   }
 
- 	function loadProjectNames() {
- 		$http.get($scope.config.getCombinedServiceUrl() + '/reports', {
+   function loadProjectNames() {
+     $http.get($scope.config.getCombinedServiceUrl() + '/reports', {
       headers: {
         'Accept' : 'text/plain'
       }
     }).success(function(data, status, headers, config) {
- 			$scope.projectNames = data;
- 		}).error(errorHandler);
- 	}
+       $scope.projectNames = data;
+     }).error(errorHandler);
+   }
 
   /**
   * Converts year and week of a report to Int.
@@ -1296,7 +1309,7 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     return;
   }
 
-  	
+    
     //initially load reports or report entity based on url
     $timeout(function() {
       if($routeParams.reportId) {
@@ -1333,9 +1346,9 @@ PReports.ReportCtrl =  function ($scope, $location, $routeParams, Report, $log, 
     }
   }
 
-}
+}]);
 
-PReports.ReportCtrl.$inject = [
+/*PReports.ReportCtrl.$inject = [
   '$scope', 
   '$location', 
   '$routeParams', 
@@ -1349,4 +1362,4 @@ PReports.ReportCtrl.$inject = [
   '$timeout', 
   '$interval',
   '$interpolate',
-  'helper'];
+  'helper']; */

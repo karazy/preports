@@ -55,17 +55,17 @@ angular.module('PReports.services').factory('onStartInterceptor', ['loadingServi
 * @inspiredby https://groups.google.com/forum/#!msg/angular/BbZ7lQgd1GI/GJBTXcJLQMkJ
 */
 angular.module('PReports.services').factory('onCompleteInterceptor', ['loadingService', '$rootScope','$q', function(loadingService, $rootScope, $q) {
-    return function (promise) {
-            return promise.then(function (response) {
-              loadingService.requestCount--;
-                $rootScope.ajaxLoading = loadingService.isLoading();
-                return response;
-
-            }, function (response) {
-                loadingService.requestCount--;
-                $rootScope.ajaxLoading = loadingService.isLoading();
-                return $q.reject(response);
-            });
+    return {
+      response: function(response) {
+        loadingService.requestCount--;
+        $rootScope.ajaxLoading = loadingService.isLoading();
+        return response;
+      },
+      responseError: function(response) {
+        loadingService.requestCount--;
+        $rootScope.ajaxLoading = loadingService.isLoading();
+        return $q.reject(response);
+      }
     };
 }]);
 
@@ -73,7 +73,7 @@ angular.module('PReports.services').factory('onCompleteInterceptor', ['loadingSe
 * Add angular.module('PReports.services').onCompleteInterceptor as $http interceptor.
 */
 angular.module('PReports.services').config(['$httpProvider', function($httpProvider) {
-  $httpProvider.responseInterceptors.push('onCompleteInterceptor');
+  $httpProvider.interceptors.push('onCompleteInterceptor');
 }]);
 
 /**

@@ -1,6 +1,6 @@
 'use strict';
 
-PReports.NavigationCtrl =  function ($scope, $route, language, config, $location, $http, $log, $rootScope) {
+angular.module('PReports').controller('NavigationCtrl',  ['$scope', '$route', 'language', 'config', '$location', '$http', '$log', '$rootScope', function ($scope, $route, language, config, $location, $http, $log, $rootScope) {
 
 	var languageKey = "preports.user.language";
 
@@ -67,7 +67,7 @@ PReports.NavigationCtrl =  function ($scope, $route, language, config, $location
 	if($location.path() == '/about') {
 		getReportsCount();
 	}
-}
+}]);
 
-PReports.NavigationCtrl.$inject = ['$scope', '$route', 'language', 'config', '$location', '$http', '$log', '$rootScope'];
+//PReports.NavigationCtrl.$inject = ['$scope', '$route', 'language', 'config', '$location', '$http', '$log', '$rootScope'];
 

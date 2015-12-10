@@ -43,7 +43,7 @@ Date.prototype.getWeek = function (dowOffset) {
   return weeknum;
 };
 
-PReports = angular.module('PReports', [
+angular.module('PReports', [
   'ngCookies',
   'ngResource',
   'ngSanitize',

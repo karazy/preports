@@ -2,24 +2,25 @@
   "name": "report-frontend",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "1.2.6",
+    "angular": "~1.4.8",
     "json3": "~3.2.6",
     "es5-shim": "~2.1.0",
     "jquery": "~1.10.2",
-    "angular-resource": "1.2.6",
-    "angular-cookies": "1.2.6",
-    "angular-sanitize": "1.2.6",
-    "angular-route": "1.2.6",
+    "angular-resource": "~1.4.8",
+    "angular-cookies": "~1.4.8",
+    "angular-sanitize": "~1.4.8",
+    "angular-route": "~1.4.8",
     "angular-file-upload": "0.3.1",
     "angular-bootstrap": "~0.10.0",
     "angular-ui-sortable": "~0.13.4",
     "bootstrap-sass": "~3.3.5"
   },
   "devDependencies": {
-    "angular-mocks": "1.2.6",
-    "angular-scenario": "1.2.6"
+    "angular-mocks": "~1.4.8",
+    "angular-scenario": "~1.4.8"
   },
   "resolutions": {
-    "jquery": "1.10.2"
+    "jquery": "1.10.2",
+    "angular": "1.4.8"
   }
 }

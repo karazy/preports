@@ -60,18 +60,18 @@ angular.module('PReports.services').factory('errorHandler',['$rootScope','$locat
 * @inspiredby https://groups.google.com/forum/#!msg/angular/BbZ7lQgd1GI/GJBTXcJLQMkJ
 */
 angular.module('PReports.services').factory('notAuthenticatedInterceptor', ['$log','$q', '$location', function($log, $q, $location) {
-    return function (promise) {
-            return promise.then(function (response) {
-              	$log.log("notAuthenticatedInterceptor intercepted successful request with status " + response.status);
-                return response;
-
-            }, function (response) {                
-                if (response.status === 401) {
+    return {
+    	response: function(response) {
+    		$log.log("notAuthenticatedInterceptor intercepted successful request with status " + response.status);
+            return response;
+    	},
+    	responseError: function(response) {
+    		if (response.status === 401) {
                 	$log.log("Request not authenticated status 401. Redirecting to login!");
 		        	window.location.href = '//' + $location.host() + ':' + $location.port() + '/login';
 		        }
                 return $q.reject(response);
-            });
+    	}
     };
 }]);
 
@@ -79,5 +79,5 @@ angular.module('PReports.services').factory('notAuthenticatedInterceptor', ['$lo
 * Add angular.module('PReports.services').notAuthenticatedInterceptor as $http interceptor.
 */
 angular.module('PReports.services').config(['$httpProvider', function($httpProvider) {
-  $httpProvider.responseInterceptors.push('notAuthenticatedInterceptor');
+  $httpProvider.interceptors.push('notAuthenticatedInterceptor');
 }]);
