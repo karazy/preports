@@ -438,7 +438,7 @@
 			<div ng-hide="currentReport.locked" class="no-print">
 				<div class="row file-area" style="margin-bottom: 10px">
 					<div class="col-md-5">
-						<div ng-file-drop ng-file-over="file-drop-over" class="file-drop">
+						<div nv-file-drop="" uploader="uploader" nv-file-over="file-drop-over" class="file-drop">
 							<span l="file.dropzone">Drop images</span>
 						</div>
 					</div>
@@ -446,7 +446,7 @@
 						<span l="or" style="text-align: center">or</span>
 					</div>
 					<div class="col-md-5">
-						<input ng-file-select type="file" multiple  />
+						<input type="file" nv-file-select="" uploader="uploader" multiple  />
 					</div>
 				</div>	
 				<div class="row">

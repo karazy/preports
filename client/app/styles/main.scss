@@ -255,7 +255,7 @@ body {
     }
 }
 
-.file-drop {
+.file-drop, .nv-file-drop {
     border-radius: 3px;
     border: 1px dotted gray;
     text-align: center;
@@ -263,7 +263,7 @@ body {
     height: 100px;
 }
 
-.file-drop-over {
+.nv-file-over {
     background-color: gray;
     color: white;
 }

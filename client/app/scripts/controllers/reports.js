@@ -5,7 +5,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
   '$routeParams', 
   'Report', '$log', 
   '$http', 
-  '$fileUploader', 
+  'FileUploader', 
   'config', 
   'errorHandler', 
   '$rootScope', 
@@ -13,7 +13,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
   '$timeout', 
   '$interval',
   '$interpolate',
-  'helper',  function ($scope, $location, $routeParams, Report, $log, $http, $fileUploader, config, 
+  'helper',  function ($scope, $location, $routeParams, Report, $log, $http, FileUploader, config, 
   errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
   helper) {
 
@@ -251,8 +251,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
       //show 404 message
       $scope.reportNotFound = false;
 
-      $scope.currentReport = Report.get({'id':id}, function() {        
-        setupFileUpload();
+      $scope.currentReport = Report.get({'id':id}, function() {                
         updateSortableOptions();
       }, function(httpResponse) {
         $scope.reportNotFound = true;
@@ -557,7 +556,6 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         //new
         resource.$create(function(saved) {
           console.log('saved new report');
-          //$scope.loadReports();
           $scope.newReportName = null;
           $location.path('reports/' + resource._id)
           
@@ -971,25 +969,29 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     function setupFileUpload() {
-     var uploader = $scope.uploader = $fileUploader.create({
+     var uploader = $scope.uploader = new FileUploader({
             scope: $scope,                          // to automatically update the html. Default: $rootScope
-            url: config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id + '/images',
+            // url: config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id + '/images',            
+            //since setup is performed before loading the report we take the report id from URL
+            url: config.getCombinedServiceUrl() + '/reports/' + $routeParams.reportId + '/images',
             alias: 'image',
             removeAfterUpload: true,
             autoUpload: false,
-            filters: [
-                function (item) {
-                    var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
-                type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
-                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-                }
-            ]
         });
 
-     uploader.bind('complete', function( event, xhr, item, response ) {
+     uploader.filters.push({
+          name: 'imageFilter',
+          fn: function(item, options) {
+              var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
+              type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
+              return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+          }
+      });
+
+    uploader.onCompleteItem = function( item, response, status, headers ) {
         $log.log(response);
         
-        if(xhr.status != 200) {
+        if(status != 200) {
           return;
         }
 
@@ -998,25 +1000,25 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         }
 
         $scope.currentReport.images.push(response);
-     });
+     };
 
-       uploader.bind('completeall', function (event, items) {
+       uploader.onCompleteAll = function () {
           //Update report with latest version.
           loadReportVersion($scope.currentReport, function(versionInfo) {
             $scope.currentReport.version = versionInfo.version;
           });
         
-        });
+        };
 
-        uploader.bind('error', function( event, xhr, item, response) {
+        uploader.onErrorItem = function(item, response, status, headers) {
           console.log('setupFileUpload: upload failed');
           //show global error. for more information have a look inside the errorHandler
           $rootScope.error = true;
-          $rootScope.errorMessage = language.translate(xhr.response) || 
+          $rootScope.errorMessage = language.translate(response) || 
             language.translate('error.image.upload') || 
             language.translate('error.general') || 
             "Error during communication with service.";
-        });
+        };
    }
 
    $scope.copyReport = function(reportToCopy, $event) {
@@ -1309,7 +1311,10 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     return;
   }
 
-    
+    //Setup File Upload immediately. Otherwise there will be erors like
+    //https://github.com/nervgh/angular-file-upload/issues/183    
+    setupFileUpload();
+
     //initially load reports or report entity based on url
     $timeout(function() {
       if($routeParams.reportId) {
@@ -1347,19 +1352,3 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
   }
 
 }]);
-
-/*PReports.ReportCtrl.$inject = [
-  '$scope', 
-  '$location', 
-  '$routeParams', 
-  'Report', '$log', 
-  '$http', 
-  '$fileUploader', 
-  'config', 
-  'errorHandler', 
-  '$rootScope', 
-  'language', 
-  '$timeout', 
-  '$interval',
-  '$interpolate',
-  'helper']; */
