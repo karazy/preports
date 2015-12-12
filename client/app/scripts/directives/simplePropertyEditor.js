@@ -413,7 +413,8 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			maxLength = attrs.hasOwnProperty('editorMaxLength') ? "maxlength='"+attrs.editorMaxLength+"'" : "",
 			placeholder = attrs.hasOwnProperty('editorPlaceholder') ? "placeholder='"+l(attrs.editorPlaceholder)+"'" : "",
 			type = 	attrs.hasOwnProperty('editorType') ? attrs.editorType : "text",
-			inputName = (suffix) ?  ("{{'simpleProperty'+"+ suffix + "}}") : "simpleProperty",
+			editorField = attrs.hasOwnProperty('editorField') ? attrs.editorField : "",
+			inputName = (suffix) ?  ("{{'simpleProperty'+"+ suffix + "}}") :  "simpleProperty_" + editorField,
 			modelBinding = (suffix) ? ("editorTranslations["+suffix+"]") : "editorValue",
 			inputHtml;
 
@@ -432,6 +433,9 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
               	'</span>'+			 								 				
  			'</p>'+
  			'<datepicker '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" show-weeks="true"></datepicker>';			 			 
+		} else if(type == 'richtext') {
+			inputHtml = 
+			'<div text-angular ng-model="' + modelBinding + '"></div>';
 		}else {
 			if(type != "email" && type != "password" && type != "number" && type != "url") {
 				type = "text";

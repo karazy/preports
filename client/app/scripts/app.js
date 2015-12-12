@@ -55,8 +55,9 @@ angular.module('PReports', [
   'PReports.filters',
   'angularFileUpload',
   'ui.bootstrap',
-  'ui.sortable'
-]).config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
+  'ui.sortable',
+  'textAngular'
+]).config(['$routeProvider', '$httpProvider', '$provide', function ($routeProvider, $httpProvider, $provide) {
     $routeProvider
       .when('/reports', {
         templateUrl: 'views/reports.html',
@@ -74,6 +75,18 @@ angular.module('PReports', [
       });
 
       $httpProvider.defaults.headers.common['Accept'] = 'application/json, application/hal+json';
+
+      //Configure TextAngular Options
+      $provide.decorator('taOptions', ['$delegate', function(taOptions){
+        // $delegate is the taOptions we are decorating
+        // here we override the default toolbars and classes specified in taOptions.
+        taOptions.forceTextAngularSanitize = true; // set false to allow the textAngular-sanitize provider to be replaced
+        // taOptions.keyMappings = []; // allow customizable keyMappings for specialized key boards or languages
+        taOptions.toolbar = [
+            ['h3', 'h4', 'p', 'bold', 'italics', 'underline', 'ul', 'ol']
+        ];
+        return taOptions; // whatever you return will be the taOptions
+      }]); 
   }]).run(['$rootScope', 'config', function($rootScope, config) {
         $rootScope.version = config.version;
 }]);

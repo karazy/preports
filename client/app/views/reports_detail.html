@@ -262,7 +262,7 @@
 	<div class="row section">
 		<div class="col-md-6">
 			<p l="report.lastweektasks" class="section-header">Last week tasks</p>
-			<div simple-property-editor editor-title="report.lastweektasks" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.tasks.ph" editor-field="lastWeekTasks" editor-entity="currentReport" editor-type="textarea" editor-enabled="!currentReport.locked">
+			<div simple-property-editor editor-title="report.lastweektasks" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.tasks.ph" editor-field="lastWeekTasks" editor-entity="currentReport" editor-type="richtext" editor-enabled="!currentReport.locked">
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
 					<span l="report.tasks.ph" ng-hide="currentReport.lastWeekTasks" class="simple-property-placeholder" >Enter tasks</span>
 					<span ng-bind-html="currentReport.lastWeekTasks | breakFilter"></span>
@@ -271,7 +271,7 @@
 		</div>
 		<div class="col-md-6">
 			<p l="report.nextweektasks" class="section-header">Next week tasks</p>
-			<div simple-property-editor editor-title="report.nextweektasks" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.tasks.ph" editor-field="nextWeekTasks" editor-entity="currentReport" editor-type="textarea" editor-enabled="!currentReport.locked">
+			<div simple-property-editor editor-title="report.nextweektasks" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.tasks.ph" editor-field="nextWeekTasks" editor-entity="currentReport" editor-type="richtext" editor-enabled="!currentReport.locked">
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
 				<span l="report.tasks.ph" ng-hide="currentReport.nextWeekTasks" class="simple-property-placeholder" >Enter tasks</span>
 				<span ng-bind-html="currentReport.nextWeekTasks | breakFilter"></span>
@@ -283,7 +283,7 @@
 	<div class="row section">
 		<div class="col-md-6">
 			<p l="report.potentials" class="section-header">Identified potentials</p>
-			<div simple-property-editor editor-title="report.potentials" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.potentials.ph" editor-field="potentials" editor-entity="currentReport" editor-type="textarea" editor-enabled="!currentReport.locked">			
+			<div simple-property-editor editor-title="report.potentials" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.potentials.ph" editor-field="potentials" editor-entity="currentReport" editor-type="richtext" editor-enabled="!currentReport.locked">			
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" class="section-content">	
 				<span l="report.potentials.ph" ng-hide="currentReport.potentials" class="simple-property-placeholder" >Enter</span>		
 				<span ng-bind-html="currentReport.potentials | breakFilter"></span>
@@ -292,7 +292,7 @@
 		</div>
 		<div class="col-md-6">
 			<p l="report.risks" class="section-header">Risks & Impediments</p>
-			<div simple-property-editor editor-title="report.risks" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.risks.ph" editor-field="risksImpediments" editor-entity="currentReport" editor-type="textarea" editor-enabled="!currentReport.locked">			
+			<div simple-property-editor editor-title="report.risks" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.risks.ph" editor-field="risksImpediments" editor-entity="currentReport" editor-type="richtext" editor-enabled="!currentReport.locked">			
 				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" class="section-content">				
 					<span l="report.risks.ph" ng-hide="currentReport.risksImpediments" class="simple-property-placeholder" >Enter risks/impediments</span>
 					<span ng-bind-html="currentReport.risksImpediments | breakFilter"></span>
