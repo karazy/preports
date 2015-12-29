@@ -55,7 +55,8 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
      /**
      * List of executed commands during report editing
      */
-     $scope.commands = [];
+     $scope.commands = [];     
+
 
 
     function updateSortableOptions() {
@@ -132,12 +133,6 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
       }
     */
 
-    //fill calendar weeks
-    for (var i = 1; i < 53; i++) {
-      $scope.weeks.push({
-        'week' : i
-      });
-    };
 
 
     $scope.loadReports = function(direction) {
@@ -251,7 +246,8 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
       //show 404 message
       $scope.reportNotFound = false;
 
-      $scope.currentReport = Report.get({'id':id}, function() {                
+      $scope.currentReport = Report.get({'id':id}, function() {  
+        fillWeeks();
         updateSortableOptions();
       }, function(httpResponse) {
         $scope.reportNotFound = true;
@@ -409,7 +405,9 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
           $scope.currentReport[updateCommand.mP] = updateCommand.nV;  
         }
 
-        $scope.currentReport.$update(angular.noop, handleUpdateError);          
+        $scope.currentReport.$update(function() {
+          $scope.$emit('report-change-'+updateCommand.mP);
+        }, handleUpdateError);          
       }
 
       //only add update command when a modified property exists
@@ -422,7 +420,10 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
           } else {
             $scope.currentReport[updateCommand.mP] = updateCommand.pV;  
           }
-          $scope.currentReport.$update(angular.noop, handleUpdateError);
+          $scope.currentReport.$update(function() {
+            $scope.$emit('report-change-'+updateCommand.mP);
+          }, handleUpdateError);
+          
         }
       }
 
@@ -455,24 +456,83 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     $scope.updateReportYear = function(newYear, oldYear) {
-      $log.log("Updating report year from " + oldYear + " to " + newYear);
       $scope.updateReport('year', parseInt(oldYear), false);
     }
 
     $scope.updateReportWeek = function(newWeek, oldWeek) {
-      $log.log("Updating report week from " + oldWeek + " to " + newWeek);
       $scope.updateReport('week', parseInt(oldWeek), false);
     }
 
+    /**
+    * Increases or decreases the current report week in steps of +/- 1.
+    * Takes changes and start/end of year into consideration.
+    * @param direction
+    *   dec for decreasing and inc for increasing
+    *
+    */
     $scope.incrementalUpdateReportWeek = function(direction) {
-      var oldWeek = $scope.currentReport.week;
-      if(direction == 'dec') {
-        $scope.currentReport.week--;
-      } else if(direction == 'inc') {
-        $scope.currentReport.week++;  
+      if(!direction) {
+        $log.log('No valid direction given.');
+        return;
       }
-      
-      $scope.updateReportWeek($scope.currentReport.week, oldWeek);
+
+      if(direction != 'dec' && direction != 'inc') {
+        $log.log('No valid direction provided. ' + direction);
+        return;
+      }
+
+      var oldWeek = $scope.currentReport.week,
+          baseYear = (direction == 'dec') ? $scope.currentReport.year-1 : $scope.currentReport.year,
+          //use 28th december since it is always in last years week
+          baseDate = new Date(baseYear,11,28),
+          maxWeek = baseDate.getWeek(),
+          updateCommand;
+
+          //save prev values
+      updateCommand = {
+        prev: {
+          week: $scope.currentReport.week,
+          year: $scope.currentReport.year
+        }
+      };
+
+      updateCommand.execute = function() {
+        if(direction == 'dec') {
+          if($scope.currentReport.week > 1) {
+            $scope.currentReport.week--;
+          } else {
+            $scope.currentReport.week = maxWeek;            
+            $scope.currentReport.year--;
+          }
+          
+        } else if(direction == 'inc') {
+          if($scope.currentReport.week <  maxWeek) {
+            $scope.currentReport.week++;
+          } else {
+            $scope.currentReport.week = 1;
+            $scope.currentReport.year++;
+          }
+        }
+        $scope.currentReport.$update(function() {
+          if(updateCommand.prev.year != $scope.currentReport.year) {
+            $scope.$emit('report-change-year');
+          }
+        }, handleUpdateError);
+      }
+
+      updateCommand.undo = function() {
+        var cYear = $scope.currentReport.year;
+        $scope.currentReport.week = updateCommand.prev.week;
+        $scope.currentReport.year = updateCommand.prev.year;
+
+        $scope.currentReport.$update(function() {
+          if(cYear != $scope.currentReport.year) {
+            $scope.$emit('report-change-year');
+          }
+        }, handleUpdateError);
+      }
+
+      storeAndExecute(updateCommand);
     }
 
     $scope.deleteReport = function(report) {
@@ -1311,9 +1371,43 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     return;
   }
 
+  /**
+  * Fills $scope.weeks based on number of weeks for current report year.
+  *
+  */
+  function fillWeeks() {
+    if(!$scope.currentReport || !$scope.currentReport.year) {
+      return;
+    }
+          //use 28th december since it is always in last years week
+      var baseDate = new Date($scope.currentReport.year,11,28),
+          maxWeek = baseDate.getWeek();
+
+    //fill calendar weeks
+    $scope.weeks = [];
+    $log.log('Filling weeks with ' + maxWeek);
+    for (var i = 1; i <= maxWeek; i++) {      
+      $scope.weeks.push({
+        'week' : i
+      });
+    };
+  }
+
+  /**
+  * Register event handlers.
+  *
+  */
+  function registerEventHandlers() {
+    $scope.$on('report-change-year', function(eventData) {
+      fillWeeks();
+     });
+  }
+
     //Setup File Upload immediately. Otherwise there will be erors like
     //https://github.com/nervgh/angular-file-upload/issues/183    
     setupFileUpload();
+
+    registerEventHandlers();
 
     //initially load reports or report entity based on url
     $timeout(function() {

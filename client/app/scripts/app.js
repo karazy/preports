@@ -24,17 +24,17 @@ Date.prototype.getWeek = function (dowOffset) {
   day = (day >= 0 ? day : day + 7);
   var daynum = Math.floor((this.getTime() - newYear.getTime() - 
   (this.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
-  var weeknum;
+  var weeknum, nYear, nDay;
   //if the year starts before the middle of a week
   if(day < 4) {
     weeknum = Math.floor((daynum+day-1)/7) + 1;
     if(weeknum > 52) {
       nYear = new Date(this.getFullYear() + 1,0,1);
-      nday = nYear.getDay() - dowOffset;
-      nday = nday >= 0 ? nday : nday + 7;
+      nDay = nYear.getDay() - dowOffset;
+      nDay = nDay >= 0 ? nDay : nDay + 7;
       /*if the next year starts before the middle of
         the week, it is week #1 of that year*/
-      weeknum = nday < 4 ? 1 : 53;
+      weeknum = nDay < 4 ? 1 : 53;
     }
   }
   else {
