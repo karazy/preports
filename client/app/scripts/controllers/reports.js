@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('PReports').controller('ReportCtrl',[ '$scope', 
+angular.module('PReports').controller('ReportCtrl', ['$scope',
   '$location',
   '$routeParams',
   'Report',
@@ -14,24 +14,25 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
   '$timeout',
   '$interval',
   '$interpolate',
-  'helper',  function ($scope, $location, $routeParams, Report, $log, $http, FileUploader, config, 
-  errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
-  helper) {
+  'helper',
+  function($scope, $location, $routeParams, Report, $log, $http, FileUploader, config,
+    errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
+    helper) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
-        PAGINATION_LIMIT = 25;
+      PAGINATION_LIMIT = 25;
 
     /**
-    * Size of the command queue that holds undo events.
-    */
+     * Size of the command queue that holds undo events.
+     */
     $scope.COMMAND_QUEUE_SIZE = 20;
     $scope.reports = [];
     $scope.currentReport = null;
     $scope.years = [2014, 2015, 2016, 2017];
 
     /*
-    * Current calendar week.
-    */
+     * Current calendar week.
+     */
     $scope.currentCalWeek = (new Date()).getWeek();
 
     //initialize global search parameters if they don't exist on $rootScope
@@ -42,73 +43,73 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     $rootScope.search.limit = PAGINATION_LIMIT;
     $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
 
-        
+
     $scope.config = config;
 
     $scope.projectNames = [];
 
     //show 404 message
-     $scope.reportNotFound = false;
+    $scope.reportNotFound = false;
 
-     /**
+    /**
      * List of executed commands during report editing
      */
-     $scope.commands = [];     
+    $scope.commands = [];
 
 
 
     function updateSortableOptions() {
-        /**
-         * Options used for sortable elements.
-         *
-         */
-         $scope.reportSortableOptions = {
-            disabled: $scope.isReportLocked(),
-            axis: 'y',
-            update: function(event, ui) {
-              var updateCommand = {},
-                  oldOrder = angular.copy($scope.currentReport.milestones);
+      /**
+       * Options used for sortable elements.
+       *
+       */
+      $scope.reportSortableOptions = {
+        disabled: $scope.isReportLocked(),
+        axis: 'y',
+        update: function(event, ui) {
+          var updateCommand = {},
+            oldOrder = angular.copy($scope.currentReport.milestones);
 
-              updateCommand.execute = function() {
-                $scope.currentReport.$update();
-              };
-
-              updateCommand.undo = function() {
-                //arraymove($scope.currentReport.milestones,)
-                $scope.currentReport.milestones = oldOrder;
-                $scope.currentReport.$update();
-              };
-
-              function arraymove(arr, fromIndex, toIndex) {
-                  var element = arr[fromIndex];
-                  arr.splice(fromIndex, 1);
-                  arr.splice(toIndex, 0, element);
-                }
-
-              storeAndExecute(updateCommand);
-            }
+          updateCommand.execute = function() {
+            $scope.currentReport.$update();
           };
-      }
+
+          updateCommand.undo = function() {
+            //arraymove($scope.currentReport.milestones,)
+            $scope.currentReport.milestones = oldOrder;
+            $scope.currentReport.$update();
+          };
+
+          function arraymove(arr, fromIndex, toIndex) {
+            var element = arr[fromIndex];
+            arr.splice(fromIndex, 1);
+            arr.splice(toIndex, 0, element);
+          }
+
+          storeAndExecute(updateCommand);
+        }
+      };
+    }
 
 
     jQuery('[data-toggle="tooltip"]').tooltip();
 
     $scope.loadReports = function(direction) {
       var page,
-          limit;
+        limit;
       console.log('loadReports');
 
       fillWeeks($rootScope.search.year);
 
-      if($scope.reportsWrapper && $scope.reportsWrapper._links) {
-        if(direction== 'next' && $scope.reportsWrapper._links.next) {
+      if ($scope.reportsWrapper && $scope.reportsWrapper._links) {
+        if (direction == 'next' && $scope.reportsWrapper._links.next) {
           $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.next.href).success(function(wrapper) {
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
             $rootScope.search.page = wrapper.currentPage - 1;
           }).error(errorHandler);
           return;
-        } else if(direction == 'prev' && $scope.reportsWrapper._links.prev) {
+        } else if (direction == 'prev' && $scope.reportsWrapper._links.prev) {
           $scope.reportsWrapper = $http.get(config.getCombinedServiceUrl() + $scope.reportsWrapper._links.prev.href).success(function(wrapper) {
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
@@ -117,51 +118,51 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
           return;
         }
       }
-       
+
       $scope.reportsWrapper = Report.query({
-        'year': $rootScope.search.year,
-        'week' : $rootScope.search.week,
-        'name' : $rootScope.search.name,
-        'page' : $rootScope.search.page,
-        'limit' : PAGINATION_LIMIT
-      },
-      function(value) {        
-        $scope.reports = $scope.reportsWrapper.reports;
-        //page is  based
-        $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
-      }, errorHandler);
+          'year': $rootScope.search.year,
+          'week': $rootScope.search.week,
+          'name': $rootScope.search.name,
+          'page': $rootScope.search.page,
+          'limit': PAGINATION_LIMIT
+        },
+        function(value) {
+          $scope.reports = $scope.reportsWrapper.reports;
+          //page is  based
+          $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
+        }, errorHandler);
     }
 
     /**
-    * Registers change listeners for search form.
-    *
-    */
+     * Registers change listeners for search form.
+     *
+     */
     function registerWatchForSearch() {
       var tempFilterText = '',
-          filterTextTimeout,
-          tmpHandle;
+        filterTextTimeout,
+        tmpHandle;
 
-      if(!$rootScope.watchHandles) {
+      if (!$rootScope.watchHandles) {
         $rootScope.watchHandles = [];
       }
 
-      tmpHandle =$rootScope.$watch('search.name', function (newVal, oldVal) {
-          if(newVal != oldVal) {
-            if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
+      tmpHandle = $rootScope.$watch('search.name', function(newVal, oldVal) {
+        if (newVal != oldVal) {
+          if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
 
-            tempFilterText = newVal;
-            filterTextTimeout = $timeout(function() {
-                $scope.filterText = tempFilterText;
-                $rootScope.search.page = 0;
-                $scope.loadReports();
-            }, 250);
-          }
+          tempFilterText = newVal;
+          filterTextTimeout = $timeout(function() {
+            $scope.filterText = tempFilterText;
+            $rootScope.search.page = 0;
+            $scope.loadReports();
+          }, 250);
+        }
       });
 
       $rootScope.watchHandles.push(tmpHandle);
 
-      tmpHandle =$rootScope.$watch('search.year', function (newVal, oldVal) {
-        if(newVal != oldVal) {
+      tmpHandle = $rootScope.$watch('search.year', function(newVal, oldVal) {
+        if (newVal != oldVal) {
           $rootScope.search.page = 0;
           $scope.loadReports();
         }
@@ -169,10 +170,10 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
 
       $rootScope.watchHandles.push(tmpHandle);
 
-      tmpHandle= $rootScope.$watch('search.week', function (newVal, oldVal) {
-        if(newVal != oldVal) {
+      tmpHandle = $rootScope.$watch('search.week', function(newVal, oldVal) {
+        if (newVal != oldVal) {
           $rootScope.search.page = 0;
-          $scope.loadReports();          
+          $scope.loadReports();
         }
       });
 
@@ -180,11 +181,11 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Unregister change listeners for search form.
-    *
-    */
+     * Unregister change listeners for search form.
+     *
+     */
     function unregisterWatchForSearch() {
-      if($rootScope.watchHandles && $rootScope.watchHandles.length > 0) {
+      if ($rootScope.watchHandles && $rootScope.watchHandles.length > 0) {
         angular.forEach($rootScope.watchHandles, function(handle) {
           handle();
         });
@@ -194,19 +195,21 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Load a single report. Sets $scope.currentReport with result.
-    * @param {String} id
-    *   Id of report to load.
-    */
-    $scope.loadReport =  function(id) {
-      if(!id) {
+     * Load a single report. Sets $scope.currentReport with result.
+     * @param {String} id
+     *   Id of report to load.
+     */
+    $scope.loadReport = function(id) {
+      if (!id) {
         $log.log('loadReport: No Id provided.');
         return;
       }
       //show 404 message
       $scope.reportNotFound = false;
 
-      $scope.currentReport = Report.get({'id':id}, function() {  
+      $scope.currentReport = Report.get({
+        'id': id
+      }, function() {
         fillWeeks();
         updateSortableOptions();
       }, function(httpResponse) {
@@ -216,12 +219,12 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Reloads current report after external modifications.
-    * @param {Boolean} redoLastModification
-    *   If true reapplies the last issued command.
-    */
+     * Reloads current report after external modifications.
+     * @param {Boolean} redoLastModification
+     *   If true reapplies the last issued command.
+     */
     $scope.reloadReport = function(redoLastModification) {
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         $log.log('loadReport: No currentReport.');
         return;
       }
@@ -229,18 +232,20 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
       //show 404 message
       $scope.reportNotFound = false;
 
-      $scope.currentReport = Report.get({'id':$scope.currentReport._id}, function() {       
-          if($scope.commands && $scope.commands.length > 0) {
-            //TODO redo last action not ready for primetime yet! Undo must also be taken into account!
-            // if(redoLastModification) {           
-            //   var lastCommand = $scope.commands[$scope.commands.length-1];
-            //   lastCommand.execute();
-            // } 
-            // else if(redoLastModification===false) {
-              //remove last command
-              // $scope.commands.pop();
-            // }
-          }
+      $scope.currentReport = Report.get({
+        'id': $scope.currentReport._id
+      }, function() {
+        if ($scope.commands && $scope.commands.length > 0) {
+          //TODO redo last action not ready for primetime yet! Undo must also be taken into account!
+          // if(redoLastModification) {           
+          //   var lastCommand = $scope.commands[$scope.commands.length-1];
+          //   lastCommand.execute();
+          // } 
+          // else if(redoLastModification===false) {
+          //remove last command
+          // $scope.commands.pop();
+          // }
+        }
       }, function(httpResponse) {
         $scope.reportNotFound = true;
         errorHandler(httpResponse);
@@ -248,60 +253,60 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Uses search parameters (if exist) and adds them 
-    * as query parameters to current url.
-    */
+     * Uses search parameters (if exist) and adds them 
+     * as query parameters to current url.
+     */
     $scope.setSearchAsQueryParams = function() {
       //set url to query params
       //set it to empty object
       $location.$$search = {};
 
-      if($rootScope.search.week) {
+      if ($rootScope.search.week) {
         $location.search('week', $rootScope.search.week);
       }
 
-      if($rootScope.search.year) {
-        $location.search('year', $rootScope.search.year);  
+      if ($rootScope.search.year) {
+        $location.search('year', $rootScope.search.year);
       }
 
-      if($rootScope.search.name) {
-        $location.search('name', $rootScope.search.name);  
+      if ($rootScope.search.name) {
+        $location.search('name', $rootScope.search.name);
       }
     }
 
     /**
-    * Uses query params from url and adds them to 
-    * $rootScope.search object
-    */
+     * Uses query params from url and adds them to 
+     * $rootScope.search object
+     */
     function setQueryParamsAsSearch() {
       var queryParams = $location.search();
-      if(queryParams) {
-        if(queryParams.week) {
+      if (queryParams) {
+        if (queryParams.week) {
           $rootScope.search.week = parseInt(queryParams.week);
         }
-        if(queryParams.year) {
+        if (queryParams.year) {
           $rootScope.search.year = queryParams.year;
         }
-        if(queryParams.name) {
+        if (queryParams.name) {
           $rootScope.search.name = queryParams.name;
         }
       }
     }
 
     /**
-    * Delete query params in URL.
-    */
+     * Delete query params in URL.
+     */
     function resetQueryParams() {
       $location.$$search = {};
       $location.url($location.path());
     }
 
     $scope.showReport = function(id, event) {
-      if(!id || !event) {
+      if (!id || !event) {
         return;
       }
 
-      if(event.target.tagName != 'TD') {
+      if (event.target.tagName != 'TD') {
         //user clicked action button or link, so do nothing!
         return;
       }
@@ -311,7 +316,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
 
     $scope.createNewReport = function() {
       var newReport = {},
-          date = new Date();
+        date = new Date();
 
       newReport.year = date.getFullYear();
       newReport.week = date.getWeek();
@@ -323,17 +328,17 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     };
 
     /**
-    * Update $scope.currentReport by persisting changes.
-    * @param {String} modifiedProperty
-    *   Property that has been modified.
-    * @param {String} prevValue
-    *   Previous value used for undo.
-    * TODO document all param
-    */
+     * Update $scope.currentReport by persisting changes.
+     * @param {String} modifiedProperty
+     *   Property that has been modified.
+     * @param {String} prevValue
+     *   Previous value used for undo.
+     * TODO document all param
+     */
     $scope.updateReport = function(modifiedProperty, prevValue, isArray, index, arrayName) {
       var updateCommand;
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         console.log('updateReport: no current report');
         return;
       }
@@ -347,18 +352,18 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         aN: arrayName
       };
 
-      if(isArray && typeof index == 'number' && arrayName) {
-          var nestedObject = getNestedObject($scope.currentReport, arrayName);
-          updateCommand.nV = nestedObject[index][updateCommand.mP];
+      if (isArray && typeof index == 'number' && arrayName) {
+        var nestedObject = getNestedObject($scope.currentReport, arrayName);
+        updateCommand.nV = nestedObject[index][updateCommand.mP];
       } else {
-        updateCommand.nV = $scope.currentReport[updateCommand.mP];  
+        updateCommand.nV = $scope.currentReport[updateCommand.mP];
       }
-      
+
       //always convert to int before saving
       convertYearAndWeekToInt($scope.currentReport);
 
       updateCommand.execute = function() {
-        if(isArray && typeof index === 'number' && arrayName) {
+        if (isArray && typeof index === 'number' && arrayName) {
           var nestedObject = getNestedObject($scope.currentReport, arrayName);
           nestedObject[index][updateCommand.mP] = updateCommand.nV;
         } else {
@@ -366,14 +371,14 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         }
 
         $scope.currentReport.$update(function() {
-          $scope.$emit('report-change-'+updateCommand.mP);
+          $scope.$emit('report-change-' + updateCommand.mP);
         }, handleUpdateError);
       };
 
       //only add update command when a modified property exists
-      if(updateCommand.mP) {
+      if (updateCommand.mP) {
         updateCommand.undo = function() {
-          if(isArray && typeof index === 'number' && arrayName) {
+          if (isArray && typeof index === 'number' && arrayName) {
             var nestedObject = getNestedObject($scope.currentReport, arrayName);
             nestedObject[index][updateCommand.mP] = updateCommand.pV;
             // modifiedEntity[updateCommand.mP] = updateCommand.pV;
@@ -381,25 +386,25 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
             $scope.currentReport[updateCommand.mP] = updateCommand.pV;
           }
           $scope.currentReport.$update(function() {
-            $scope.$emit('report-change-'+updateCommand.mP);
+            $scope.$emit('report-change-' + updateCommand.mP);
           }, handleUpdateError);
         };
       }
 
       function getNestedObject(object, nestedProperty) {
         var props,
-            tmpObj;
+          tmpObj;
 
-        if(!nestedProperty) {
+        if (!nestedProperty) {
           return false;
         }
 
         props = nestedProperty.split('.');
 
-        if(props.length > 0) {
+        if (props.length > 0) {
           tmpObj = object;
           for (var i = 0; i < props.length; i++) {
-            if(!props[i] || !props[i].length) {
+            if (!props[i] || !props[i].length) {
               return false;
             }
             tmpObj = tmpObj[props[i]];
@@ -407,7 +412,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         }
 
         return tmpObj;
-      }   
+      }
 
       storeAndExecute(updateCommand);
 
@@ -423,31 +428,31 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Increases or decreases the current report week in steps of +/- 1.
-    * Takes changes and start/end of year into consideration.
-    * @param direction
-    *   dec for decreasing and inc for increasing
-    *
-    */
+     * Increases or decreases the current report week in steps of +/- 1.
+     * Takes changes and start/end of year into consideration.
+     * @param direction
+     *   dec for decreasing and inc for increasing
+     *
+     */
     $scope.incrementalUpdateReportWeek = function(direction) {
-      if(!direction) {
+      if (!direction) {
         $log.log('No valid direction given.');
         return;
       }
 
-      if(direction != 'dec' && direction != 'inc') {
+      if (direction != 'dec' && direction != 'inc') {
         $log.log('No valid direction provided. ' + direction);
         return;
       }
 
       var oldWeek = $scope.currentReport.week,
-          baseYear = (direction == 'dec') ? $scope.currentReport.year-1 : $scope.currentReport.year,
-          //use 28th december since it is always in last years week
-          baseDate = new Date(baseYear,11,28),
-          maxWeek = baseDate.getWeek(),
-          updateCommand;
+        baseYear = (direction == 'dec') ? $scope.currentReport.year - 1 : $scope.currentReport.year,
+        //use 28th december since it is always in last years week
+        baseDate = new Date(baseYear, 11, 28),
+        maxWeek = baseDate.getWeek(),
+        updateCommand;
 
-          //save prev values
+      //save prev values
       updateCommand = {
         prev: {
           week: $scope.currentReport.week,
@@ -456,16 +461,16 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
       };
 
       updateCommand.execute = function() {
-        if(direction == 'dec') {
-          if($scope.currentReport.week > 1) {
+        if (direction == 'dec') {
+          if ($scope.currentReport.week > 1) {
             $scope.currentReport.week--;
           } else {
-            $scope.currentReport.week = maxWeek;            
+            $scope.currentReport.week = maxWeek;
             $scope.currentReport.year--;
           }
-          
-        } else if(direction == 'inc') {
-          if($scope.currentReport.week <  maxWeek) {
+
+        } else if (direction == 'inc') {
+          if ($scope.currentReport.week < maxWeek) {
             $scope.currentReport.week++;
           } else {
             $scope.currentReport.week = 1;
@@ -473,7 +478,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
           }
         }
         $scope.currentReport.$update(function() {
-          if(updateCommand.prev.year != $scope.currentReport.year) {
+          if (updateCommand.prev.year != $scope.currentReport.year) {
             $scope.$emit('report-change-year');
           }
         }, handleUpdateError);
@@ -485,7 +490,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         $scope.currentReport.year = updateCommand.prev.year;
 
         $scope.currentReport.$update(function() {
-          if(cYear != $scope.currentReport.year) {
+          if (cYear != $scope.currentReport.year) {
             $scope.$emit('report-change-year');
           }
         }, handleUpdateError);
@@ -497,33 +502,33 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     $scope.deleteReport = function(report) {
       $scope.reportToDelete = report || $scope.currentReport;
 
-      if(!$scope.reportToDelete) {
+      if (!$scope.reportToDelete) {
         console.log('deleteReport: no report to delete');
         return;
       }
 
-      $scope.remainingSecondsBeforeDoomsday = Math.round(REPORT_DELETE_TIMEOUT/1000);
-      $scope.deleteTimer = true;      
+      $scope.remainingSecondsBeforeDoomsday = Math.round(REPORT_DELETE_TIMEOUT / 1000);
+      $scope.deleteTimer = true;
 
       $scope.doomsdayInterval = $interval(countDown, 1000, $scope.remainingSecondsBeforeDoomsday + 1);
 
       function killTheReport() {
-          $http.delete(config.getCombinedServiceUrl() + $scope.reportToDelete._links.self.href).
-        success(function(data, status, headers, config) {           
-            if($location.path() == '/reports') {
-              angular.forEach($scope.reports, function(r, index) {
-                if($scope.reportToDelete._id == r._id) {
-                  $scope.reports.splice(index, 1);
-                  $scope.reportToDelete = null;
-                  //exit loop
-                  return false;
-                }
-              });
-            } else {
-              $location.path('/');
-            }
+        $http.delete(config.getCombinedServiceUrl() + $scope.reportToDelete._links.self.href).
+        success(function(data, status, headers, config) {
+          if ($location.path() == '/reports') {
+            angular.forEach($scope.reports, function(r, index) {
+              if ($scope.reportToDelete._id == r._id) {
+                $scope.reports.splice(index, 1);
+                $scope.reportToDelete = null;
+                //exit loop
+                return false;
+              }
+            });
+          } else {
+            $location.path('/');
+          }
         }).error(errorHandler);
-        
+
         // $scope.reportToDelete.$delete(function() {
         //   $scope.reportToDelete = null;
         //   if($location.path() == '/reports') {
@@ -538,38 +543,38 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         //     $location.path('/');
         //   }
         // }, errorHandler);        
-      }     
+      }
 
       function countDown() {
-        if($scope.remainingSecondsBeforeDoomsday > 0) {
-          $scope.remainingSecondsBeforeDoomsday = $scope.remainingSecondsBeforeDoomsday - 1;  
+        if ($scope.remainingSecondsBeforeDoomsday > 0) {
+          $scope.remainingSecondsBeforeDoomsday = $scope.remainingSecondsBeforeDoomsday - 1;
         } else {
           $scope.deleteTimer = false;
           killTheReport();
-        }  
-      }      
+        }
+      }
     }
 
-     $scope.delayDoomsday = function() {
+    $scope.delayDoomsday = function() {
       $scope.deleteTimer = false;
 
-      if($scope.doomsdayInterval) {        
+      if ($scope.doomsdayInterval) {
         $interval.cancel($scope.doomsdayInterval);
-        $scope.doomsdayInterval = null;  
-      }        
+        $scope.doomsdayInterval = null;
+      }
     }
 
     function saveReport(report) {
       var resource;
 
-      if(!report) {
+      if (!report) {
         console.log('saveReport: no report given');
         return;
       }
 
       resource = new Report(report);
 
-      if(report._id) {
+      if (report._id) {
         //error
       } else {
         //new
@@ -577,37 +582,37 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
           console.log('saved new report');
           $scope.newReportName = null;
           $location.path('reports/' + resource._id)
-          
+
         }, function(response) {
-          if(response.status == 409) {
-            response.data.errorKey = 'error.report.clone';            
+          if (response.status == 409) {
+            response.data.errorKey = 'error.report.clone';
           }
-          
+
           errorHandler(response);
 
-          if(response.status == 409) {
+          if (response.status == 409) {
             //jump to copied report also some problems exist
             $scope.newReportName = null;
             $location.path('reports/' + response.data._id)
           }
-                   
+
         });
-        
+
       }
     }
 
     /**
-    * Add a new milestone to currentReport.
-    */
+     * Add a new milestone to currentReport.
+     */
     $scope.addMilestone = function() {
       var updateCommand = {};
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         console.log('addMilestone: no current report');
         return;
       }
 
-      if(!$scope.currentReport.milestones) {
+      if (!$scope.currentReport.milestones) {
         $scope.currentReport.milestones = [];
       }
 
@@ -629,28 +634,28 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Remove milestone from currentReport.
-    * @param {Integer} index
-    *   Index of milestone to remove in currentReport.milestones.
-    */
+     * Remove milestone from currentReport.
+     * @param {Integer} index
+     *   Index of milestone to remove in currentReport.milestones.
+     */
     $scope.removeMilestone = function(index) {
       var updateCommand = {},
-          milestoneToRemove;
+        milestoneToRemove;
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         console.log('addMilestone: no current report');
         return;
       }
 
-      if(!index && index !== 0) {
+      if (!index && index !== 0) {
         console.log('addMilestone: no index given');
         return;
       }
 
-      if(!$scope.currentReport.milestones || $scope.currentReport.milestones.length == 0 || !$scope.currentReport.milestones[index]) {
+      if (!$scope.currentReport.milestones || $scope.currentReport.milestones.length == 0 || !$scope.currentReport.milestones[index]) {
         return;
       }
-      
+
 
       convertYearAndWeekToInt($scope.currentReport);
 
@@ -670,18 +675,18 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Adds a new code review to currentReport.codeReviews.
-    *
-    */
+     * Adds a new code review to currentReport.codeReviews.
+     *
+     */
     $scope.addCodeReview = function() {
       var updateCommand = {};
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         console.log('addCodeReview: no current report');
         return;
       }
 
-      if(!$scope.currentReport.codeReviews) {
+      if (!$scope.currentReport.codeReviews) {
         $scope.currentReport.codeReviews = [];
       }
 
@@ -703,25 +708,25 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Removes a code review from currentReport.
-    * @param {Integer} index
-    *   Index of code review to remove.
-    */
+     * Removes a code review from currentReport.
+     * @param {Integer} index
+     *   Index of code review to remove.
+     */
     $scope.removeCodeReview = function(index) {
       var updateCommand = {},
-          codeReviewToRemove;
+        codeReviewToRemove;
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         console.log('removeCodeReview: no current report');
         return;
       }
 
-      if(!index && index !== 0) {
+      if (!index && index !== 0) {
         console.log('removeCodeReview: no index given');
         return;
       }
 
-      if(!$scope.currentReport.codeReviews || $scope.currentReport.codeReviews.length == 0 || !$scope.currentReport.codeReviews[index]) {
+      if (!$scope.currentReport.codeReviews || $scope.currentReport.codeReviews.length == 0 || !$scope.currentReport.codeReviews[index]) {
         return;
       }
 
@@ -742,26 +747,25 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Adds a system (DEV, QA ...) currentReport.systems.
-    *
-    */
+     * Adds a system (DEV, QA ...) currentReport.systems.
+     *
+     */
     $scope.addSystem = function() {
       var updateCommand = {};
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         console.log('addSystem: no current report');
         return;
       }
 
-      if(!$scope.currentReport.systems) {
+      if (!$scope.currentReport.systems) {
         $scope.currentReport.systems = [];
       }
 
       convertYearAndWeekToInt($scope.currentReport);
 
       updateCommand.execute = function() {
-        $scope.currentReport.systems.push({
-        });
+        $scope.currentReport.systems.push({});
 
         $scope.currentReport.$update();
       }
@@ -775,25 +779,25 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Removes a system from currentReport.
-    * @param {Integer} index
-    *   Index of system to remove.
-    */
+     * Removes a system from currentReport.
+     * @param {Integer} index
+     *   Index of system to remove.
+     */
     $scope.removeSystem = function(index) {
       var updateCommand = {},
-          systemToRemove;
+        systemToRemove;
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         console.log('removeSystem: no current report');
         return;
       }
 
-      if(!index && index !== 0) {
+      if (!index && index !== 0) {
         console.log('removeSystem: no index given');
         return;
       }
 
-      if(!$scope.currentReport.systems || $scope.currentReport.systems.length == 0 || !$scope.currentReport.systems[index]) {
+      if (!$scope.currentReport.systems || $scope.currentReport.systems.length == 0 || !$scope.currentReport.systems[index]) {
         return;
       }
 
@@ -814,33 +818,32 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Adds a recipient to currentReport.settings.notification.recipients.
-    * Recipients listed there can be send a notification.
-    */
+     * Adds a recipient to currentReport.settings.notification.recipients.
+     * Recipients listed there can be send a notification.
+     */
     $scope.addRecipient = function() {
       var updateCommand = {};
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         $log.log('addSystem: no current report');
         return;
       }
 
-      if(!$scope.currentReport.settings) {
+      if (!$scope.currentReport.settings) {
         $scope.currentReport.settings = {};
         $scope.currentReport.settings.notification = {};
         $scope.currentReport.settings.notification.recipients = [];
-      } else if(!$scope.currentReport.settings.notification) {
+      } else if (!$scope.currentReport.settings.notification) {
         $scope.currentReport.settings.notification = {};
         $scope.currentReport.settings.settings.notification.recipients = [];
-      } else if(!$scope.currentReport.settings.notification.recipients) {
+      } else if (!$scope.currentReport.settings.notification.recipients) {
         $scope.currentReport.settings.notification.recipients = [];
       }
 
       convertYearAndWeekToInt($scope.currentReport);
 
       updateCommand.execute = function() {
-        $scope.currentReport.settings.notification.recipients.push({
-        });
+        $scope.currentReport.settings.notification.recipients.push({});
 
         $scope.currentReport.$update();
       }
@@ -854,26 +857,25 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Removes a recipient from currentReport.settings.notification.recipients.
-    * @param {Integer} index
-    *   Index of reciepient to remove.
-    */
+     * Removes a recipient from currentReport.settings.notification.recipients.
+     * @param {Integer} index
+     *   Index of reciepient to remove.
+     */
     $scope.removeRecipient = function(index) {
       var updateCommand = {},
-          objectToRemove;
+        objectToRemove;
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         $log.log('removeRecipient: no current report');
         return;
       }
 
-      if(!index && index !== 0) {
+      if (!index && index !== 0) {
         $log.log('removeRecipient: no index given');
         return;
       }
 
-      if(!$scope.currentReport.settings || !$scope.currentReport.settings.notification || !$scope.currentReport.settings.notification.recipients 
-        || $scope.currentReport.settings.notification.recipients.length == 0 || !$scope.currentReport.settings.notification.recipients[index]) {
+      if (!$scope.currentReport.settings || !$scope.currentReport.settings.notification || !$scope.currentReport.settings.notification.recipients || $scope.currentReport.settings.notification.recipients.length == 0 || !$scope.currentReport.settings.notification.recipients[index]) {
         $log.log('removeRecipient: precondition checks on settings object failed');
         return;
       }
@@ -895,67 +897,67 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     /**
-    * Sends a notification (email) to recipients listed in $scope.currentReport.settings.notification.recipients.
-    * Uses PReports.service.notification.
-    */
+     * Sends a notification (email) to recipients listed in $scope.currentReport.settings.notification.recipients.
+     * Uses PReports.service.notification.
+     */
     $scope.sendNotifications = function() {
       var subject,
-          content,
-          templateData;
+        content,
+        templateData;
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         console.log('sendNotifications: no current report');
         return;
       }
 
-      $http.post(config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id +  '/notifications')
-      .success(angular.noop)
-      .error(function(response) {
+      $http.post(config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id + '/notifications')
+        .success(angular.noop)
+        .error(function(response) {
           $log.error('Failed so send notifications ' + response.message);
           errorHandler(response);
-      });
+        });
     }
 
     /**
-    * Deletes an image.
-    * @param {Object} image
-    *   Image to delete. Contains only meta data.
-    *
-    */
+     * Deletes an image.
+     * @param {Object} image
+     *   Image to delete. Contains only meta data.
+     *
+     */
     $scope.deleteReportImage = function(image) {
-      if(!image) {
+      if (!image) {
         console.log('deleteReportImage: no image given');
         return;
       }
 
-      if(!$scope.currentReport) {
+      if (!$scope.currentReport) {
         console.log('deleteReportImage: no current report');
         return;
       }
 
       $http.delete(config.getCombinedServiceUrl() + image._links.self.href).
-        success(function(data, status, headers, config) {
-          angular.forEach($scope.currentReport.images, function(object, index) {
-            if(object._id  == image._id) {
-              $scope.currentReport.images.splice(index, 1);
-              return false;
-            }
-          });
+      success(function(data, status, headers, config) {
+        angular.forEach($scope.currentReport.images, function(object, index) {
+          if (object._id == image._id) {
+            $scope.currentReport.images.splice(index, 1);
+            return false;
+          }
+        });
 
         loadReportVersion($scope.currentReport, function(versionInfo) {
           $scope.currentReport.version = versionInfo.version;
         });
 
-        }).error(errorHandler);
+      }).error(errorHandler);
     }
 
     /**
-    * Convenience methods. Allows user to show print dialog from the application.
-    *
-    */
+     * Convenience methods. Allows user to show print dialog from the application.
+     *
+     */
     $scope.printReport = function() {
-      
-      if(!$scope.currentReport) {
+
+      if (!$scope.currentReport) {
         console.log('printReport: no current report');
         return;
       }
@@ -964,62 +966,62 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     }
 
     function setupFileUpload() {
-     var uploader = $scope.uploader = new FileUploader({
-            scope: $scope,                          // to automatically update the html. Default: $rootScope
-            // url: config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id + '/images',            
-            //since setup is performed before loading the report we take the report id from URL
-            url: config.getCombinedServiceUrl() + '/reports/' + $routeParams.reportId + '/images',
-            alias: 'image',
-            removeAfterUpload: true,
-            autoUpload: false,
-        });
-
-     uploader.filters.push({
-          name: 'imageFilter',
-          fn: function(item, options) {
-              var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
-              type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
-              return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-          }
+      var uploader = $scope.uploader = new FileUploader({
+        scope: $scope, // to automatically update the html. Default: $rootScope
+        // url: config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id + '/images',            
+        //since setup is performed before loading the report we take the report id from URL
+        url: config.getCombinedServiceUrl() + '/reports/' + $routeParams.reportId + '/images',
+        alias: 'image',
+        removeAfterUpload: true,
+        autoUpload: false,
       });
 
-    uploader.onCompleteItem = function( item, response, status, headers ) {
+      uploader.filters.push({
+        name: 'imageFilter',
+        fn: function(item, options) {
+          var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
+          type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
+          return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+      });
+
+      uploader.onCompleteItem = function(item, response, status, headers) {
         $log.log(response);
-        
-        if(status != 200) {
+
+        if (status != 200) {
           return;
         }
 
-        if(!$scope.currentReport.images) {
+        if (!$scope.currentReport.images) {
           $scope.currentReport.images = [];
         }
 
         $scope.currentReport.images.push(response);
-     };
+      };
 
-       uploader.onCompleteAll = function () {
-          //Update report with latest version.
-          loadReportVersion($scope.currentReport, function(versionInfo) {
-            $scope.currentReport.version = versionInfo.version;
-          });
-        
-        };
+      uploader.onCompleteAll = function() {
+        //Update report with latest version.
+        loadReportVersion($scope.currentReport, function(versionInfo) {
+          $scope.currentReport.version = versionInfo.version;
+        });
 
-        uploader.onErrorItem = function(item, response, status, headers) {
-          console.log('setupFileUpload: upload failed');
-          //show global error. for more information have a look inside the errorHandler
-          $rootScope.error = true;
-          $rootScope.errorMessage = language.translate(response) || 
-            language.translate('error.image.upload') || 
-            language.translate('error.general') || 
-            'Error during communication with service.';
-        };
-   }
+      };
 
-   $scope.copyReport = function(reportToCopy, $event) {
-    var date = new Date();
+      uploader.onErrorItem = function(item, response, status, headers) {
+        console.log('setupFileUpload: upload failed');
+        //show global error. for more information have a look inside the errorHandler
+        $rootScope.error = true;
+        $rootScope.errorMessage = language.translate(response) ||
+          language.translate('error.image.upload') ||
+          language.translate('error.general') ||
+          'Error during communication with service.';
+      };
+    }
 
-     if(!reportToCopy) {
+    $scope.copyReport = function(reportToCopy, $event) {
+      var date = new Date();
+
+      if (!reportToCopy) {
         console.log('copyReport: no reportToCopy given');
         return;
       }
@@ -1028,323 +1030,329 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
       reportToCopy.copyOf = reportToCopy._id;
       delete reportToCopy._id;
 
-      reportToCopy.name = reportToCopy.name +'_copy';
+      reportToCopy.name = reportToCopy.name + '_copy';
       reportToCopy.week = date.getWeek();
       reportToCopy.year = date.getFullYear();
       reportToCopy.locked = false;
 
       saveReport(reportToCopy);
-   }
-
-  /**
-  * Locks currently edited report to prevnt accidential edits.
-  */
-  $scope.toggleReportLock = function() {
-    var prevLockState;
-    if(!$scope.currentReport) {
-      console.log('copyReport: no currentReport');
-      return;
     }
 
-    if(typeof $scope.currentReport.locked != 'undefined') {
-      prevLockState = $scope.currentReport.locked;
-      $scope.currentReport.locked = !prevLockState;       
-    } else {
-      prevLockState = false;
-      $scope.currentReport.locked = true;
+    /**
+     * Locks currently edited report to prevnt accidential edits.
+     */
+    $scope.toggleReportLock = function() {
+      var prevLockState;
+      if (!$scope.currentReport) {
+        console.log('copyReport: no currentReport');
+        return;
+      }
+
+      if (typeof $scope.currentReport.locked != 'undefined') {
+        prevLockState = $scope.currentReport.locked;
+        $scope.currentReport.locked = !prevLockState;
+      } else {
+        prevLockState = false;
+        $scope.currentReport.locked = true;
+      }
+
+      $scope.updateReport();
+
     }
 
-    $scope.updateReport();
-    
-  }
+    $scope.isReportLocked = function() {
+      if (!$scope.currentReport) {
+        return false;
+      }
 
-  $scope.isReportLocked = function() {
-    if(!$scope.currentReport) {
-      return false;
+      return $scope.currentReport.locked;
     }
 
-    return $scope.currentReport.locked;
-  }
 
-
-  $scope.isUrl = function(url) {
-    return helper.isUrl(url);
-  }
-
-  $scope.calculateCosts = function() {
-    if(!$scope.currentReport) {
-      console.log('copyReport: no currentReport');
-      return;
+    $scope.isUrl = function(url) {
+      return helper.isUrl(url);
     }
 
-    //save prev values
-    var updateCommand = {
-      prev: {
+    $scope.calculateCosts = function() {
+      if (!$scope.currentReport) {
+        console.log('copyReport: no currentReport');
+        return;
+      }
+
+      //save prev values
+      var updateCommand = {
+        prev: {
+          hoursExternal: $scope.currentReport.hoursExternal,
+          hoursInternal: $scope.currentReport.hoursInternal,
+          hoursNearshoring: $scope.currentReport.hoursNearshoring,
+          costsCurrent: $scope.currentReport.costsCurrent,
+          // costsRest: $scope.currentReport.costsRest,
+          costsDelta: $scope.currentReport.costsDelta
+        }
+      };
+
+
+      updateCommand.execute = function() {
+        console.log('calculateCosts: execute');
+        var currentCosts = 0;
+
+        if ($scope.temp.costs.hoursExternal) {
+          $scope.currentReport.hoursExternal = $scope.temp.costs.hoursExternal;
+          currentCosts = $scope.config.COST_EXTERNAL * $scope.temp.costs.hoursExternal;
+        }
+
+        if ($scope.temp.costs.hoursInternal) {
+          $scope.currentReport.hoursInternal = $scope.temp.costs.hoursInternal;
+          currentCosts += $scope.config.COST_INTERNAL * $scope.temp.costs.hoursInternal;
+        }
+
+        if ($scope.temp.costs.hoursNearshoring) {
+          $scope.currentReport.hoursNearshoring = $scope.temp.costs.hoursNearshoring;
+          currentCosts += $scope.config.COST_NEARSHORE * $scope.temp.costs.hoursNearshoring;
+        }
+
+        //Adjust for display in k€
+        currentCosts = currentCosts / 1000;
+
+        $scope.currentReport.costsCurrent = Math.round(currentCosts);
+
+        if ($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
+          // $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
+          $scope.currentReport.costsDelta = calcCostsDelta($scope.currentReport.costsCurrent, $scope.currentReport.costsPlanned);
+        } else {
+          // $scope.currentReport.costsRest = null;
+          $scope.currentReport.costsDelta = null;
+        }
+
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
+
+        //remove the temp costs
+        delete $scope.temp.costs;
+      }
+
+      updateCommand.undo = function() {
+        console.log('calculateCosts: undo');
+        //restore previous values
+        $scope.currentReport.hoursExternal = updateCommand.prev.hoursExternal;
+        $scope.currentReport.hoursInternal = updateCommand.prev.hoursInternal;
+        $scope.currentReport.hoursNearshoring = updateCommand.prev.hoursNearshoring;
+        $scope.currentReport.costsCurrent = updateCommand.prev.costsCurrent;
+        // $scope.currentReport.costsRest =  updateCommand.prev.costsRest;
+        $scope.currentReport.costsDelta = updateCommand.prev.costsDelta;
+
+        $scope.currentReport.$update(angular.noop, handleUpdateError);
+
+        //remove the temp costs
+        delete $scope.temp.costs;
+      }
+
+      storeAndExecute(updateCommand);
+    }
+
+
+
+    $scope.toggleCostDialog = function() {
+      var modal = angular.element('#costDialog .modal');
+
+      if (!modal) {
+        console.log('No cost dialog found.');
+      }
+
+
+      $scope.temp = $scope.temp ? $scope.temp : {};
+      //fill dialog with temporary cost values
+      //needed to provide undo functionality
+      $scope.temp.costs = {
         hoursExternal: $scope.currentReport.hoursExternal,
         hoursInternal: $scope.currentReport.hoursInternal,
-        hoursNearshoring: $scope.currentReport.hoursNearshoring,
-        costsCurrent: $scope.currentReport.costsCurrent,
-        // costsRest: $scope.currentReport.costsRest,
-        costsDelta: $scope.currentReport.costsDelta
+        hoursNearshoring: $scope.currentReport.hoursNearshoring
       }
-    };
-    
 
-    updateCommand.execute = function() {
-          console.log('calculateCosts: execute');
-          var currentCosts = 0;
-              
-          if($scope.temp.costs.hoursExternal) {
-            $scope.currentReport.hoursExternal = $scope.temp.costs.hoursExternal;
-            currentCosts = $scope.config.COST_EXTERNAL * $scope.temp.costs.hoursExternal;  
-          }
-
-          if($scope.temp.costs.hoursInternal) {
-            $scope.currentReport.hoursInternal = $scope.temp.costs.hoursInternal;
-            currentCosts += $scope.config.COST_INTERNAL * $scope.temp.costs.hoursInternal;  
-          }
-
-          if($scope.temp.costs.hoursNearshoring) {
-            $scope.currentReport.hoursNearshoring = $scope.temp.costs.hoursNearshoring;
-            currentCosts += $scope.config.COST_NEARSHORE * $scope.temp.costs.hoursNearshoring;  
-          } 
-
-          //Adjust for display in k€
-          currentCosts =  currentCosts / 1000;
-
-          $scope.currentReport.costsCurrent = Math.round(currentCosts);
-
-          if($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
-            // $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
-            $scope.currentReport.costsDelta =  calcCostsDelta($scope.currentReport.costsCurrent, $scope.currentReport.costsPlanned);
-          } else {
-            // $scope.currentReport.costsRest = null;
-            $scope.currentReport.costsDelta = null;
-          }
-          
-          $scope.currentReport.$update(angular.noop, handleUpdateError); 
-
-          //remove the temp costs
-          delete $scope.temp.costs;
-    }
-
-    updateCommand.undo = function() {
-      console.log('calculateCosts: undo');
-      //restore previous values
-      $scope.currentReport.hoursExternal = updateCommand.prev.hoursExternal;
-      $scope.currentReport.hoursInternal = updateCommand.prev.hoursInternal;
-      $scope.currentReport.hoursNearshoring = updateCommand.prev.hoursNearshoring;
-      $scope.currentReport.costsCurrent =  updateCommand.prev.costsCurrent;
-      // $scope.currentReport.costsRest =  updateCommand.prev.costsRest;
-      $scope.currentReport.costsDelta =  updateCommand.prev.costsDelta;
-      
-      $scope.currentReport.$update(angular.noop, handleUpdateError); 
-
-      //remove the temp costs
-      delete $scope.temp.costs;
-    }
-
-     storeAndExecute(updateCommand);
-  }
-
-
-
-  $scope.toggleCostDialog = function() {
-    var modal = angular.element('#costDialog .modal');
-
-    if(!modal) {
-      console.log('No cost dialog found.');
-    }
-
-
-    $scope.temp = $scope.temp ? $scope.temp : {};
-    //fill dialog with temporary cost values
-    //needed to provide undo functionality
-    $scope.temp.costs = {
-      hoursExternal: $scope.currentReport.hoursExternal,
-      hoursInternal: $scope.currentReport.hoursInternal,
-      hoursNearshoring: $scope.currentReport.hoursNearshoring
-    }
-
-    if(!$scope.currentReport.locked) {
-      modal.modal('toggle');  
-    }
-    
-  }
-
-  function calcCostsDelta(current, planned) {
-    var delta = current / planned;
-    
-    //reduce to precision of 2 
-    delta = Math.round(delta * 100);
-
-    return delta;
-
-  } 
-
-
-  /**
-  * Stores command in queue and executes it.
-  * @param {Function} command
-  *   Object with execute and undo function.
-  */
-  function storeAndExecute(command) {
-    var undoFn = true;
-
-    if(!command) {
-      $log.log('storeAndExecute: no command given');
-      return;
-    }
-
-    if(typeof command != 'object') {
-      $log.log('storeAndExecute: command is not an object');
-      return; 
-    }
-
-    if(!command.hasOwnProperty('execute') || typeof command.execute != 'function') {
-      $log.log('storeAndExecute: no execute method found or not a function');
-      return; 
-    }
-
-    if(!command.hasOwnProperty('undo') || typeof command.undo != 'function') {
-      $log.log('storeAndExecute: no undo method found or not a function. Command not added to queue.');
-      undoFn = false;
-    }
-
-    if(undoFn) {
-      if($scope.commands.length == $scope.COMMAND_QUEUE_SIZE) {
-        //only store last $scope.COMMAND_QUEUE_SIZE commands
-        $scope.commands = $scope.commands.slice(1);
-        $scope.commands.push(command);
-      } else {
-        $scope.commands.push(command);  
+      if (!$scope.currentReport.locked) {
+        modal.modal('toggle');
       }
+
     }
 
-    try {
-      command.execute();
-    } catch(e) {
-      $log.log('storeAndExecute: failed to execute command. ' + e);
-      $scope.commands.pop(command);
-      alert('commmand execution failed!');
-    }
-    
-  }
+    function calcCostsDelta(current, planned) {
+      var delta = current / planned;
 
-  /**
-  * Undo last action by executing undo on latest command.
-  * Afterwards remove the command from array.
-  */
-  $scope.removeAndUndoLastCommand = function() {
+      //reduce to precision of 2 
+      delta = Math.round(delta * 100);
+
+      return delta;
+
+    }
+
+
+    /**
+     * Stores command in queue and executes it.
+     * @param {Function} command
+     *   Object with execute and undo function.
+     */
+    function storeAndExecute(command) {
+      var undoFn = true;
+
+      if (!command) {
+        $log.log('storeAndExecute: no command given');
+        return;
+      }
+
+      if (typeof command != 'object') {
+        $log.log('storeAndExecute: command is not an object');
+        return;
+      }
+
+      if (!command.hasOwnProperty('execute') || typeof command.execute != 'function') {
+        $log.log('storeAndExecute: no execute method found or not a function');
+        return;
+      }
+
+      if (!command.hasOwnProperty('undo') || typeof command.undo != 'function') {
+        $log.log('storeAndExecute: no undo method found or not a function. Command not added to queue.');
+        undoFn = false;
+      }
+
+      if (undoFn) {
+        if ($scope.commands.length == $scope.COMMAND_QUEUE_SIZE) {
+          //only store last $scope.COMMAND_QUEUE_SIZE commands
+          $scope.commands = $scope.commands.slice(1);
+          $scope.commands.push(command);
+        } else {
+          $scope.commands.push(command);
+        }
+      }
+
+      try {
+        command.execute();
+      } catch (e) {
+        $log.log('storeAndExecute: failed to execute command. ' + e);
+        $scope.commands.pop(command);
+        alert('commmand execution failed!');
+      }
+
+    }
+
+    /**
+     * Undo last action by executing undo on latest command.
+     * Afterwards remove the command from array.
+     */
+    $scope.removeAndUndoLastCommand = function() {
       var commandToUndo;
 
-      if($scope.commands.length > 0) {
+      if ($scope.commands.length > 0) {
         commandToUndo = $scope.commands.pop();
         commandToUndo.undo();
       } else {
         $log.log('removeAndUndoLastCommand: no commands in queue');
       }
-      
-  }
 
-  $scope.isZero = function(value) {
-    return helper.isZero(value);
-  }
-
-  $scope.getStateColor = function(state) {
-    var color = '';
-
-    if(!state) {
-      return '';
     }
 
-    switch(state) {
-      case 1: color = 'red'; break;
-      case 2: color = 'yellow'; break;
-      case 3: color = 'green'; break;
+    $scope.isZero = function(value) {
+      return helper.isZero(value);
     }
 
-    return color;
-  }
+    $scope.getStateColor = function(state) {
+      var color = '';
 
-   function loadProjectNames() {
-     $http.get($scope.config.getCombinedServiceUrl() + '/reports', {
-      headers: {
-        'Accept' : 'text/plain'
+      if (!state) {
+        return '';
       }
-    }).success(function(data, status, headers, config) {
-       $scope.projectNames = data;
-     }).error(errorHandler);
-   }
 
-  /**
-  * Converts year and week of a report to Int.
-  */
-  function convertYearAndWeekToInt(report) {
-    if(!report) {
-      console.log('convertCalAndWeekToInt: no report given');
-      return;
+      switch (state) {
+        case 1:
+          color = 'red';
+          break;
+        case 2:
+          color = 'yellow';
+          break;
+        case 3:
+          color = 'green';
+          break;
+      }
+
+      return color;
     }
+
+    function loadProjectNames() {
+      $http.get($scope.config.getCombinedServiceUrl() + '/reports', {
+        headers: {
+          'Accept': 'text/plain'
+        }
+      }).success(function(data, status, headers, config) {
+        $scope.projectNames = data;
+      }).error(errorHandler);
+    }
+
+    /**
+     * Converts year and week of a report to Int.
+     */
+    function convertYearAndWeekToInt(report) {
+      if (!report) {
+        console.log('convertCalAndWeekToInt: no report given');
+        return;
+      }
 
       //always convert to int before saving
       report.year = parseInt(report.year);
       report.week = parseInt(report.week);
-  }
+    }
 
-  /**
-  * Load version information for given report.
-  */
-  function loadReportVersion(report, callback) {
-    if(!report) {
-      console.log('loadReportVersion: no report given');
+    /**
+     * Load version information for given report.
+     */
+    function loadReportVersion(report, callback) {
+      if (!report) {
+        console.log('loadReportVersion: no report given');
+        return;
+      }
+      $http.get(config.getCombinedServiceUrl() + report._links.self.href + '/version').success(function(versionInfo) {
+        console.log('Retrieved version ' + versionInfo.version + ' for report id ' + versionInfo._id);
+        callback(versionInfo);
+      }).error(errorHandler);
       return;
     }
-    $http.get(config.getCombinedServiceUrl() + report._links.self.href + '/version').success(function(versionInfo) {
-      console.log('Retrieved version ' + versionInfo.version + ' for report id ' + versionInfo._id);
-      callback(versionInfo);
-    }).error(errorHandler);
-    return;
-  }
 
-  /**
-  * Fills $scope.weeks based on number of weeks for current report year.
-  *
-  */
-  function fillWeeks(baseYear) {    
+    /**
+     * Fills $scope.weeks based on number of weeks for current report year.
+     *
+     */
+    function fillWeeks(baseYear) {
       //use 28th december since it is always in last years week
       var baseDate,
-          maxWeek,
-          weeks = [];
-    
-    if(baseYear) {
-      baseDate = new Date(baseYear,11,28);  
-    } else {
-      baseDate = new Date($scope.currentReport.year,11,28);
+        maxWeek,
+        weeks = [];
+
+      if (baseYear) {
+        baseDate = new Date(baseYear, 11, 28);
+      } else {
+        baseDate = new Date($scope.currentReport.year, 11, 28);
+      }
+
+      maxWeek = baseDate.getWeek();
+
+
+      //fill calendar weeks
+      $log.log('Filling weeks with ' + maxWeek);
+      for (var i = 1; i <= maxWeek; i++) {
+        weeks.push({
+          'week': i
+        });
+      };
+
+      $scope.weeks = weeks;
     }
 
-    maxWeek = baseDate.getWeek();
-    
-
-    //fill calendar weeks
-    $log.log('Filling weeks with ' + maxWeek);
-    for (var i = 1; i <= maxWeek; i++) {      
-      weeks.push({
-        'week' : i
+    /**
+     * Register event handlers.
+     *
+     */
+    function registerEventHandlers() {
+      $scope.$on('report-change-year', function(eventData) {
+        fillWeeks();
       });
-    };
-
-    $scope.weeks = weeks;
-  }
-
-  /**
-  * Register event handlers.
-  *
-  */
-  function registerEventHandlers() {
-    $scope.$on('report-change-year', function(eventData) {
-      fillWeeks();
-     });
-  }
+    }
 
     //Setup File Upload immediately. Otherwise there will be erors like
     //https://github.com/nervgh/angular-file-upload/issues/183    
@@ -1354,38 +1362,39 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
 
     //initially load reports or report entity based on url
     $timeout(function() {
-      if($routeParams.reportId) {
+      if ($routeParams.reportId) {
         unregisterWatchForSearch();
-        $scope.loadReport($routeParams.reportId);      
+        $scope.loadReport($routeParams.reportId);
       } else {
         $scope.loadReports();
         loadProjectNames();
         registerWatchForSearch();
-      } 
+      }
     }, 50);
 
- 
 
-   /**
-   * Handles errors during report update.
-   * Especially for error 428 when report has been modified externaly. Lost update problem.
-   * @param {Object} response
-   *  Server resonse
-   */
-   function handleUpdateError(response) {
-    if(!response) {
-      return
+
+    /**
+     * Handles errors during report update.
+     * Especially for error 428 when report has been modified externaly. Lost update problem.
+     * @param {Object} response
+     *  Server resonse
+     */
+    function handleUpdateError(response) {
+      if (!response) {
+        return
+      }
+
+      if (response.status == 428) {
+        //modified by third party
+        $log.log('Failed to update report because it has been modified.');
+        //prevent accidential overrides by killing the undo stack
+        $scope.commands = [];
+        $('#dialogModifiedReport').modal('toggle');
+      } else {
+        errorHandler(response);
+      }
     }
 
-    if(response.status == 428) {
-      //modified by third party
-      $log.log('Failed to update report because it has been modified.');
-      //prevent accidential overrides by killing the undo stack
-      $scope.commands = [];
-      $('#dialogModifiedReport').modal('toggle');
-    } else {
-      errorHandler(response);
-    }
   }
-
-}]);
+]);

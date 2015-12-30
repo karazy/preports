@@ -1,4 +1,3 @@
-'use strict';
 /** 
 *	@constructor
 * 	Provider for the 'config' service.
