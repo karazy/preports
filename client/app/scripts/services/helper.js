@@ -1,3 +1,4 @@
+'use strict';
 /** 
 * 	@constructor
 * 	Factory function for the 'helper' service.

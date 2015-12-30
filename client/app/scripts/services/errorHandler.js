@@ -1,3 +1,4 @@
+'use strict';
 angular.module('PReports.services').factory('errorHandler',['$rootScope','$location','$log','language','config', function($rootScope,$location,$log,langService,config) {
 	/**
 	*	Service to handle callback for errors during Resource methods.(get,save,query, etc.).

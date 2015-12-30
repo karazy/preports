@@ -1,3 +1,4 @@
+'use strict';
 /**
 * Used to translate UI texts.
 * Usage: l="languageKey"

@@ -1,4 +1,4 @@
-/** @module Cloobster/Translations */
+'use strict';
 
 /**
 *	@name Cloobster.Translations

@@ -1,3 +1,4 @@
+'use strict';
 angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeout', '$log', 'language', 'helper', '$filter',  function($timeout, $log, langService, helper, $filter) {
 	var inputType, //type of the input to generate in form
 		required, //if present marks a required field

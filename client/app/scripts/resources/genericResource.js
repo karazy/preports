@@ -1,3 +1,4 @@
+'use strict';
 angular.module('PReports.resources').factory('genericResource',['$resource','config', 'errorHandler', function($resource, config, handleError) {
 
 	function ResourceFactory(url, paramDefaults, actions) {

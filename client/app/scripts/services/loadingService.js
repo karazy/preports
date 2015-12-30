@@ -1,3 +1,4 @@
+'use strict';
 /** 
 *   @constructor
 *   Factory function for the 'loadingService' service.
@@ -38,7 +39,7 @@ angular.module('PReports.services').factory('loadingService', function() {
 * @inspiredby https://groups.google.com/forum/#!msg/angular/BbZ7lQgd1GI/GJBTXcJLQMkJ
 */
 angular.module('PReports.services').factory('onStartInterceptor', ['loadingService', '$rootScope', function(loadingService, $rootScope) {
-  return function (data, headersGetter) {
+  return function (data) {
     loadingService.requestCount++;
     $rootScope.ajaxLoading = loadingService.isLoading();
     return data;

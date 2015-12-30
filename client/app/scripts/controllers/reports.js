@@ -1,16 +1,17 @@
 'use strict';
 
 angular.module('PReports').controller('ReportCtrl',[ '$scope', 
-  '$location', 
-  '$routeParams', 
-  'Report', '$log', 
-  '$http', 
-  'FileUploader', 
-  'config', 
-  'errorHandler', 
-  '$rootScope', 
-  'language', 
-  '$timeout', 
+  '$location',
+  '$routeParams',
+  'Report',
+  '$log',
+  '$http',
+  'FileUploader',
+  'config',
+  'errorHandler',
+  '$rootScope',
+  'language',
+  '$timeout',
   '$interval',
   '$interpolate',
   'helper',  function ($scope, $location, $routeParams, Report, $log, $http, FileUploader, config, 
@@ -24,14 +25,14 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     * Size of the command queue that holds undo events.
     */
     $scope.COMMAND_QUEUE_SIZE = 20;
-
     $scope.reports = [];
-
     $scope.currentReport = null;
+    $scope.years = [2014, 2015, 2016, 2017];
+
     /*
     * Current calendar week.
     */
-    $scope.currentCalWeek = (new Date).getWeek();
+    $scope.currentCalWeek = (new Date()).getWeek();
 
     //initialize global search parameters if they don't exist on $rootScope
     $rootScope.search = $rootScope.search || {};
@@ -41,10 +42,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
     $rootScope.search.limit = PAGINATION_LIMIT;
     $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
 
-    
-    $scope.weeks = [];
-    $scope.years = [2014, 2015, 2016, 2017];
-
+        
     $scope.config = config;
 
     $scope.projectNames = [];
@@ -73,72 +71,34 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
 
               updateCommand.execute = function() {
                 $scope.currentReport.$update();
-              }
+              };
 
               updateCommand.undo = function() {
                 //arraymove($scope.currentReport.milestones,)
                 $scope.currentReport.milestones = oldOrder;
                 $scope.currentReport.$update();
-              }
+              };
 
               function arraymove(arr, fromIndex, toIndex) {
                   var element = arr[fromIndex];
                   arr.splice(fromIndex, 1);
                   arr.splice(toIndex, 0, element);
-              }
+                }
 
               storeAndExecute(updateCommand);
             }
-        };
-     }
+          };
+      }
 
 
     jQuery('[data-toggle="tooltip"]').tooltip();
-
-
-    //Report Structure
-
-    /*
-      {
-        name: 'IPM',
-        leadDevelopers: 'Fred und Guido',
-        projectManagers: 'Meike Rieken',
-        start: '2013-01-01'
-        golive: '2014-10-31'
-        milestones: [
-          {
-            name: 'Manual Matching',
-            start: '2013-11-27',
-            end: '2014-03-24'
-          }
-        ],
-        lastWeekTasks: 'String',
-        nextWeekTasks: 'String',
-        identifiedPotentials: 'String',
-        risksAndImpediments: 'String',
-        codeReviews: [
-          {
-            authors: 'Fred',
-            underReview: 'Data Migration',
-            results: 'String'
-          }
-        ],
-        settings: {
-          notifications: {
-            recipients: [{
-              email: 'abc@def.gh'
-            }]
-          }
-        }
-      }
-    */
-
-
 
     $scope.loadReports = function(direction) {
       var page,
           limit;
       console.log('loadReports');
+
+      fillWeeks($rootScope.search.year);
 
       if($scope.reportsWrapper && $scope.reportsWrapper._links) {
         if(direction== 'next' && $scope.reportsWrapper._links.next) {
@@ -165,7 +125,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         'page' : $rootScope.search.page,
         'limit' : PAGINATION_LIMIT
       },
-      function(value) {
+      function(value) {        
         $scope.reports = $scope.reportsWrapper.reports;
         //page is  based
         $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
@@ -341,13 +301,13 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         return;
       }
 
-      if(event.target.tagName != "TD") {
+      if(event.target.tagName != 'TD') {
         //user clicked action button or link, so do nothing!
         return;
       }
 
       $location.path('reports/' + id);
-    }
+    };
 
     $scope.createNewReport = function() {
       var newReport = {},
@@ -360,7 +320,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
       newReport.milestones = [];
 
       saveReport(newReport);
-    }
+    };
 
     /**
     * Update $scope.currentReport by persisting changes.
@@ -385,7 +345,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         iA: isArray,
         i: index,
         aN: arrayName
-      }
+      };
 
       if(isArray && typeof index == 'number' && arrayName) {
           var nestedObject = getNestedObject($scope.currentReport, arrayName);
@@ -398,33 +358,32 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
       convertYearAndWeekToInt($scope.currentReport);
 
       updateCommand.execute = function() {
-        if(isArray && typeof index == 'number' && arrayName) {
+        if(isArray && typeof index === 'number' && arrayName) {
           var nestedObject = getNestedObject($scope.currentReport, arrayName);
           nestedObject[index][updateCommand.mP] = updateCommand.nV;
         } else {
-          $scope.currentReport[updateCommand.mP] = updateCommand.nV;  
+          $scope.currentReport[updateCommand.mP] = updateCommand.nV;
         }
 
         $scope.currentReport.$update(function() {
           $scope.$emit('report-change-'+updateCommand.mP);
-        }, handleUpdateError);          
-      }
+        }, handleUpdateError);
+      };
 
       //only add update command when a modified property exists
       if(updateCommand.mP) {
         updateCommand.undo = function() {
-          if(isArray && typeof index == 'number' && arrayName) {
+          if(isArray && typeof index === 'number' && arrayName) {
             var nestedObject = getNestedObject($scope.currentReport, arrayName);
             nestedObject[index][updateCommand.mP] = updateCommand.pV;
             // modifiedEntity[updateCommand.mP] = updateCommand.pV;
           } else {
-            $scope.currentReport[updateCommand.mP] = updateCommand.pV;  
+            $scope.currentReport[updateCommand.mP] = updateCommand.pV;
           }
           $scope.currentReport.$update(function() {
             $scope.$emit('report-change-'+updateCommand.mP);
           }, handleUpdateError);
-          
-        }
+        };
       }
 
       function getNestedObject(object, nestedProperty) {
@@ -949,36 +908,12 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
         return;
       }
 
-     /* templateData = {
-        name: $scope.currentReport.name,
-        week: $scope.currentReport.week,
-        year: $scope.currentReport.year,
-        url: location.href
-      }
-*/
-      //setup notification content
-      //subject = $interpolate(language.translate('notification.subject.template'));
-      //subject = subject(templateData);
-
-      //content = $interpolate(language.translate('notification.content.template'));
-      //content = content(templateData);
-
-      //notification.send(subject, content, $scope.currentReport.settings.notification.recipients, callback);
-
-      //notification.send($scope.currentReport.id, callback);
-
       $http.post(config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id +  '/notifications')
       .success(angular.noop)
       .error(function(response) {
-          $log.error("Failed so send notifications " + response.message);
+          $log.error('Failed so send notifications ' + response.message);
           errorHandler(response);
       });
-
-      // function callback(success, response) {
-      //   if(!success) {
-      //       errorHandler(response);
-      //     }
-      // }
     }
 
     /**
@@ -1077,7 +1012,7 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
           $rootScope.errorMessage = language.translate(response) || 
             language.translate('error.image.upload') || 
             language.translate('error.general') || 
-            "Error during communication with service.";
+            'Error during communication with service.';
         };
    }
 
@@ -1317,16 +1252,16 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
   }
 
   $scope.getStateColor = function(state) {
-    var color = "";
+    var color = '';
 
     if(!state) {
-      return "";
+      return '';
     }
 
     switch(state) {
-      case 1: color = "red"; break;
-      case 2: color = "yellow"; break;
-      case 3: color = "green"; break;
+      case 1: color = 'red'; break;
+      case 2: color = 'yellow'; break;
+      case 3: color = 'green'; break;
     }
 
     return color;
@@ -1375,22 +1310,30 @@ angular.module('PReports').controller('ReportCtrl',[ '$scope',
   * Fills $scope.weeks based on number of weeks for current report year.
   *
   */
-  function fillWeeks() {
-    if(!$scope.currentReport || !$scope.currentReport.year) {
-      return;
+  function fillWeeks(baseYear) {    
+      //use 28th december since it is always in last years week
+      var baseDate,
+          maxWeek,
+          weeks = [];
+    
+    if(baseYear) {
+      baseDate = new Date(baseYear,11,28);  
+    } else {
+      baseDate = new Date($scope.currentReport.year,11,28);
     }
-          //use 28th december since it is always in last years week
-      var baseDate = new Date($scope.currentReport.year,11,28),
-          maxWeek = baseDate.getWeek();
+
+    maxWeek = baseDate.getWeek();
+    
 
     //fill calendar weeks
-    $scope.weeks = [];
     $log.log('Filling weeks with ' + maxWeek);
     for (var i = 1; i <= maxWeek; i++) {      
-      $scope.weeks.push({
+      weeks.push({
         'week' : i
       });
     };
+
+    $scope.weeks = weeks;
   }
 
   /**

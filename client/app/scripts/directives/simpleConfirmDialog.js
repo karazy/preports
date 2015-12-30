@@ -1,3 +1,4 @@
+'use strict';
 angular.module('PReports.directives').directive('simpleConfirmDialog', ['language', '$log', '$timeout', function(langService, $log, $timeout) {
 	var //directive configuration
 		config = {

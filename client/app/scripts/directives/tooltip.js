@@ -1,3 +1,4 @@
+'use strict';
 /**
 * Used to display a Bootstrap tooltip which gets localized.
 * http://twitter.github.com/bootstrap/javascript.html#tooltips

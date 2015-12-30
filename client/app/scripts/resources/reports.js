@@ -1,3 +1,4 @@
+'use strict';
 //define the Report resource
 
 angular.module('PReports.resources').factory('Report',['genericResource', function(genericResource) {
