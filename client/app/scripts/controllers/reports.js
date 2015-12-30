@@ -140,7 +140,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     function registerWatchForSearch() {
       var tempFilterText = '',
         filterTextTimeout,
-        tmpHandle;
+        tmpHandle,
+        tmpMaxWeekOldYear,
+        tmpMaxWeekNewYear;
 
       if (!$rootScope.watchHandles) {
         $rootScope.watchHandles = [];
@@ -164,7 +166,19 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       tmpHandle = $rootScope.$watch('search.year', function(newVal, oldVal) {
         if (newVal != oldVal) {
           $rootScope.search.page = 0;
-          $scope.loadReports();
+          tmpMaxWeekOldYear = helper.getMaxWeeksPerYear(oldVal);
+          //if max week was selected, recalculate week. This will trigger
+          if($rootScope.search.week === tmpMaxWeekOldYear) {
+            tmpMaxWeekNewYear = helper.getMaxWeeksPerYear(newVal);
+            if(tmpMaxWeekOldYear > tmpMaxWeekNewYear) {
+              //will trigger the watch on search.week and therefore call loadReports
+              $rootScope.search.week = tmpMaxWeekNewYear;  
+            } else {
+              $scope.loadReports();
+            }
+          } else {
+            $scope.loadReports();
+          }
         }
       });
 
@@ -420,7 +434,50 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     }
 
     $scope.updateReportYear = function(newYear, oldYear) {
-      $scope.updateReport('year', parseInt(oldYear), false);
+      var tmpMaxWeekOldYear,
+          tmpMaxWeekNewYear,
+          updateCommand;
+
+     tmpMaxWeekOldYear = helper.getMaxWeeksPerYear(oldYear);
+     //if max week was selected, recalculate week.
+      if($scope.currentReport.week === tmpMaxWeekOldYear) {
+        tmpMaxWeekNewYear = helper.getMaxWeeksPerYear(newYear);
+        if(tmpMaxWeekOldYear > tmpMaxWeekNewYear) {              
+           adjustAndPersistWeek();
+        } else {
+          $scope.updateReport('year', parseInt(oldYear), false);  
+        }
+      } else {
+        $scope.updateReport('year', parseInt(oldYear), false);
+      }
+
+      function adjustAndPersistWeek() {
+        //save prev values
+        updateCommand = {
+          prev: {
+            week: parseInt($scope.currentReport.week),
+            year: parseInt(oldYear)
+          }
+        };
+
+        updateCommand.execute = function() {
+          $scope.currentReport.week = parseInt(tmpMaxWeekNewYear);         
+          $scope.currentReport.$update(angular.noop, handleUpdateError);
+          $scope.$emit('report-change-year');
+        }
+
+        updateCommand.undo = function() {
+          var cYear = $scope.currentReport.year;
+          $scope.currentReport.week = updateCommand.prev.week;
+          $scope.currentReport.year = updateCommand.prev.year;        
+          $scope.currentReport.$update(angular.noop, handleUpdateError);
+          $scope.$emit('report-change-year');
+        }
+
+        storeAndExecute(updateCommand);
+      }
+
+      
     }
 
     $scope.updateReportWeek = function(newWeek, oldWeek) {
@@ -1332,9 +1389,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
       maxWeek = baseDate.getWeek();
 
-
       //fill calendar weeks
-      $log.log('Filling weeks with ' + maxWeek);
       for (var i = 1; i <= maxWeek; i++) {
         weeks.push({
           'week': i
