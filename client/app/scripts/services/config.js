@@ -1,3 +1,4 @@
+'use strict';
 /** 
 *	@constructor
 * 	Provider for the 'config' service.
@@ -11,8 +12,8 @@ angular.module('PReports.services').provider('config', function() {
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : 'http://127.0.0.1',
-		'servicePort' : '3000',
+		'serviceUrl' : '',
+		'servicePort' : '',
 		'version' : '1.5.0 Ignorant Ibis',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {
