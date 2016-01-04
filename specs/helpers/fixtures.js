@@ -4,7 +4,7 @@ var id = require('pow-mongodb-fixtures').createObjectId;
 exports.reports = [
     {
       "_id": id("564cf41ef110b5ef6846f8db"),
-      "year": 2015,
+      "year": (new Date()).getFullYear(),
       "week": 47,
       "name": "Test Report",
       "milestones": [],
@@ -26,7 +26,7 @@ exports.reports = [
     },
     {
       "_id": id("564cf435f110b5ef6846f8dc"),
-      "year": 2015,
+      "year": (new Date()).getFullYear(),
       "week": 47,
       "name": "Report with missing file",
       "milestones": [],
@@ -59,7 +59,7 @@ exports.reports = [
     },
     {
       "_id": id("564da94cfa2a698677b0cc61"),
-      "year": 2015,
+      "year": (new Date()).getFullYear(),
       "week": 47,
       "name": "Report with missing file",
       "milestones": [],

@@ -44,8 +44,8 @@ function populateDB(cb) {
 	//Files	
 	fixtures.load(__dirname + '/helpers/fixtures.js', function() {
 		console.log('Loaded fixtures');
-		cb();	
-	});		
+		cb();
+	});
 }
 
 function cleanDB(cb) {
@@ -65,7 +65,7 @@ describe('When loading all reports', function() {
 		cleanDB(done)
 	});
 
-	it('should return a 200', function(done) {
+	it('should return a list with 3 records', function(done) {
 
 	request(app)
       .get('/reports')
