@@ -34,6 +34,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      * Current calendar week.
      */
     $scope.currentCalWeek = (new Date()).getWeek();
+    $scope.currentCalYear = (new Date()).getFullYear();
 
     //initialize global search parameters if they don't exist on $rootScope
     $rootScope.search = $rootScope.search || {};
@@ -1397,6 +1398,11 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       };
 
       $scope.weeks = weeks;
+    }
+
+    $scope.resetSearchCal = function() {
+      $rootScope.search.year = $scope.currentCalYear;
+      $rootScope.search.week = $scope.currentCalWeek;
     }
 
     /**
