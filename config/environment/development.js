@@ -3,7 +3,6 @@
 // Development specific configuration
 // ==================================
 
-var casStrategy = require('passport-cas').Strategy;
 function getConfigRootPath() {
 	if (process.env.SHELL_CONFIG_BASE ) {
 		return process.env.SHELL_CONFIG_BASE;
@@ -19,15 +18,12 @@ var config = {
   	'port':     3000,
   	'protocol': 'http',
 	'authentication': {
-	    'strategy': new casStrategy({
-	        version: 'CAS3.0',
-	        validateURL: '/serviceValidate',
-	        ssoBaseURL: 'https://10.49.96.216:8443/cas',
-	        serverBaseURL: 'http://127.0.0.1:3000'
-	    }, function(profile, done) {
-	        var login = profile.subscriberId;
-	        return done(null, profile);
-	    })
+        'disabled': true,
+        'strategy': 'cas',
+        'version': 'CAS3.0',
+        'validateURL': '/serviceValidate',
+        'ssoBaseURL': 'https://10.49.96.216:8443/cas',
+        'serverBaseURL': 'http://127.0.0.1:3000'
 	},
 	'session': {
         'secret': 'xf435g5ghr54gd54gdf54gd45',

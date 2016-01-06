@@ -22,17 +22,12 @@ module.exports = {
 	 'mongo': {
 	    'uri': 'mongodb://localhost/trunk-dev'
 	},
-	'authentication': {
-	    'strategy': new casStrategy({
-	        version: 'CAS3.0',
-	        validateURL: '/serviceValidate',
-	        ssoBaseURL: 'https://ysr-qa-frontend-01:8443/cas',
-	        serverBaseURL: 'http://ysr-dev-frontend-01:3000'
-	    }, function(profile, done) {
-	        var login = profile.subscriberId;
-	        return done(null, profile);
-	    })
-	},
+  'authentication': {
+    'version': 'CAS3.0',
+    'validateURL': '/serviceValidate',
+    'ssoBaseURL': 'https://ysr-qa-frontend-01:8443/cas',
+    'serverBaseURL': 'http://ysr-qa-frontend-01:3000'     
+  },
 	'session': {
         'secret': 'xf435g5ghr54gd54gdf54gd45',
         'cookie': {

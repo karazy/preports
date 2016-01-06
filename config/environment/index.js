@@ -44,6 +44,12 @@ var all = {
 
 };
 
+/**
+* If env var CONFIG_PATH is set path is
+* CONFIG_PATH/$NODE_ENV.js
+* otherwise
+* ./$NODE_ENV.js
+*/
 function getEnvConfigPath() {
   var configPath = process.env.CONFIG_PATH;
   if(configPath) {
