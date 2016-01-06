@@ -4,5 +4,6 @@ node_modules
 .directory
 .bash_history
 .tmp
+arc-manager.json
 preports-local.yml
 docker-compose.override.yml

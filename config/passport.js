@@ -1,13 +1,20 @@
 'use strict';
 
 var passport = require('passport');
-var config = require('./environment');
+var config = require('./environment');	
 
 
 module.exports.initialize = function(app) {
 	console.log('Initialize passport');
+	
+	//check if auth is disabled
+	if(!config.authentication) {
+		//throw error!
+	}
 
-	passport.use(config.authentication.strategy);
+	strategy = require('./passport-strategy/' + config.authentication.strategy).configureStrategy(config.authentication);
+
+	passport.use(strategy);
 
 	var users = {};
 

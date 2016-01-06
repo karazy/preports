@@ -16,6 +16,7 @@ if(process.env.DISABLE_CAS == 'true' && process.env.NODE_ENV != 'production') {
     config.authentication.disabled = true;
 }
 
+global.__base = __dirname + '/';
 
 var App = function() {
 

@@ -14,8 +14,6 @@ function requiredProcessEnv(name) {
   return process.env[name];
 }
 
-console.log("env/index.js");
-
 // All configurations will extend these options
 // ============================================
 var all = {
@@ -46,8 +44,23 @@ var all = {
 
 };
 
+function getEnvConfigPath() {
+  var configPath = process.env.CONFIG_PATH;
+  if(configPath) {
+    //remove / at end
+    if(configPath.substr(configPath.length - 1) === '/') {
+      configPath = configPath.substr(0, configPath.length-1);
+    }
+
+    return process.env.CONFIG_PATH + '/' + all.env  + '.js';
+  } else {
+    return './' + all.env  + '.js';
+  }
+}
+
 // Export the config object based on the NODE_ENV
 // ==============================================
 module.exports = _.merge(
   all,
-  require('./' + all.env  + '.js') || {});
+  require(getEnvConfigPath()) || {}
+);
