@@ -1,4 +1,4 @@
-FROM node:0.12.7
+FROM node:4.2
 
 MAINTAINER Frederik Reifschneider
 

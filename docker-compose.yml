@@ -8,7 +8,7 @@ preportsweb:
  links:
   - db
  environment:
-  - NODE_ENV=production
+  - NODE_ENV=development
   - UPLOAD_DIR=/var/preports/upload
   - MONGODB_DB_HOST=db
  ports:
