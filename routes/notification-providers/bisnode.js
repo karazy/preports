@@ -42,7 +42,7 @@ var config = require('../../config/environment'),
 	*/
 	exports.send = function(report, callback, reportUrl) {
 
-		if(!config) {
+		if(!config || !config.notificationProviders) {
 			console.log('PReports.services.com-bisnode-notification.send: config missing')
 			return;
 		}
