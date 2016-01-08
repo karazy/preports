@@ -17,9 +17,6 @@ var App = function() {
     var self = this;
 
     // Setup
-
-    self.dbHost = process.env.MONGODB_DB_HOST || process.env.MONGOLAB_URI || "localhost";
-    self.dbPort = 27017;
     self.uploadDir = process.env.UPLOAD_DIR;
 
     //Check if a port (from Heroku) is set and use it!
@@ -62,16 +59,11 @@ var App = function() {
 
     self.app.use(self.app.router);
 
-    //Mongolab connection when deployed on Heroku
-    if(typeof process.env.MONGOLAB_URI !== "undefined") {
-        console.log("Connecting to mongolab");
-        self.dbConnect = process.env.MONGOLAB_URI;
-    } else {
-        self.dbConnect = "mongodb://" + self.dbHost + ":" + self.dbPort + "/preports";
-    }
-
     //Create mongodb connection
+    self.dbConnect = mongo.createConnectionString();
     mongo.connect(self.dbConnect);
+
+    //init reports controller with upload directory
     reports.setup(self.uploadDir);
 
     //define routes

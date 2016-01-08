@@ -19,10 +19,35 @@ ObjectID = mongo.ObjectID;
 MongoClient = mongo.MongoClient; 
 
 
+exports.createConnectionString = function() {
+	var dbHost,
+		dbPort,
+		dbConnect;	   
+	
+	//Mongolab connection when deployed on Heroku
+    if(typeof process.env.MONGOLAB_URI !== 'undefined') {
+    	//kept for backwards compatibility use MONGODB_DB_CONNECTION instead
+        console.log('Connecting to mongolab');
+        dbConnect = process.env.MONGOLAB_URI;
+    } else if(typeof process.env.MONGODB_DB_CONNECTION !== 'undefined') {
+    	if(process.env.MONGODB_DB_CONNECTION.indexOf('mongodb://') == 0) {
+    		console.log('TEST');
+    	}
+		console.log('Found MONGODB_DB_CONNECTION');
+		dbConnect = process.env.MONGODB_DB_CONNECTION + '/preports';		
+    } else {
+    	dbHost = process.env.MONGODB_DB_HOST || 'localhost';
+    	dbPort = process.env.MONGODB_DB_PORT || 27017;
+        dbConnect = 'mongodb://' + dbHost + ":" + dbPort + '/preports';
+    }
+
+    return dbConnect;
+}
+
 
 exports.connect = function(connectionUrl) {
 
-	console.log("Connecting to db: " + connectionUrl);
+	console.log('Connecting to db: ' + connectionUrl);
 
     MongoClient.connect(connectionUrl, function(err, _db) {
     	//TODO add retry loop
