@@ -13,10 +13,12 @@ function getConfigRootPath() {
 
 var config = {
     'demo': false,
-	'ip':    '0.0.0.0',
+	'mongo': {
+        'uri' : '127.0.0.1:27017'
+    },
     // Server port
   	'port':     3000,
-  	'protocol': 'http',
+  	'protocol': 'http',    
 	'authentication': {
         'disabled': true,
         'strategy': 'cas',

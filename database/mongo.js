@@ -3,12 +3,14 @@
 */
 var mongo = require('mongodb'),
 	test = require('assert'),
+	config = require('../config/environment'),
 	Db,
 	Connection,
 	Server,
 	ObjectID,
 	db,
-	MAX_RETRIES = 10;
+	MAX_RETRIES = 10,
+	DB_IDENTIFIER = 'preports';
 
 //setup mongo variables
 Db = mongo.Db;
@@ -18,7 +20,14 @@ BSON = mongo.BSON;
 ObjectID = mongo.ObjectID;
 MongoClient = mongo.MongoClient; 
 
-
+/**
+* Creates the mongodb connection string.
+* First configuration that is that gets used in following order:
+* - MONGOLAB_URI
+* - MONGODB_DB_CONNECTION
+* - MONGODB_DB_HOST
+* - config
+*/
 exports.createConnectionString = function() {
 	var dbHost,
 		dbPort,
@@ -27,27 +36,40 @@ exports.createConnectionString = function() {
 	//Mongolab connection when deployed on Heroku
     if(typeof process.env.MONGOLAB_URI !== 'undefined') {
     	//kept for backwards compatibility use MONGODB_DB_CONNECTION instead
-        console.log('Connecting to mongolab');
+        console.log('Using MONGOLAB_URI');
         dbConnect = process.env.MONGOLAB_URI;
     } else if(typeof process.env.MONGODB_DB_CONNECTION !== 'undefined') {
-    	if(process.env.MONGODB_DB_CONNECTION.indexOf('mongodb://') == 0) {
-    		console.log('TEST');
-    	}
-		console.log('Found MONGODB_DB_CONNECTION');
-		dbConnect = process.env.MONGODB_DB_CONNECTION + '/preports';		
-    } else {
-    	dbHost = process.env.MONGODB_DB_HOST || 'localhost';
+		console.log('Using MONGODB_DB_CONNECTION');
+		dbConnect = formatConnectionString(process.env.MONGODB_DB_CONNECTION);
+    } else if(typeof process.env.MONGODB_DB_HOST !== 'undefined'){
+    	console.log('Using MONGODB_DB_HOST');
+    	dbHost = process.env.MONGODB_DB_HOST;
     	dbPort = process.env.MONGODB_DB_PORT || 27017;
-        dbConnect = 'mongodb://' + dbHost + ":" + dbPort + '/preports';
+        dbConnect = 'mongodb://' + dbHost + ":" + dbPort + '/' + DB_IDENTIFIER;
+    } else if(config.mongo && config.mongo.uri) {
+    	console.log('Using config.mongo.uri');
+    	dbConnect = formatConnectionString(config.mongo.uri);
+    } else {
+    	console.log('Using default connection');
+    	dbConnect = 'mongodb://localhost:27017/preports';
     }
 
     return dbConnect;
 }
 
+function formatConnectionString(con) {
+	if(con.indexOf('mongodb://') == 0) {
+		return con + '/' + DB_IDENTIFIER;
+	} else {
+		return 'mongodb://' + con + '/' + DB_IDENTIFIER;
+	}
+
+}
+
 
 exports.connect = function(connectionUrl) {
 
-	console.log('Connecting to db: ' + connectionUrl);
+	console.log('Connecting to mongo db: ' + connectionUrl);
 
     MongoClient.connect(connectionUrl, function(err, _db) {
     	//TODO add retry loop

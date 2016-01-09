@@ -19,7 +19,7 @@ module.exports = {
   	'port':     3000,
   	'protocol': 'http',
 	  //MongoDB connection options
-	 'mongo': {
+	'mongo': {
 	    'uri': 'mongodb://localhost/trunk-dev'
 	},
   'authentication': {
