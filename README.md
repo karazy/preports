@@ -116,6 +116,31 @@ List of env variables needed to configure PReports.
 Config files reside under ./config/environment. Depending on the value of NODE_ENV
 the corresponding config is loaded.
 
+###Directories
+
+/auth - Authorization logic
+
+/backup - Scripts for backups (experimental)
+
+/client - UI src code
+
+/components - Misc stuff
+
+/config - configurations
+
+/database - DB helper
+
+/dist - Minified UI build
+
+/preports-icon - icons
+
+/routes - Backend core logic. 
+
+/specs - Backend tests
+
+/views - Views rendered by express.js (not used currently)
+
+
 ##Release Notes
 [> Release Notes](RELEASE_NOTES.md)
 
