@@ -12,7 +12,92 @@ project reports - create and manage weekly IT project reports
 
 PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
-###Release Notes
+##About
+
+PReports (abbr for project reports) lets you write project reports (tailored for IT) in you browser on the fly. More information on the [Official homepage](http://p-reports.com).
+
+##Installation
+*WORK IN PROGRESS*
+
+###Development Setup
+####Prerequisites
+For development please install
+- NodeJS 4.2.3
+- npm install -g bower, grunt-cli
+- [Compass](http://compass-style.org/install/) for SASS, needs Ruby
+- [MongoDB](https://www.mongodb.org/)
+
+Optional
+- npm install -g supervisor
+
+####Run it
+1. Check out development (or master for last stable) branch.
+2. Make sure a mongo daemon is running on your local machine (or a remote machine, that you can reach)
+3. CD into root folder
+4. Set up environment variables (see below)
+4. RUN npm install
+5. RUN 'supervisor app.js' (or node if you didn't install supervisor). This will fire up the backend
+and you should see something like this.
+```
+Starting child process with 'node app.js'
+Watching directory '/Users/fred/Dev/preports/service' for changes.
+connect.multipart() will be removed in connect 3.0
+visit https://github.com/senchalabs/connect/wiki/Connect-3.0 for alternatives
+connect.limit() will be removed in connect 3.0
+Initialize passport
+Authentication disabled
+Using MONGODB_DB_CONNECTION
+Connecting to mongo db: mongodb://localhost:27017/preports
+directory for upload: undefined
+Wed Jan 13 2016 20:36:00 GMT+0100 (CET): Node server started on undefined:3000 ...
+Connected to 'project report' database
+createIndexes: created index searchIndex_1
+```
+6. CD into client folder
+7. RUN npm install && bower install (this will install the frontend dependencies)
+8. RUN grunt serve (This will fire up a webserver on port 9000 an show the UI.)
+
+```
+...
+Running "connect:livereload" (connect) task
+Started connect web server on 0.0.0.0:9000.
+
+Running "watch" task
+Waiting...
+
+```
+10. Go and code... All changes should be picked up immediately.
+11. To run tests RUN npm test in root folder. Currently only backend tests exists.
+
+####Build it
+*Under construction*
+
+###Production standalone
+*Under construction*
+####Prerequisites
+- NodeJS 4.2.3
+- npm install -g forever (To run your script continously)
+- [MongoDB](https://www.mongodb.org/) preferably on another server
+
+###Production via Docker (experimental)
+####Prerequisites
+- Docker obviously and docker-compose
+- Tune env variables in docker-compose.yml to suite your needs
+- RUN docker-compose -d up
+
+###Environment variables
+List of env variables needed to configure PReports.
+
+| Variable      | Values      | Default | Required |
+| ------------- | :-------------: | :-------------: | -------------: |
+| NODE_ENV     | e.g. development, production | development | no |
+| CONFIG_PATH    | /path/to/external/config      | none | no |
+| UPLOAD_DIR | /path/to/file/upload    | USER_HOME/.preports | no |
+
+###Configuration
+*Under construction*
+
+##Release Notes
 
 ####v1.5.0 Ignorant Ibis
 - Added richtext editor
