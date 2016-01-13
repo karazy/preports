@@ -68,7 +68,7 @@ and you should see something like this.
     ```
 10. Go and code... All changes should be picked up immediately.
 11. visit http://localhost:9000
-12. To run tests RUN `npm test` in root folder. Currently only backend tests exists.
+12. To run tests RUN `npm test` in root folder. Currently only backend tests exists. Make sure mongo is running. ATTENTION Will wipe your database!!!
 
 ####Build it
 To have a production build CD into client folder and execute `grunt build --force`.
