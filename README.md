@@ -1,4 +1,4 @@
-preports
+PReports
 ========
 
 project reports - create and manage weekly IT project reports
@@ -14,29 +14,29 @@ PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
 ##About
 
-PReports (abbr for project reports) lets you write project reports (tailored for IT) in you browser on the fly. More information on the [Official homepage](http://p-reports.com).
+PReports (short for project reports) lets you write project reports (tailored for IT) in your browser on the fly. More information on the [official homepage](http://p-reports.com).
 
-##Installation
+##Setup
 *WORK IN PROGRESS*
 
-###Development Setup
+###Dev
 ####Prerequisites
 For development please install
-- NodeJS 4.2.3
-- npm install -g bower, grunt-cli
+- [NodeJS 4.2.3](https://nodejs.org/en/)
+- `npm install -g bower grunt-cli`
 - [Compass](http://compass-style.org/install/) for SASS, needs Ruby
 - [MongoDB](https://www.mongodb.org/)
 
 Optional
-- npm install -g supervisor
+- `npm install -g supervisor`
 
 ####Run it
 1. Check out development (or master for last stable) branch.
-2. Make sure a mongo daemon is running on your local machine (or a remote machine, that you can reach)
+2. Make sure a mongo daemon is running on your local machine (or a remote machine)
 3. CD into root folder
 4. Set up environment variables (see below)
-5. RUN npm install
-6. RUN 'supervisor app.js' (or node if you didn't install supervisor). This will fire up the backend
+5. RUN `npm install`
+6. RUN `supervisor app.js` (or node if you didn't install supervisor). This will fire up the backend
 and you should see something like this.
 ```
 Starting child process with 'node app.js'
@@ -54,8 +54,8 @@ Connected to 'project report' database
 createIndexes: created index searchIndex_1
 ```
 7. CD into client folder
-8. RUN npm install && bower install (this will install the frontend dependencies)
-9. RUN grunt serve (This will fire up a webserver on port 9000 an show the UI.)
+8. RUN `npm install && bower install` (this will install the frontend dependencies)
+9. RUN `grunt serve` (This will fire up a webserver on port 9000 an show the UI.)
 
 ```
 ...
@@ -68,23 +68,38 @@ Waiting...
 ```
 10. Go and code... All changes should be picked up immediately.
 11. visit http://localhost:9000
-12. To run tests RUN npm test in root folder. Currently only backend tests exists.
+12. To run tests RUN `npm test` in root folder. Currently only backend tests exists.
 
 ####Build it
-*Under construction*
+To have a production build CD into client folder and execute `grunt build --force`.
+This creates a new minified UI build in /dist folder that gets served by the backend.
+You can access the dist build via http://localhost:3000
+Commit and push the "build" to your repository. Thats it.
 
-###Production standalone
+
+###Production
 *Under construction*
-####Prerequisites
+####Standalone
 - NodeJS 4.2.3
-- npm install -g forever (To run your script continously)
+- `npm install -g forever` (To run your script continously)
 - [MongoDB](https://www.mongodb.org/) preferably on another server
 
-###Production via Docker (experimental)
-####Prerequisites
+####Docker (experimental)
 - Docker obviously and docker-compose
 - Tune env variables in docker-compose.yml to suite your needs
-- RUN docker-compose -d up
+
+####Run it...
+1. Checkout the source with the latest UI dist build on your prod host
+2. CD into src root
+3. Adjust config and env variables
+4. RUN `npm install`
+5. RUN `forever app.js`
+  1. or RUN `docker-compose -d up` when using docker
+
+This may not be the best approach. One might want to check out
+[Strongloop](https://strongloop.com) as a tool for node app building and deployment.
+Check out their [post](/strongblog/node-js-deploy-production-best-practice/) regarding best practices.
+
 
 ###Environment variables
 List of env variables needed to configure PReports.
