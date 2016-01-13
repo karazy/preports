@@ -17,12 +17,11 @@ PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 PReports (short for project reports) lets you write project reports (tailored for IT) in your browser on the fly. More information on the [official homepage](http://p-reports.com).
 
 ##Setup
-*WORK IN PROGRESS*
 
 ###Dev
 ####Prerequisites
-For development please install
-- [NodeJS 4.2.3](https://nodejs.org/en/)
+Install
+- [NodeJS > 4.2.3](https://nodejs.org/en/)
 - `npm install -g bower grunt-cli`
 - [Compass](http://compass-style.org/install/) for SASS, needs Ruby
 - [MongoDB](https://www.mongodb.org/)
@@ -33,39 +32,40 @@ Optional
 ####Run it
 1. Check out development (or master for last stable) branch.
 2. Make sure a mongo daemon is running on your local machine (or a remote machine)
-3. CD into root folder
+3. CD into project root folder
 4. Set up environment variables (see below)
 5. RUN `npm install`
 6. RUN `supervisor app.js` (or node if you didn't install supervisor). This will fire up the backend
 and you should see something like this.
-```
-Starting child process with 'node app.js'
-Watching directory '/Users/fred/Dev/preports/service' for changes.
-connect.multipart() will be removed in connect 3.0
-visit https://github.com/senchalabs/connect/wiki/Connect-3.0 for alternatives
-connect.limit() will be removed in connect 3.0
-Initialize passport
-Authentication disabled
-Using MONGODB_DB_CONNECTION
-Connecting to mongo db: mongodb://localhost:27017/preports
-directory for upload: undefined
-Wed Jan 13 2016 20:36:00 GMT+0100 (CET): Node server started on undefined:3000 ...
-Connected to 'project report' database
-createIndexes: created index searchIndex_1
-```
+
+    ```
+    Starting child process with 'node app.js'
+    Watching directory '/Users/fred/Dev/preports/service' for changes.
+    connect.multipart() will be removed in connect 3.0
+    visit https://github.com/senchalabs/connect/wiki/Connect-3.0 for alternatives
+    connect.limit() will be removed in connect 3.0
+    Initialize passport
+    Authentication disabled
+    Using MONGODB_DB_CONNECTION
+    Connecting to mongo db: mongodb://localhost:27017/preports
+    directory for upload: undefined
+    Wed Jan 13 2016 20:36:00 GMT+0100 (CET): Node server started on undefined:3000 ...
+    Connected to 'project report' database
+    createIndexes: created index searchIndex_1
+    ```
 7. CD into client folder
 8. RUN `npm install && bower install` (this will install the frontend dependencies)
 9. RUN `grunt serve` (This will fire up a webserver on port 9000 an show the UI.)
 
-```
-...
-Running "connect:livereload" (connect) task
-Started connect web server on 0.0.0.0:9000.
-
-Running "watch" task
-Waiting...
-
-```
+    ```
+    ...
+    Running "connect:livereload" (connect) task
+    Started connect web server on 0.0.0.0:9000.
+    
+    Running "watch" task
+    Waiting...
+    
+    ```
 10. Go and code... All changes should be picked up immediately.
 11. visit http://localhost:9000
 12. To run tests RUN `npm test` in root folder. Currently only backend tests exists.
@@ -78,13 +78,15 @@ Commit and push the "build" to your repository. Thats it.
 
 
 ###Production
-*Under construction*
+
 ####Standalone
-- NodeJS 4.2.3
+Install
+- NodeJS > 4.2.3
 - `npm install -g forever` (To run your script continously)
 - [MongoDB](https://www.mongodb.org/) preferably on another server
 
 ####Docker (experimental)
+Install
 - Docker obviously and docker-compose
 - Tune env variables in docker-compose.yml to suite your needs
 
@@ -111,75 +113,11 @@ List of env variables needed to configure PReports.
 | UPLOAD_DIR | /path/to/file/upload    | USER_HOME/.preports | no |
 
 ###Configuration
-*Under construction*
+Config files reside under ./config/environment. Depending on the value of NODE_ENV
+the corresponding config is loaded.
 
 ##Release Notes
-
-####v1.5.0 Ignorant Ibis
-- Added richtext editor
-- Bugfixes
-
-####v1.4.1 Herculean Hedgehog
-- Minor changes
-- Bugfixes & Cleanups
-
-####v1.4.0 Herculean Hedgehog
-- Milestones are dragable for easy rearrangement.
-- See project status in overview.
-- Migrated to Bootstrap 3.3.5.
-- Minor fixes and tweaks.
-
-####v1.3.1 Grumpy Giraffe
-- Fixed issue in simple property editor not displaying the saved value when type datepicker is used.
-
-####v1.3.0 Grumpy Giraffe
-- Added Datepicker for easy date selection.
-- Added CAS support
-- Several Bugfixes
-
-####v1.2.0
-- Readded UI into this project since it is easier to use.
-- Added Dockerfiles for deployment.
-
-####v1.1.1
-- Fixed display issues in firefox for html representation.
-
-####v1.1.0
-- Service supports type text/html as return type.
-
-####v1.0
-- Removed frontend from service and created separate project.
-
-####v0.4 Dude Diederich
-- Added pagination (for more than 50 records)
-- Added lock button to disable editing of a report
-- Added version checks to prevent lost updates
-- REST Api is now cleaner and features links for navigation
-- Usability and other improvements
-- Bugfixes and cleanups
-- Started naming of versions ;)
-
-####v0.3
-- Added undo functionality for report editing (works not on selects and image upload!)
-- Added created on and last modified information
-- Added delete countdown
-- Added copy button in report detail
-- Bugfixes
-
-####v0.2.1
-- fixed bug in search
-- removed some required fields
-- visual tweaks
-
-####v0.2.0
-- Language switch (German, English)
-- Print CSS for reports
-- Persist search filters when switching back and forth between reports and report list
-- Bugfixes and style optimizations
-- Display version in about
-
-####v0.0.1
-- Initial version
+[> Release Notes](RELEASE_NOTES.md)
 
 ###License
 
