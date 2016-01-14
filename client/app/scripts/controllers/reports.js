@@ -494,6 +494,11 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      *
      */
     $scope.incrementalUpdateReportWeek = function(direction) {
+
+      if($scope.isReportLocked()) {
+        return;
+      }
+
       if (!direction) {
         $log.log('No valid direction given.');
         return;
@@ -1299,6 +1304,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $scope.removeAndUndoLastCommand = function() {
       var commandToUndo;
 
+      if($scope.isReportLocked()) {
+        return;
+      }
+
       if ($scope.commands.length > 0) {
         commandToUndo = $scope.commands.pop();
         commandToUndo.undo();
@@ -1463,6 +1472,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           }
         }
       );
+
+      hotkeys.del('esc');
 
       //Disabled since direct call to methods doesn't show the 
       //confirmation window like the directive does
