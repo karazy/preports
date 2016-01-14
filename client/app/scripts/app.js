@@ -56,7 +56,8 @@ angular.module('PReports', [
   'angularFileUpload',
   'ui.bootstrap',
   'ui.sortable',
-  'textAngular'
+  'textAngular',
+  'cfp.hotkeys'
 ]).config(['$routeProvider', '$httpProvider', '$provide', function ($routeProvider, $httpProvider, $provide) {
     $routeProvider
       .when('/reports', {

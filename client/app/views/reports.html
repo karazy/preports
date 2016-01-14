@@ -9,7 +9,7 @@
 	<form role="form" class="col-md-12">	
 		<div class="form-group">
 			<div class="input-group">
-				<input type="text" class="form-control" l="reports.new" l-attribute="placeholder" placeholder="New report" ng-model="newReportName" typeahead="name for name in projectNames | filter:$viewValue | limitTo:8"></input>
+				<input id="report_new_title_field" type="text" class="form-control" l="reports.new" l-attribute="placeholder" placeholder="New report" ng-model="newReportName" typeahead="name for name in projectNames | filter:$viewValue | limitTo:8"></input>
 				<span class="input-group-btn">
 					<button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i> <span l="reports.new.button">New Report</span>					
 				</button>	 
@@ -25,7 +25,7 @@
 			  <span class="input-group-addon">
 			  	<i class="glyphicon glyphicon-search"></i>
 			  </span>
-			  <input type="text" class="form-control" l="search" l-attribute="placeholder" placeholder="search" ng-model="search.name">
+			  <input id="report_search_field" type="text" class="form-control" l="search" l-attribute="placeholder" placeholder="search" ng-model="search.name">
 			  <span class="input-group-btn">
 			  	<button class="btn btn-default" type="button" ng-click="search.name = '';"><i class="glyphicon glyphicon-remove"></i></button>
 			  </span>

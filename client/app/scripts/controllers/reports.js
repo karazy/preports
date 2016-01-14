@@ -15,9 +15,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
   '$interval',
   '$interpolate',
   'helper',
+  'hotkeys',
   function($scope, $location, $routeParams, Report, $log, $http, FileUploader, config,
     errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
-    helper) {
+    helper, hotkeys) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
       PAGINATION_LIMIT = 25;
@@ -1415,6 +1416,153 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       });
     }
 
+    /**
+    * Resgister hotkeys for report detail view.
+    *
+    */
+    function registerReportDetailHotkeys() {
+      //hotkeys.del();
+
+      hotkeys.bindTo($scope).add(
+        {
+          combo: 'ctrl+z',
+          description: 'Undo',
+          callback: function() {
+            $log.log('Hotkey');
+            $scope.removeAndUndoLastCommand();
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'plus',
+          description: 'Increase report week',
+          callback: function() {
+            $log.log('Hotkey');
+            $scope.incrementalUpdateReportWeek('inc');
+          }
+        }
+      )
+      .add(
+        {
+          combo: '-',
+          description: 'Decrease report week',
+          callback: function() {
+            $log.log('Hotkey');
+            $scope.incrementalUpdateReportWeek('dec');
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'l',
+          description: 'Lock report',
+          callback: function() {
+            $log.log('Hotkey');
+            $scope.toggleReportLock();
+          }
+        }
+      );
+
+      //Disabled since direct call to methods doesn't show the 
+      //confirmation window like the directive does
+
+      // hotkeys.add(
+      //   {
+      //     combo: 'c',
+      //     description: 'Hotkey: Copy report',
+      //     callback: function() {
+      //       $scope.copyReport($scope.currentReport);
+      //     }
+      //   }
+      // );
+
+      // hotkeys.add(
+      //   {
+      //     combo: 'del',
+      //     description: 'Hotkey: Delete report',
+      //     callback: function() {
+      //       $scope.deleteReport($scope.currentReport);
+      //     }
+      //   }
+      // );
+    }
+
+     /**
+    * Resgister hotkeys for report detail view.
+    *
+    */
+    function registerReportSearchHotkeys() {
+
+      hotkeys.bindTo($scope).add(
+        {
+          combo: 'a',
+          description: 'Show all weeks',
+          callback: function() {
+            $scope.search.week = '';
+          }
+        }
+      )
+      .add(
+        {
+          combo: 't',
+          description: 'Reset week and year',
+          callback: function() {
+            $scope.resetSearchCal();
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'r',
+          description: 'Reload reports',
+          callback: function() {
+            $scope.loadReports();
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'c',
+          description: 'Clear search',
+          callback: function() {
+            $scope.search.name = '';
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'n',
+          description: 'New report',
+          callback: function(event, hotkey) {
+            event.preventDefault();
+            angular.element('#report_new_title_field').focus();
+          }
+        }
+      )
+      .add(
+        {
+          combo: 's',
+          description: 'Search',
+          callback: function(event, hotkey) {
+            event.preventDefault();
+            angular.element('#report_search_field').focus();
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'esc',
+          description: 'Unfocus field',
+          allowIn: ['INPUT'],
+          callback: function() {
+            angular.element('input').blur();
+          }
+        }
+      );
+
+    }
+
     //Setup File Upload immediately. Otherwise there will be erors like
     //https://github.com/nervgh/angular-file-upload/issues/183    
     setupFileUpload();
@@ -1425,11 +1573,13 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $timeout(function() {
       if ($routeParams.reportId) {
         unregisterWatchForSearch();
+        registerReportDetailHotkeys();
         $scope.loadReport($routeParams.reportId);
       } else {
         $scope.loadReports();
         loadProjectNames();
         registerWatchForSearch();
+        registerReportSearchHotkeys();
       }
     }, 50);
 
