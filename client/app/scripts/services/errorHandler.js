@@ -6,7 +6,10 @@ angular.module('PReports.services').factory('errorHandler',['$rootScope','$locat
 	*	@param {Object} response Object containing response and request data of the failed HTTP request.
 	*/
 	function handleError(_response, _status, _headers, _config) {
-		var response;
+		var response,
+			errorKey,
+			responseMessage;
+
 		if(arguments.length > 1) {
 			response = {};
 			response.data = _response;
@@ -26,8 +29,8 @@ angular.module('PReports.services').factory('errorHandler',['$rootScope','$locat
 			
 		}
 
-		var errorKey = response.data['errorKey'] || response.data,
-			responseMessage = response.data['message'];
+		errorKey = (response.data) ? response.data['errorKey'] || response.data : null,
+		responseMessage = (response.data) ? response.data['message'] : null;
 
 		$rootScope.error = true;
 		// Set the error message to the first valid message out of the following:
