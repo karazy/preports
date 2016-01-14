@@ -21,7 +21,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     helper, hotkeys) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
-      PAGINATION_LIMIT = 25;
+        PAGINATION_LIMIT = 25;
 
     /**
      * Size of the command queue that holds undo events.
@@ -1619,6 +1619,24 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
             if($scope.selectedReportSearchRow >= 0 && $scope.selectedReportSearchRow < $scope.reports.length) {
               $location.path('reports/' + $scope.reports[$scope.selectedReportSearchRow]._id);
             }
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'right',
+          description: 'Next page',
+          callback: function() {
+            $scope.loadReports('next');
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'left',
+          description: 'Previous page',
+          callback: function() {
+            $scope.loadReports('prev');
           }
         }
       );
