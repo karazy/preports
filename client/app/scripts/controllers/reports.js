@@ -27,6 +27,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      * Size of the command queue that holds undo events.
      */
     $scope.COMMAND_QUEUE_SIZE = 20;
+    /**
+    * Reports retrieved after search.
+    */
     $scope.reports = [];
     $scope.currentReport = null;
     $scope.years = [2014, 2015, 2016, 2017];
@@ -57,6 +60,11 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      * List of executed commands during report editing
      */
     $scope.commands = [];
+
+    /**
+    * The currently via arrow keys selected row in the UI.
+    */
+    $scope.selectedReportSearchRow = null;
 
 
 
@@ -100,6 +108,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       var page,
         limit;
       console.log('loadReports');
+
+      $scope.selectedReportSearchRow = null;
 
       fillWeeks($rootScope.search.year);
 
@@ -1568,6 +1578,47 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           allowIn: ['INPUT'],
           callback: function() {
             angular.element('input').blur();
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'down',
+          description: 'Select next result',
+          callback: function() {
+            if($scope.selectedReportSearchRow === null) {
+              $scope.selectedReportSearchRow = 0;
+            } else if($scope.selectedReportSearchRow === $scope.reports.length-1) {
+              return;
+            }  else {
+              $scope.selectedReportSearchRow = $scope.selectedReportSearchRow + 1;
+            }
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'up',
+          description: 'Select prev result',
+          callback: function() {
+            if($scope.selectedReportSearchRow === null) {
+              $scope.selectedReportSearchRow = $scope.reports.length-1;
+            } else if($scope.selectedReportSearchRow === 0) {
+              return;
+            } else {
+              $scope.selectedReportSearchRow = $scope.selectedReportSearchRow - 1;
+            }
+          }
+        }
+      )
+      .add(
+        {
+          combo: 'enter',
+          description: 'Show selected report',
+          callback: function() {
+            if($scope.selectedReportSearchRow >= 0 && $scope.selectedReportSearchRow < $scope.reports.length) {
+              $location.path('reports/' + $scope.reports[$scope.selectedReportSearchRow]._id);
+            }
           }
         }
       );

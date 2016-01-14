@@ -336,3 +336,9 @@ $state-color-green: green;
       border-color: darken($state-color-green, 10%);
     }
 }
+
+.row-selected {
+  background-color: darken(#f5f5f5, 10%);
+}
+
+
