@@ -12,14 +12,19 @@ function getConfigRootPath() {
 }
 
 var config = {
+    //If true, will disable file upload and notifications
     'demo': false,
+    //Mongo DB settings
 	'mongo': {
+        //connection string
         'uri' : '127.0.0.1:27017'
     },
     // Server port
   	'port':     3000,
-  	'protocol': 'http',    
+  	'protocol': 'http',
+    //Authentication settings. Depending on chosen strategy.
 	'authentication': {
+        //set disabled true to deactivate
         'disabled': true,
         'strategy': 'cas',
         'version': 'CAS3.0',

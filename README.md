@@ -1,4 +1,4 @@
-preports
+PReports
 ========
 
 project reports - create and manage weekly IT project reports
@@ -12,79 +12,143 @@ project reports - create and manage weekly IT project reports
 
 PReports project is based on MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
-###Release Notes
+##About
 
-####v1.5.0 Ignorant Ibis
-- Added richtext editor
-- Bugfixes
+PReports (short for project reports) lets you write project reports (tailored for IT) in your browser on the fly. More information on the [official homepage](http://p-reports.com).
 
-####v1.4.1 Herculean Hedgehog
-- Minor changes
-- Bugfixes & Cleanups
+##Setup
 
-####v1.4.0 Herculean Hedgehog
-- Milestones are dragable for easy rearrangement.
-- See project status in overview.
-- Migrated to Bootstrap 3.3.5.
-- Minor fixes and tweaks.
+###Dev
+####Prerequisites
+Install
+- [NodeJS > 4.2.3](https://nodejs.org/en/)
+- `npm install -g bower grunt-cli`
+- [Compass](http://compass-style.org/install/) for SASS, needs Ruby
+- [MongoDB](https://www.mongodb.org/)
 
-####v1.3.1 Grumpy Giraffe
-- Fixed issue in simple property editor not displaying the saved value when type datepicker is used.
+Optional
+- `npm install -g supervisor`
 
-####v1.3.0 Grumpy Giraffe
-- Added Datepicker for easy date selection.
-- Added CAS support
-- Several Bugfixes
+####Run it
+1. Check out development (or master for last stable) branch.
+2. Make sure a mongo daemon is running on your local machine (or a remote machine)
+3. CD into project root folder
+4. Set up environment variables (see below)
+5. RUN `npm install`
+6. RUN `supervisor app.js` (or node if you didn't install supervisor). This will fire up the backend
+and you should see something like this.
 
-####v1.2.0
-- Readded UI into this project since it is easier to use.
-- Added Dockerfiles for deployment.
+    ```
+    Starting child process with 'node app.js'
+    Watching directory '/Users/fred/Dev/preports/service' for changes.
+    connect.multipart() will be removed in connect 3.0
+    visit https://github.com/senchalabs/connect/wiki/Connect-3.0 for alternatives
+    connect.limit() will be removed in connect 3.0
+    Initialize passport
+    Authentication disabled
+    Using MONGODB_DB_CONNECTION
+    Connecting to mongo db: mongodb://localhost:27017/preports
+    directory for upload: undefined
+    Wed Jan 13 2016 20:36:00 GMT+0100 (CET): Node server started on undefined:3000 ...
+    Connected to 'project report' database
+    createIndexes: created index searchIndex_1
+    ```
+7. CD into client folder
+8. RUN `npm install && bower install` (this will install the frontend dependencies)
+9. RUN `grunt serve` (This will fire up a webserver on port 9000 an show the UI.)
 
-####v1.1.1
-- Fixed display issues in firefox for html representation.
+    ```
+    ...
+    Running "connect:livereload" (connect) task
+    Started connect web server on 0.0.0.0:9000.
+    
+    Running "watch" task
+    Waiting...
+    
+    ```
+10. Go and code... All changes should be picked up immediately.
+11. visit http://localhost:9000
+12. To run tests RUN `npm test` in root folder. Currently only backend tests exists. Make sure mongo is running. ATTENTION Will wipe your database!!!
 
-####v1.1.0
-- Service supports type text/html as return type.
+####Build it
+To have a production build CD into client folder and execute `grunt build --force`.
+This creates a new minified UI build in /dist folder that gets served by the backend.
+You can access the dist build via http://localhost:3000
+Commit and push the "build" to your repository. Thats it.
 
-####v1.0
-- Removed frontend from service and created separate project.
 
-####v0.4 Dude Diederich
-- Added pagination (for more than 50 records)
-- Added lock button to disable editing of a report
-- Added version checks to prevent lost updates
-- REST Api is now cleaner and features links for navigation
-- Usability and other improvements
-- Bugfixes and cleanups
-- Started naming of versions ;)
+###Production
 
-####v0.3
-- Added undo functionality for report editing (works not on selects and image upload!)
-- Added created on and last modified information
-- Added delete countdown
-- Added copy button in report detail
-- Bugfixes
+####Standalone
+Install
+- NodeJS > 4.2.3
+- `npm install -g forever` (To run your script continously)
+- [MongoDB](https://www.mongodb.org/) preferably on another server
 
-####v0.2.1
-- fixed bug in search
-- removed some required fields
-- visual tweaks
+####Docker (experimental)
+Install
+- Docker obviously and docker-compose
+- Tune env variables in docker-compose.yml to suite your needs
 
-####v0.2.0
-- Language switch (German, English)
-- Print CSS for reports
-- Persist search filters when switching back and forth between reports and report list
-- Bugfixes and style optimizations
-- Display version in about
+####Run it...
+1. Checkout the source with the latest UI dist build on your prod host
+2. CD into src root
+3. Adjust config and env variables
+4. RUN `npm install`
+5. RUN `forever app.js`
+  1. or RUN `docker-compose -d up` when using docker
 
-####v0.0.1
-- Initial version
+This may not be the best approach. One might want to check out
+[Strongloop](https://strongloop.com) as a tool for node app building and deployment.
+Check out their [post](/strongblog/node-js-deploy-production-best-practice/) regarding best practices.
+
+
+###Environment variables
+List of env variables needed to configure PReports.
+
+| Variable      | Values      | Default | Required |
+| ------------- | :-------------: | :-------------: | -------------: |
+| NODE_ENV     | e.g. development, production | development | no |
+| CONFIG_PATH    | /path/to/external/config      | none | no |
+| UPLOAD_DIR | /path/to/file/upload    | USER_HOME/.preports | no |
+
+###Configuration
+Config files reside under ./config/environment. Depending on the value of NODE_ENV
+the corresponding config is loaded.
+
+###Directories
+
+/auth - Authorization logic
+
+/backup - Scripts for backups (experimental)
+
+/client - UI src code
+
+/components - Misc stuff
+
+/config - configurations
+
+/database - DB helper
+
+/dist - Minified UI build
+
+/preports-icon - icons
+
+/routes - Backend core logic. 
+
+/specs - Backend tests
+
+/views - Views rendered by express.js (not used currently)
+
+
+##Release Notes
+[> Release Notes](RELEASE_NOTES.md)
 
 ###License
 
 MIT License (MIT)
 
-Copyright (c) 2014 Frederik Reifschneider
+Copyright (c) 2016 Frederik Reifschneider
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
