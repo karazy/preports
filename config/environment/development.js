@@ -29,7 +29,7 @@ var config = {
         'strategy': 'cas',
         'version': 'CAS3.0',
         'validateURL': '/serviceValidate',
-        'ssoBaseURL': 'https://10.49.96.216:8443/cas',
+        'ssoBaseURL': 'https://ysr-qa-frontend-01:8443/cas',
         'serverBaseURL': 'http://127.0.0.1:3000'
 	},
 	'session': {
