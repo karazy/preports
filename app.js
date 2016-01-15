@@ -1,6 +1,9 @@
+'use strict';
+
 var http = require('http');
 var express = require('express');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(express);
 var reports = require('./routes/reports');
 var notifications = require('./routes/notifications');
 var logout = require('./routes/logout/logout.controller');
@@ -50,9 +53,19 @@ var App = function() {
     self.app.use(allowCrossDomain);  
 
     //use express session management. Needed for passport to work.
-    self.app.use(session(
-        { secret: 'keyboard cat', resave: true, saveUninitialized: true }
-    ));    
+    mongo.getDB(function(dbInstance) {
+        self.app.use(session(
+            { 
+                secret: 'preports_s3cr3t', 
+                saveUninitialized: false, // don't create session until something stored
+                resave: false, //don't save session if unmodified
+                store: new MongoStore({
+                    db: dbInstance
+                }) 
+            }
+        ));     
+    })
+       
 
     //setup passport (see config/pasport.js)
     passport.initialize(self.app);
