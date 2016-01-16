@@ -53,7 +53,16 @@ var config = {
     		'host': 'ysr-dev-service-01',
     		'path': '/rest/notification-service',
             'port': 8181
-    	}
+    	},
+        'mail' : {
+            host: 'smtp.strato.de',
+            port: 465,
+            secure: true, // use SSL
+            auth: {
+                user: 'notification@p-reports.com',
+                pass: 'q0XQvv_A65$}'
+            }
+        }
     }
 };
 

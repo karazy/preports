@@ -31,7 +31,7 @@ var config = require('../../config/environment'),
 	    contentLangKey = "notification.content.template",
 	    subjectLangKey = "notification.subject.template",
 	    isLive = true,
-		PROVIDER_TYPE = 'email',
+		PROVIDER_TYPE = 'bisnode',
 		SUBJECT_TPL = 'Project report {name} CW {week}|{year}',
 		TEMPLATE = 'Project report for {name} - CW {week}|{year} is available under'+
 			' {reportUrl} This is an automatically generated notification from preports.';
