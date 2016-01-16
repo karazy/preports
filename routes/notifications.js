@@ -26,6 +26,11 @@ exports.sendNotifications = function(req, res) {
 		return;
 	}
 
+	if(!config || !config.notificationProviders) {
+		console.log('notifications.sendNotifications: no providers setup');
+		return;
+	}
+
 	console.log('sendNotifications: for report with id ' + _id);	
 	
 	report.findReport(_id, doSend);
@@ -46,13 +51,13 @@ exports.sendNotifications = function(req, res) {
 		reportUrl = createReportUrl(req, data);
 
 		//send via registered providers
-		providers.forEach(function(p) {
-			providerCallFinished++;
+		providers.forEach(function(p) {			
 			console.log('Calling provider ' + p.getProviderType());
 			p.send(data, evaluateStatus, reportUrl);
 		});
 
 		function evaluateStatus(success, message) {
+			providerCallFinished++;
 			if(!success) {
 				if(Array.isArray(message)) {
 					errors = errors.concat(message);
@@ -64,7 +69,7 @@ exports.sendNotifications = function(req, res) {
 			//all calls finished send response
 			if(providerCallFinished == providers.length) {
 				if(errors.length == 0) {
-					res.send(200);
+					res.send(200);					
 					res.end();
 				} else {
 					res.send(500, errors);

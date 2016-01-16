@@ -987,7 +987,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       $http.post(config.getCombinedServiceUrl() + '/reports/' + $scope.currentReport._id + '/notifications')
         .success(angular.noop)
         .error(function(response) {
-          $log.error('Failed so send notifications ' + response.message);
+          $log.error('Failed so send notifications ' + response);
           errorHandler(response);
         });
     }

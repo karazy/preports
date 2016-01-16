@@ -27,8 +27,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "This feature is not available in demo."
 		},
 		"error.general" : {
-			"DE" : "Es gibt ein Problem mit der Verbindung zum Service. Versuchen Sie neu zu laden.",
-			"EN" : "There has been a connection problem. Try reloading."
+			"DE" : "Ein Problem ist aufgetreten. Versuchen Sie neu zu laden.",
+			"EN" : "There has been a problem. Try reloading."
 		},
 		"error.report.clone": {
 			"DE" : "Beim Kopieren traten Fehler auf. Eventuell konnten Bilder nicht kopiert werden.",

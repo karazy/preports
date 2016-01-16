@@ -32,8 +32,8 @@ var //the json object consumed by slack.
 
 		report.reportUrl = reportUrl;
 
-		if(!config || !config.notificationProviders) {
-			console.log('slack.send: config missing');
+		if(!config.notificationProviders.slack) {
+			console.log('slack.send: config has no url');
 			return;
 		}
 

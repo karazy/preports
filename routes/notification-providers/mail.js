@@ -37,7 +37,7 @@ exports.send = function(report, callback, reportUrl) {
 		recipients,
 		handle = false;
 
-	if(!isConfigValid) {
+	if(!isConfigValid()) {
 		return;
 	}
 
@@ -73,8 +73,7 @@ exports.send = function(report, callback, reportUrl) {
 
 				if(status.send == status.usersToNotify) {
 					if(errors.length > 0) {
-						formatErrors(errors);
-						callback(false, errors);
+						callback(false, formatErrors(errors));
 					}
 
 					callback(true);
@@ -98,7 +97,7 @@ function setupMailTransport() {
 
 	var transportConfig;
 
-	if(!isConfigValid) {
+	if(!isConfigValid()) {
 		return;
 	}
 
@@ -129,12 +128,17 @@ function isConfigValid() {
 *
 */
 function formatErrors(errors) {
+	var formatted = '';
+
 	if(!errors || !errors.length) {
-		return;
+		return '';
 	}
 
-	//$log.log("Amount of errors " + errors.length);
-	//deal with 500 Invalid channel specified
+	errors.forEach(function(e) {
+		formatted += e + '\n';
+	});
+
+	return formatted;
 }
 
 setupMailTransport();
