@@ -35,6 +35,21 @@ var config = {
     },
     'notificationProviders': {
         //no notifications in demo mode
+        'slack' : {
+            'display': 'Slack',
+            'host' : 'hooks.slack.com',
+            'path' : '/services/webhook/from/slack'
+        },
+        'mail' : {
+            'display': 'e-mail',
+            'host': 'smtp.strato.de',
+            'port': 465,
+            'secure': true, // use SSL
+            'auth': {
+                'user': 'notification@p-reports.com',
+                'pass': 'secret'
+            }
+        }
     }
 };
 
