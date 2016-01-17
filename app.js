@@ -103,6 +103,7 @@ var App = function() {
     self.app.delete('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.deleteImage);
     self.app.delete('/reports/:id', auth.ensureAuthenticated, reports.deleteReport);
     self.app.post('/reports/:id/notifications', auth.ensureAuthenticated, notifications.sendNotifications);
+    self.app.get('/notifications/providers', auth.ensureAuthenticated, notifications.getConfiguredProviders);
 
     //starting the nodejs server with express
     self.startServer = function() {

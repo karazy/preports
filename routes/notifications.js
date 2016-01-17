@@ -1,3 +1,4 @@
+'use strict';
 
 var providerManager = require('./notification-providers'),
 	config = require('../config/environment'),
@@ -47,6 +48,13 @@ exports.sendNotifications = function(req, res) {
 			return;
 		}
 
+		if(!data.settings || !data.settings.notification) {
+			console.log('notifications.sendNotifications: no notification settings for report exist');
+			res.send(200);
+			res.end();
+			return;
+		}
+
 		providers = providerManager.getProviders();
 		reportUrl = createReportUrl(req, data);
 
@@ -68,6 +76,7 @@ exports.sendNotifications = function(req, res) {
 
 			//all calls finished send response
 			if(providerCallFinished == providers.length) {
+				console.log('notifications.sendNotifications: all providers returned');
 				if(errors.length == 0) {
 					res.send(200);					
 					res.end();
@@ -76,7 +85,7 @@ exports.sendNotifications = function(req, res) {
 					res.end();
 				}
 			}
-		}		
+		}
 	}
 
 	function createReportUrl(request, report) {
@@ -89,9 +98,30 @@ exports.sendNotifications = function(req, res) {
 
 }
 
-/* Templates from UI
- 			"DE" : "Der technische Report fuer {{name}} - KW {{week}}|{{year}} ist verfuegbar unter"+
-			" {{url}} Dies ist eine automatisch generierte Benachrichtigung von preports.",
-			"EN" : "Technical report for {{name}} - CW {{week}}|{{year}} is available under"+
-			" {{url}} This is an automatically generated notification from preports."
+/**
+* Get the providers configured for this instance.
+* @return Array [{'provider': PROVIDER_NAME, 'display': DISPLAY_NAME}]
 */
+exports.getConfiguredProviders = function(req, res) {
+	var providers,
+		providersStripped = [];
+
+	if(!config || !config.notificationProviders) {
+		console.log('notifications.sendNotifications: no providers setup');
+		res.send(200);
+		res.end();
+		return;
+	}
+
+	providers = config.notificationProviders;
+
+	for(let p in providers) {
+		providersStripped.push({
+			'provider' : p,
+			'display': providers[p].display
+		});
+	};
+
+	res.send(200, providersStripped);
+	res.end();
+}

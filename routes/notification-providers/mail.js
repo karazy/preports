@@ -51,7 +51,7 @@ exports.send = function(report, callback, reportUrl) {
 	report.reportUrl = reportUrl;
 	mailData.subject = strTpl(SUBJECT_TPL, report);		
 	mailData.text = strTpl(TEMPLATE, report);
-	mailData.from = config.notificationProviders.mail.auth.user;
+	mailData.from = config.notificationProviders[PROVIDER_TYPE].auth.user;
 
 	//create one mail for each recipient and send it
 	recipients.forEach(function(r) {
@@ -72,6 +72,7 @@ exports.send = function(report, callback, reportUrl) {
 				}
 
 				if(status.send == status.usersToNotify) {
+					console.log('mail.send: finished sending');
 					if(errors.length > 0) {
 						callback(false, formatErrors(errors));
 					}
@@ -101,7 +102,7 @@ function setupMailTransport() {
 		return;
 	}
 
-	transportConfig = config.notificationProviders.mail;
+	transportConfig = config.notificationProviders[PROVIDER_TYPE];
 
 	transportConfig.pool = false;
 	
@@ -115,7 +116,7 @@ function isConfigValid() {
 		return false;
 	}
 
-	if(!config.notificationProviders.mail) {
+	if(!config.notificationProviders[PROVIDER_TYPE]) {
 		console.log('mail.setupMailTransport: mail provider config missing');
 		return false;
 	}

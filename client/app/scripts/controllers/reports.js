@@ -16,9 +16,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
   '$interpolate',
   'helper',
   'hotkeys',
+  'notification',
   function($scope, $location, $routeParams, Report, $log, $http, FileUploader, config,
     errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
-    helper, hotkeys) {
+    helper, hotkeys, notificationService) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
         PAGINATION_LIMIT = 25;
@@ -65,6 +66,11 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     * The currently via arrow keys selected row in the UI.
     */
     $scope.selectedReportSearchRow = null;
+
+    /**
+    * Notification providers available for use.
+    */
+    $scope.notificationProviders = null;
 
 
 
@@ -1643,12 +1649,19 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
     }
 
+    function getNotificationProviders() {
+      notificationService.getProviders(function(providers) {
+        $scope.notificationProviders = providers;
+      });
+    }
+
     //Setup File Upload immediately. Otherwise there will be erors like
     //https://github.com/nervgh/angular-file-upload/issues/183    
     setupFileUpload();
 
     registerEventHandlers();
 
+    //## Init Section
     //initially load reports or report entity based on url
     $timeout(function() {
       if ($routeParams.reportId) {
@@ -1663,7 +1676,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       }
     }, 50);
 
+    getNotificationProviders();
 
+    //##Init section end
 
     /**
      * Handles errors during report update.

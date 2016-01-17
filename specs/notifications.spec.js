@@ -9,7 +9,8 @@ var app = require('../app').app,
 	fs = require('fs-extra'),
 	fixtures = require('pow-mongodb-fixtures').connect('preports'),
 	id = require('pow-mongodb-fixtures').createObjectId,
-	config = require('../config/environment');
+	config = require('../config/environment'),
+	notifications = require('../routes/notifications');
 
 
 before(function(done) {
@@ -89,5 +90,21 @@ describe('When demo mode is active', function() {
 		request(app)
 		    .post('/reports/564cf41ef110b5ef6846f8db/notifications/')
 		    .expect(403, done);
+	});
+});
+
+describe('When loading configured provider', function() {
+	var providers;
+	it('should return an array with 2 objects', function(done) {
+		request(app)
+		    .get('/notifications/providers')
+		    .expect(200)
+		    .end(function(err, res) {
+	    		if (err) throw err;
+	    		expect(res.body).to.have.length(2);
+	    		expect(res.body[0].provider).to.equal('slack');
+	    		expect(res.body[0].display).to.equal('Slack');
+	    		done();
+	  		});
 	});
 });

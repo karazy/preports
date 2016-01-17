@@ -387,34 +387,8 @@
 	</div>
 	<!-- Notifications -->
 	<div class="row section hidden-print">
-		<div class="col-md-12">
-			<div style="margin-bottom: 15px;">			
-				<button class="btn btn-primary btn-sm pull-right" ng-click="addRecipient();" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
-				<p l="report.notification" class="section-header">Notification</p>
-			</div>
-			<div ng-repeat="recipient in currentReport.settings.notification.recipients" style="margin-bottom: 15px;">
-				<div class="row section-row">
-					<div class="col-md-2">	
-						<select ng-model="currentReport.settings.notification.recipients[$index].type" ng-change="updateReport();"  class="form-control"  style="width: 100px;" ng-disabled="currentReport.locked">
-							<option value="">- Type -</option>
-							<option value="email">E-Mail</option>
-							<option value="slack">Slack</option>
-							<option value="bisnode">Bisnode</option>
-						</select>
-					</div>
-					<div class="col-md-8">	
-						<div simple-property-editor editor-title="report.notification.recipient" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'settings.notification.recipients');" editor-placeholder="report.notification.recipient.ph" editor-field="email" editor-entity="currentReport.settings.notification.recipients[$index]" editor-type="text" editor-enabled="!currentReport.locked">
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
-								<span l="report.notification.recipient.ph" ng-hide="currentReport.settings.notification.recipients[$index].email" class="simple-property-placeholder" >Enter email recipient</span>
-								{{recipient.email}}
-							</p>
-						</div>					
-					</div>					
-					<div class="col-md-2">						
-						<button class="btn btn-warning btn-xs pull-right" ng-click="removeRecipient($index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>					
-					</div>
-				</div>
-			</div>
+		<div class="col-md-12">		
+			<div ng-include src="'views/reports_detail/notifications.html'"></div>
 		</div>
 	</div>
 	<!-- Images -->

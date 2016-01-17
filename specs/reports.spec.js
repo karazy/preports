@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var app = require('../app').app,
 	mongo = require('../database/mongo'),

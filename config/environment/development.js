@@ -19,6 +19,7 @@ var config = {
         //connection string
         'uri' : '127.0.0.1:27017'
     },
+    'ip':    '0.0.0.0',
     // Server port
   	'port':     3000,
   	'protocol': 'http',

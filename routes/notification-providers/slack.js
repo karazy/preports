@@ -28,28 +28,25 @@ var //the json object consumed by slack.
 				send: 0
 			},
 			slackWebhookUrl,
-			recipients;
+			recipients,
+			handle = false;
 
 		report.reportUrl = reportUrl;
 
 		if(!config.notificationProviders.slack) {
 			console.log('slack.send: config has no url');
+			callback(true);
 			return;
 		}
 
 		if(!report) {
 			console.log('slack.send: Missing report.');
+			callback(true);
 			return;
 		}
 
 		if(!config.notificationProviders.slack.host) {
 			console.log('slack.send: config has no url');
-			return;
-		}
-
-		if(!report.settings || !report.settings.notification) {
-			console.log('slack.send: no notification settings exist');
-			callback(true);
 			return;
 		}
 
@@ -70,6 +67,7 @@ var //the json object consumed by slack.
 		//create one notification for each recipient and send it
 		recipients.forEach(function(r) {
 			if(r.type == PROVIDER_TYPE && r.email) {
+				handle = true;
 				status.usersToNotify++;
 
 				var slackNotification = clone(notification);
@@ -91,6 +89,7 @@ var //the json object consumed by slack.
 				  res.on('end', function() {
 				    status.send++;
 					if(status.send == status.usersToNotify) {
+						console.log('slack.send: finished sending');
 						if(errors.length > 0) {
 							formatErrors(errors);
 							callback(false, errors);
@@ -115,9 +114,12 @@ var //the json object consumed by slack.
 				req.write(JSON.stringify(slackNotification));
 				req.end();
 			}
-
-
 		});
+
+		if(!handle) {
+			console.log('slack.send: No handlers found.');
+			callback(true);
+		}
 	}
 
 	exports.getProviderType = function() {
