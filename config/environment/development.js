@@ -46,6 +46,7 @@ var config = {
       'logFile': getConfigRootPath() + '/preports.log'
     },
     'notificationProviders': {
+        //put your providers here
     }
 };
 

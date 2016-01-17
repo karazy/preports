@@ -1,6 +1,6 @@
 'use strict';
 
-// Development specific configuration
+// Test specific configuration.
 // ==================================
 
 function getConfigRootPath() {
@@ -18,7 +18,9 @@ var config = {
 	'mongo': {
         //connection string
         'uri' : '127.0.0.1:27017'
+        //replicaSet specify name of replicaSet
     },
+    //IP the server will listen on
     'ip':    '0.0.0.0',
     // Server port
   	'port':     3000,
@@ -33,9 +35,6 @@ var config = {
         'cookie': {
             maxAge: 60000 * 30
         }
-    },
-    'application': {
-      'baseDirectory' : getConfigRootPath() + '/application'
     },
     'logging': {
       'logFile': getConfigRootPath() + '/preports.log'
