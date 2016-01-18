@@ -17,9 +17,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
   'helper',
   'hotkeys',
   'notification',
+  'commandService',
   function($scope, $location, $routeParams, Report, $log, $http, FileUploader, config,
     errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
-    helper, hotkeys, notificationService) {
+    helper, hotkeys, notificationService, commandService) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
         PAGINATION_LIMIT = 25;
@@ -27,7 +28,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     /**
      * Size of the command queue that holds undo events.
      */
-    $scope.COMMAND_QUEUE_SIZE = 20;
+    // $scope.COMMAND_QUEUE_SIZE = 20;
     /**
     * Reports retrieved after search.
     */
@@ -57,10 +58,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     //show 404 message
     $scope.reportNotFound = false;
 
-    /**
-     * List of executed commands during report editing
-     */
-    $scope.commands = [];
+    $scope.commandService = commandService;
+    commandService.reset();
 
     /**
     * The currently via arrow keys selected row in the UI.
@@ -267,7 +266,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       $scope.currentReport = Report.get({
         'id': $scope.currentReport._id
       }, function() {
-        if ($scope.commands && $scope.commands.length > 0) {
+        // if ($scope.commands && $scope.commands.length > 0) {
           //TODO redo last action not ready for primetime yet! Undo must also be taken into account!
           // if(redoLastModification) {           
           //   var lastCommand = $scope.commands[$scope.commands.length-1];
@@ -277,7 +276,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           //remove last command
           // $scope.commands.pop();
           // }
-        }
+        // }
       }, function(httpResponse) {
         $scope.reportNotFound = true;
         errorHandler(httpResponse);
@@ -1271,46 +1270,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      *   Object with execute and undo function.
      */
     function storeAndExecute(command) {
-      var undoFn = true;
-
-      if (!command) {
-        $log.log('storeAndExecute: no command given');
-        return;
-      }
-
-      if (typeof command != 'object') {
-        $log.log('storeAndExecute: command is not an object');
-        return;
-      }
-
-      if (!command.hasOwnProperty('execute') || typeof command.execute != 'function') {
-        $log.log('storeAndExecute: no execute method found or not a function');
-        return;
-      }
-
-      if (!command.hasOwnProperty('undo') || typeof command.undo != 'function') {
-        $log.log('storeAndExecute: no undo method found or not a function. Command not added to queue.');
-        undoFn = false;
-      }
-
-      if (undoFn) {
-        if ($scope.commands.length == $scope.COMMAND_QUEUE_SIZE) {
-          //only store last $scope.COMMAND_QUEUE_SIZE commands
-          $scope.commands = $scope.commands.slice(1);
-          $scope.commands.push(command);
-        } else {
-          $scope.commands.push(command);
-        }
-      }
-
-      try {
-        command.execute();
-      } catch (e) {
-        $log.log('storeAndExecute: failed to execute command. ' + e);
-        $scope.commands.pop(command);
-        alert('commmand execution failed!');
-      }
-
+      commandService.storeAndExecuteCmd(command);
     }
 
     /**
@@ -1318,19 +1278,13 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      * Afterwards remove the command from array.
      */
     $scope.removeAndUndoLastCommand = function() {
-      var commandToUndo;
+      // var commandToUndo;
 
       if($scope.isReportLocked()) {
         return;
       }
 
-      if ($scope.commands.length > 0) {
-        commandToUndo = $scope.commands.pop();
-        commandToUndo.undo();
-      } else {
-        $log.log('removeAndUndoLastCommand: no commands in queue');
-      }
-
+      commandService.undo();
     }
 
     $scope.isZero = function(value) {
@@ -1695,7 +1649,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         //modified by third party
         $log.log('Failed to update report because it has been modified.');
         //prevent accidential overrides by killing the undo stack
-        $scope.commands = [];
+        commandService.reset();
         $('#dialogModifiedReport').modal('toggle');
       } else {
         errorHandler(response);
