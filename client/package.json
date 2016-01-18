@@ -1,8 +1,8 @@
 {
   "name": "preports-app",
-  "version": "1.5.1",
-  "versionName" : "Ignorant Ibis",
-  "description": "PReports App",
+  "version": "1.6.0",
+  "versionName" : "Jolly Jaguar",
+  "description": "PReports",
   "author": {
     "name": "Frederik Reifschneider",
     "email": "frederik.reifschneider@gmail.com"

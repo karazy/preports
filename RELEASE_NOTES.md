@@ -1,5 +1,11 @@
 #Release Notes
 
+###v1.6.0 Jolly Jaguar
+- New Feature: hotkeys (type ?) based on angular-hotkeys
+- Added e-mail as notification provider (previous mail provider was Bisnode specific)
+- Bugfixes & improvements
+- Documentation
+
 ###v1.5.0 Ignorant Ibis
 - Added richtext editor
 - Bugfixes
