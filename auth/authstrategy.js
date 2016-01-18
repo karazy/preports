@@ -76,7 +76,7 @@ module.exports = function() {
         console.log('authstrategy: logout called');
         req.logOut();
         res.set('Access-Control-Allow-Origin', '*');
-        res.redirect(302, config.authentication.strategy.ssoBase + '/logout');
+        res.redirect(302, config.authentication.ssoBase + '/logout');
 
         //return res.status(200).send();
     }
