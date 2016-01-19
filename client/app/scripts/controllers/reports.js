@@ -564,7 +564,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
             $scope.$emit('report-change-year');
           }
           defer.resolve();
-        }, handleUpdateError);
+        }, function(response) {
+          handleUpdateError(response);
+          defer.reject();
+        });
       }
 
       updateCommand.undo = function() {

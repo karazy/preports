@@ -69,27 +69,24 @@ angular.module('PReports.services').service('commandService', [
 				}
 
 				if(command.promise) {
-					//if command is promise based queue them
+					//if command is promise execute one after another (queue)
 					if(pending.length === 0) {
 						$log.log('No pending command found. Execute directly.');
 						pending.push(command);
 						executeNextCmd();						
 					} else {
-						$log.log('Pending commands found. Put in queue.');
+						$log.log(pending.length + ' pending commands. Put command in queue.');
 						pending.push(command);
 					}
 				} else {
-					command.execute();
-				}
-										
-
-				/*try {
-					command.execute();
-				} catch (e) {
-					$log.log('storeAndExecuteCmd: failed to execute command. ' + e);
-					commands.pop(command);
-					alert('commmand execution failed!');
-				}*/
+					try {
+						command.execute();
+					} catch (e) {
+						$log.log('storeAndExecuteCmd: failed to execute command. ' + e);
+						commands.pop(command);
+						alert('commmand execution failed!');
+					}
+				}													
 			},
 
 			undo: function() {
@@ -99,7 +96,12 @@ angular.module('PReports.services').service('commandService', [
 
 			      if (commands.length > 0) {
 			        commandToUndo = commands.pop();
-			        commandToUndo.undo();
+			        if(commandToUndo.undoPromis) {
+
+			        } else {
+			        	commandToUndo.undo();
+			        }
+			        
 			      } else {
 			        $log.log('undo: no commands in queue');
 			      }
@@ -121,29 +123,38 @@ angular.module('PReports.services').service('commandService', [
 			}
 		}
 
+		function undoPrevCmd() {
+
+		}
+
 		function executeNextCmd() {
 			var command = pending[0];
 			
 			if(command !== 'undefined' && command != null) {
-				if(command.promise) {
-					command.execute();
-					$log.log('commandService: found promise');
-					command.promise.then(function() {
-						$log.log('commandService: promise was successful');
-						//success
-						pending.shift();
-						executeNextCmd();						
-					}, function() {
-						//error
-						//clear remaining tasks and log error
-						pending = [];
-						$log.log('commandService: failed to execute command clear pending commands.');
-					});
-				} 
-				else {					
-					command.execute();
-					//pending.shift();
-					//executeNextCmd();
+				try {
+					if(command.promise) {
+						
+						command.execute();
+						
+						$log.log('commandService: found promise');
+						command.promise.then(function() {
+							$log.log('commandService: promise was successful');
+							//success
+							pending.shift();
+							executeNextCmd();						
+						}, function() {
+							//error
+							//clear remaining tasks and log error
+							pending = [];
+							$log.log('commandService: failed to execute command clear pending commands.');
+						});
+					}
+				} catch (e) {
+					$log.log('executeNextCmd: failed to execute command. ' + e);
+					commands.pop(command);
+					pending = [];
+					alert('commmand execution failed!');
+					return;
 				}
 			} else {
 				$log.log('commandService: pending queue is empty');
