@@ -1,5 +1,13 @@
 'use strict';
 
+/**
+* Encapsulates command handling for do and undo of commands.
+*
+* ATTENTION!
+* Each view should call reset to work on a clean state.
+* Restoring command states between views is currently not supported.
+* Currently only used in report detail view.
+*/
 angular.module('PReports.services').service('commandService', [
 	'$log',
 	'errorHandler',
@@ -71,10 +79,6 @@ angular.module('PReports.services').service('commandService', [
 
 			undo: function() {
 				var commandToUndo;
-
-			      // if($scope.isReportLocked()) {
-			      //   return;
-			      // }
 
 			      if (commands.length > 0) {
 			        commandToUndo = commands.pop();

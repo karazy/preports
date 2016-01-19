@@ -18,9 +18,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
   'hotkeys',
   'notification',
   'commandService',
+  '$q',
   function($scope, $location, $routeParams, Report, $log, $http, FileUploader, config,
     errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
-    helper, hotkeys, notificationService, commandService) {
+    helper, hotkeys, notificationService, commandService, $q) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
         PAGINATION_LIMIT = 25;
