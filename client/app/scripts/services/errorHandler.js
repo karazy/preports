@@ -17,7 +17,8 @@ angular.module('PReports.services').factory('errorHandler',['$rootScope','$locat
 			response.headers = _headers;
 			response.config = _config;
 		}
-		else {
+		else if(_response){
+
 			if(_response.hasOwnProperty('data')) {
 				response = _response;	
 			}
@@ -27,6 +28,8 @@ angular.module('PReports.services').factory('errorHandler',['$rootScope','$locat
 				}
 			}
 			
+		} else {
+			response = {};
 		}
 
 		errorKey = (response.data) ? response.data['errorKey'] || response.data : null,
