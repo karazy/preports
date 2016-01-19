@@ -11,8 +11,8 @@
 angular.module('PReports.services').service('commandService', [
 	'$log',
 	'errorHandler',
-
-	function($log, errorHandler) {
+	'$q',
+	function($log, errorHandler, $q) {
 
 		/**
 		 * Size of the command queue that holds undo events.
@@ -68,17 +68,31 @@ angular.module('PReports.services').service('commandService', [
 					}
 				}
 
-				try {
+				if(pending.length === 0) {
+					$log.log('No pending command found. Execute directly.');
+					pending.push(command);
+					executeNextCmd();						
+				} else {
+					$log.log('Pending commands found. Put in queue.');
+					pending.push(command);
+				}
+				
+
+				
+
+				/*try {
 					command.execute();
 				} catch (e) {
 					$log.log('storeAndExecuteCmd: failed to execute command. ' + e);
 					commands.pop(command);
 					alert('commmand execution failed!');
-				}
+				}*/
 			},
 
 			undo: function() {
 				var commandToUndo;
+
+				//TODO add promise logic for undo commands as well
 
 			      if (commands.length > 0) {
 			        commandToUndo = commands.pop();
@@ -101,6 +115,30 @@ angular.module('PReports.services').service('commandService', [
 			reset: function() {
 				commands = [];
 				pending = [];
+			}
+		}
+
+		function executeNextCmd() {
+			var command = pending.shift();
+			
+			if(command) {
+				if(command.promise) {
+					command.execute();
+					$log.log('commandService: found promise');
+					command.promise.then(function() {
+						$log.log('commandService: promise was successful');
+						//success
+						executeNextCmd();	
+					}, function() {
+						//error
+						//clear remaining tasks and log error
+						pending = [];
+						$log.log('commandService: failed to execute command clear pending commands.');
+					});
+				} else {
+					command.execute();
+					executeNextCmd();
+				}
 			}
 		}
 

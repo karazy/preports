@@ -54,6 +54,10 @@ exports.createConnectionString = function() {
     	dbConnect = 'mongodb://localhost:27017/preports';
     }
 
+    if(config.mongo && config.mongo.replicaSet) {
+    	dbConnect = dbConnect + '?replicaSet=' + config.mongo.replicaSet;
+    }
+
     return dbConnect;
 }
 

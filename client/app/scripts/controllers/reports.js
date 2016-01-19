@@ -510,6 +510,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      *
      */
     $scope.incrementalUpdateReportWeek = function(direction) {
+      var defer = $q.defer();
 
       if($scope.isReportLocked()) {
         return;
@@ -537,7 +538,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         prev: {
           week: $scope.currentReport.week,
           year: $scope.currentReport.year
-        }
+        },
+        promise: defer.promise
       };
 
       updateCommand.execute = function() {
@@ -561,6 +563,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           if (updateCommand.prev.year != $scope.currentReport.year) {
             $scope.$emit('report-change-year');
           }
+          defer.resolve();
         }, handleUpdateError);
       }
 

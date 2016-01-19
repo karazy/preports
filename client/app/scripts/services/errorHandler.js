@@ -69,7 +69,7 @@ angular.module('PReports.services').factory('errorHandler',['$rootScope','$locat
 angular.module('PReports.services').factory('notAuthenticatedInterceptor', ['$log','$q', '$location', function($log, $q, $location) {
     return {
     	response: function(response) {
-    		$log.log("notAuthenticatedInterceptor intercepted successful request with status " + response.status);
+    		//$log.log("notAuthenticatedInterceptor intercepted successful request with status " + response.status);
             return response;
     	},
     	responseError: function(response) {
