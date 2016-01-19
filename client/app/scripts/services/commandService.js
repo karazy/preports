@@ -68,17 +68,20 @@ angular.module('PReports.services').service('commandService', [
 					}
 				}
 
-				if(pending.length === 0) {
-					$log.log('No pending command found. Execute directly.');
-					pending.push(command);
-					executeNextCmd();						
+				if(command.promise) {
+					//if command is promise based queue them
+					if(pending.length === 0) {
+						$log.log('No pending command found. Execute directly.');
+						pending.push(command);
+						executeNextCmd();						
+					} else {
+						$log.log('Pending commands found. Put in queue.');
+						pending.push(command);
+					}
 				} else {
-					$log.log('Pending commands found. Put in queue.');
-					pending.push(command);
+					command.execute();
 				}
-				
-
-				
+										
 
 				/*try {
 					command.execute();
@@ -119,26 +122,31 @@ angular.module('PReports.services').service('commandService', [
 		}
 
 		function executeNextCmd() {
-			var command = pending.shift();
+			var command = pending[0];
 			
-			if(command) {
+			if(command !== 'undefined' && command != null) {
 				if(command.promise) {
 					command.execute();
 					$log.log('commandService: found promise');
 					command.promise.then(function() {
 						$log.log('commandService: promise was successful');
 						//success
-						executeNextCmd();	
+						pending.shift();
+						executeNextCmd();						
 					}, function() {
 						//error
 						//clear remaining tasks and log error
 						pending = [];
 						$log.log('commandService: failed to execute command clear pending commands.');
 					});
-				} else {
+				} 
+				else {					
 					command.execute();
-					executeNextCmd();
+					//pending.shift();
+					//executeNextCmd();
 				}
+			} else {
+				$log.log('commandService: pending queue is empty');
 			}
 		}
 
