@@ -2,6 +2,7 @@
 * Helper class that init db connection and can be reused accros the application.
 */
 var mongo = require('mongodb'),
+	ReplSetServers = require('mongodb').ReplSetServers,
 	test = require('assert'),
 	config = require('../config/environment'),
 	Db,
@@ -55,7 +56,7 @@ exports.createConnectionString = function() {
     }
 
     if(config.mongo && config.mongo.replicaSet) {
-    	dbConnect = dbConnect + '?replicaSet=' + config.mongo.replicaSet;
+    	dbConnect = dbConnect + '?replicaSet=' + config.mongo.replicaSet+'&w=1';
     }
 
     return dbConnect;
@@ -67,7 +68,6 @@ function formatConnectionString(con) {
 	} else {
 		return 'mongodb://' + con + '/' + DB_IDENTIFIER;
 	}
-
 }
 
 
@@ -76,7 +76,6 @@ exports.connect = function(connectionUrl) {
 	console.log('Connecting to mongo db: ' + connectionUrl);
 
     MongoClient.connect(connectionUrl, function(err, _db) {
-    	//TODO add retry loop
         test.equal(null, err); 
         test.ok(_db != null);
         console.log("Connected to 'project report' database");

@@ -2,7 +2,7 @@
 
 var http = require('http');
 var express = require('express');
-var session = require('express-session');
+//var session = require('express-session');
 var MongoStore = require('connect-mongo')(express);
 var reports = require('./routes/reports');
 var notifications = require('./routes/notifications');
@@ -52,29 +52,29 @@ var App = function() {
     self.app.use(cookieParser());
     self.app.use(allowCrossDomain);  
 
+    //Create mongodb connection
+    self.dbConnect = mongo.createConnectionString();
+    mongo.connect(self.dbConnect);
+
     //use express session management. Needed for passport to work.
     mongo.getDB(function(dbInstance) {
-        self.app.use(session(
+        self.app.use(express.session(
             { 
-                secret: 'preports_s3cr3t', 
+                secret: 'preports_secret', 
                 saveUninitialized: false, // don't create session until something stored
                 resave: false, //don't save session if unmodified
                 store: new MongoStore({
-                    db: dbInstance
+                    'db': dbInstance
                 }) 
             }
         ));     
-    })
+    });
        
 
     //setup passport (see config/pasport.js)
     passport.initialize(self.app);
 
-    self.app.use(self.app.router);
-
-    //Create mongodb connection
-    self.dbConnect = mongo.createConnectionString();
-    mongo.connect(self.dbConnect);
+    self.app.use(self.app.router);    
 
     //init reports controller with upload directory
     reports.setup(self.uploadDir);
