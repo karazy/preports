@@ -510,7 +510,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      *
      */
     $scope.incrementalUpdateReportWeek = function(direction) {
-      var defer = $q.defer();
+      var defer = $q.defer(),
+          deferUndo = $q.defer();
 
       if($scope.isReportLocked()) {
         return;
@@ -539,7 +540,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           week: $scope.currentReport.week,
           year: $scope.currentReport.year
         },
-        promise: defer.promise
+        promise: defer.promise,
+        undoPromise: deferUndo.promise
       };
 
       updateCommand.execute = function() {
@@ -565,8 +567,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           }
           defer.resolve();
         }, function(response) {
-          handleUpdateError(response);
-          defer.reject();
+          handleUpdateError(response, deffered);
         });
       }
 
@@ -579,7 +580,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           if (cYear != $scope.currentReport.year) {
             $scope.$emit('report-change-year');
           }
-        }, handleUpdateError);
+          deferUndo.resolve();
+        }, function(response) {
+          handleUpdateError(response, deffered);
+        });
       }
 
       storeAndExecute(updateCommand);
@@ -1272,8 +1276,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
 
     /**
-     * Stores command in queue and executes it.
-     * @param {Function} command
+     * Stores command in queue and executes it. Calls commandService
+     * @param {Object} command
      *   Object with execute and undo function.
      */
     function storeAndExecute(command) {
@@ -1319,7 +1323,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
       return color;
     }
-
+    
     function loadProjectNames() {
       $http.get($scope.config.getCombinedServiceUrl() + '/reports', {
         headers: {
@@ -1646,10 +1650,16 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      * Especially for error 428 when report has been modified externaly. Lost update problem.
      * @param {Object} response
      *  Server resonse
+     * @param {Object} deffered
+     *  Promise that was involved in operation. 
      */
-    function handleUpdateError(response) {
+    function handleUpdateError(response, deffered) {
       if (!response) {
         return
+      }
+
+      if(deffered) {
+        deffered.reject();
       }
 
       if (response.status == 428) {

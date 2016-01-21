@@ -3,6 +3,8 @@
 /**
 * Encapsulates command handling for do and undo of commands.
 *
+* TODO add command interface description
+*
 * ATTENTION!
 * Each view should call reset to work on a clean state.
 * Restoring command states between views is currently not supported.
@@ -27,7 +29,12 @@ angular.module('PReports.services').service('commandService', [
 			/**
 			* List of commands waiting for execution.
 			*/
-			pending = [];
+			pending = [],
+
+			/**
+			* List of undos waiting for execution.
+			*/
+			undosPending = [];
 
 		var _service = {
 			/**
@@ -59,6 +66,7 @@ angular.module('PReports.services').service('commandService', [
 					undoFn = false;
 				}
 
+				//if command supports undo add it to commands list
 				if (undoFn) {
 					if (commands.length == COMMAND_QUEUE_SIZE) {
 						//only store last COMMAND_QUEUE_SIZE commands
@@ -76,7 +84,7 @@ angular.module('PReports.services').service('commandService', [
 					if(pending.length === 0) {
 						//$log.log('No pending command found. Execute directly.');
 						pending.push(command);
-						executeNextCmd();						
+						executeNextCmd();
 					} else {
 						$log.log(pending.length + ' pending commands. Put command in queue.');
 						pending.push(command);
@@ -89,20 +97,30 @@ angular.module('PReports.services').service('commandService', [
 						commands.pop(command);
 						alert('commmand execution failed!');
 					}
-				}													
+				}
 			},
-
+			/**
+			* Undo last command. 
+			* See this.undosPending array.
+			*
+			*/
 			undo: function() {
-				var commandToUndo;
+				var undoCommand;
 
-				//TODO add promise logic for undo commands as well
-
-			      if (commands.length > 0) {
-			        commandToUndo = commands.pop();
-			        if(commandToUndo.undoPromis) {
-
+			      if(commands.length > 0) {
+			        	undoCommand = commands[commands.length-1];
+			        if(undoCommand.undoPromise) {
+			        	if(undosPending.length === 0) {
+			        		undosPending.push(undoCommand);
+			        		undoPrevCmd();	
+			        	} else {
+			        		$log.log(undosPending.length + ' pending undos. Put command in queue.');
+			        		undosPending.push(undoCommand);
+			        	}
 			        } else {
-			        	commandToUndo.undo();
+			        	//remove command
+			        	commands.pop();
+			        	undoCommand.undo();
 			        }
 			        
 			      } else {
@@ -123,42 +141,68 @@ angular.module('PReports.services').service('commandService', [
 			reset: function() {
 				commands = [];
 				pending = [];
+				undosPending = [];
 			}
 		}
 
 		function undoPrevCmd() {
-
+			var command = undosPending[undosPending.length-1];
+			
+			if(command !== 'undefined' && command != null) {
+				if(command.undoPromise) {
+					command.undoPromise.then(function() {
+						//promise resolved
+						undosPending.shift();
+						//remove command
+			        	commands.pop();
+						undoPrevCmd();
+					}, function() {
+						//promise rejected
+						//clear remaining tasks and log error
+						//needed to keep consistency of object
+						undosPending = [];
+						$log.log('commandService: failed to undo command. Clear pending undos.');
+					});
+					//call actual command action
+					command.undo();
+				}
+			} //else {
+			//	$log.log('commandService: undosPending queue is empty');
+			//}
 		}
 
 		function executeNextCmd() {
 			var command = pending[0];
 			
 			if(command !== 'undefined' && command != null) {
-				try {
-					if(command.promise) {																	
+				//try {
+					if(command.promise) {
 						command.promise.then(function() {
-							//success
+							//promise resolved
 							pending.shift();
 							executeNextCmd();
 						}, function() {
-							//error
+							//promise rejected
 							//clear remaining tasks and log error
+							//needed to keep consistency of object
 							pending = [];
 							$log.log('commandService: failed to execute command clear pending commands.');
 						});
+						//call actual command action
 						command.execute();
 
 					}
-				} catch (e) {
-					$log.log('executeNextCmd: failed to execute command. ' + e);
-					commands.pop(command);
-					pending = [];
-					alert('commmand execution failed!');
-					return;
-				}
-			} else {
-				$log.log('commandService: pending queue is empty');
-			}
+				// } catch (e) {
+				// 	//TODO try catch needed?
+				// 	$log.log('executeNextCmd: failed to execute command. ' + e);
+				// 	commands.pop(command);
+				// 	pending = [];
+				// 	alert('commmand execution failed!');
+				// 	return;
+				// }
+			} //else {
+			//	$log.log('commandService: pending queue is empty');
+			//}
 		}
 
 		return _service;
