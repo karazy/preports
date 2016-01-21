@@ -36,7 +36,8 @@ angular.module('PReports.services').service('commandService', [
 			 *   Object with execute and undo function.
 			 */
 			storeAndExecuteCmd: function(command) {
-				var undoFn = true;
+				var undoFn = true,
+					oldCmd;
 
 				if (!command) {
 					$log.log('storeAndExecuteCmd: no command given');
@@ -61,7 +62,9 @@ angular.module('PReports.services').service('commandService', [
 				if (undoFn) {
 					if (commands.length == COMMAND_QUEUE_SIZE) {
 						//only store last COMMAND_QUEUE_SIZE commands
-						commands = commands.slice(1);
+						//commands = commands.slice(1);
+						oldCmd = commands.shift();
+						oldCmd = null;
 						commands.push(command);
 					} else {
 						commands.push(command);
@@ -71,7 +74,7 @@ angular.module('PReports.services').service('commandService', [
 				if(command.promise) {
 					//if command is promise execute one after another (queue)
 					if(pending.length === 0) {
-						$log.log('No pending command found. Execute directly.');
+						//$log.log('No pending command found. Execute directly.');
 						pending.push(command);
 						executeNextCmd();						
 					} else {
@@ -132,22 +135,19 @@ angular.module('PReports.services').service('commandService', [
 			
 			if(command !== 'undefined' && command != null) {
 				try {
-					if(command.promise) {
-						
-						command.execute();
-						
-						$log.log('commandService: found promise');
+					if(command.promise) {																	
 						command.promise.then(function() {
-							$log.log('commandService: promise was successful');
 							//success
 							pending.shift();
-							executeNextCmd();						
+							executeNextCmd();
 						}, function() {
 							//error
 							//clear remaining tasks and log error
 							pending = [];
 							$log.log('commandService: failed to execute command clear pending commands.');
 						});
+						command.execute();
+
 					}
 				} catch (e) {
 					$log.log('executeNextCmd: failed to execute command. ' + e);

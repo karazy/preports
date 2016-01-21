@@ -75,7 +75,9 @@ exports.connect = function(connectionUrl) {
 
 	console.log('Connecting to mongo db: ' + connectionUrl);
 
-    MongoClient.connect(connectionUrl, function(err, _db) {
+    MongoClient.connect(connectionUrl, {
+    	'maxPoolSize': 5
+    }, function(err, _db) {
         test.equal(null, err); 
         test.ok(_db != null);
         console.log("Connected to 'project report' database");
