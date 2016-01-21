@@ -147,7 +147,7 @@ angular.module('PReports.services').service('commandService', [
 		}
 
 		function undoPrevCmd() {
-			var command = undosPending[undosPending.length-1];
+			var command = undosPending[0];
 			
 			if(command !== 'undefined' && command != null) {
 				if(command.undoPromise) {
