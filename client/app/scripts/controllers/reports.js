@@ -567,7 +567,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           }
           defer.resolve();
         }, function(response) {
-          handleUpdateError(response, deffered);
+          handleUpdateError(response, defer);
         });
       }
 
@@ -582,7 +582,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           }
           deferUndo.resolve();
         }, function(response) {
-          handleUpdateError(response, deffered);
+          handleUpdateError(response, deferUndo);
         });
       }
 
@@ -1323,7 +1323,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
       return color;
     }
-    
+
     function loadProjectNames() {
       $http.get($scope.config.getCombinedServiceUrl() + '/reports', {
         headers: {
@@ -1650,16 +1650,16 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      * Especially for error 428 when report has been modified externaly. Lost update problem.
      * @param {Object} response
      *  Server resonse
-     * @param {Object} deffered
+     * @param {Object} defered
      *  Promise that was involved in operation. 
      */
-    function handleUpdateError(response, deffered) {
+    function handleUpdateError(response, defered) {
       if (!response) {
         return
       }
 
-      if(deffered) {
-        deffered.reject();
+      if(defered) {
+        defered.reject();
       }
 
       if (response.status == 428) {

@@ -108,7 +108,8 @@ angular.module('PReports.services').service('commandService', [
 				var undoCommand;
 
 			      if(commands.length > 0) {
-			        	undoCommand = commands[commands.length-1];
+//			        	undoCommand = commands[commands.length-1];
+						undoCommand = commands.shift();
 			        if(undoCommand.undoPromise) {
 			        	if(undosPending.length === 0) {
 			        		undosPending.push(undoCommand);
@@ -119,7 +120,7 @@ angular.module('PReports.services').service('commandService', [
 			        	}
 			        } else {
 			        	//remove command
-			        	commands.pop();
+			        	//commands.pop();
 			        	undoCommand.undo();
 			        }
 			        
@@ -154,7 +155,7 @@ angular.module('PReports.services').service('commandService', [
 						//promise resolved
 						undosPending.shift();
 						//remove command
-			        	commands.pop();
+			        	//commands.pop();
 						undoPrevCmd();
 					}, function() {
 						//promise rejected
