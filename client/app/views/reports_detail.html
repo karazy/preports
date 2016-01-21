@@ -130,29 +130,6 @@
 			</table>
 		</div>
 	</div>
-	<!--@Deprecated Start and GoLive. -->
-	<!--
-	<div class="row section">
-		<div class="col-md-6">
-			<p l="report.start.title" class="section-header">Project start</p>
-			<div simple-property-editor editor-title="report.start.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.start.ph" editor-required editor-field="start" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
-				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">	
-				<span l="report.start.ph" ng-hide="currentReport.start" class="simple-property-placeholder">Enter start</span>		
-					{{currentReport.start}}
-				</p>
-			</div>
-		</div>
-		<div class="col-md-6">
-			<p l="report.golive.title" class="section-header">Project GoLive</p>
-			<div simple-property-editor editor-title="report.golive.title" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-placeholder="report.golive.ph" editor-required editor-field="goLive" editor-entity="currentReport" editor-enabled="!currentReport.locked">			
-				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">				
-					<span l="report.golive.ph" ng-hide="currentReport.goLive" class="simple-property-placeholder" >Enter go live</span>
-					{{currentReport.goLive}}
-				</p>
-			</div>		
-		</div>
-	</div>
-	-->
 	<div class="row section">
 		<div class="col-md-6">
 			<p l="report.year" class="section-header">Year</p>
@@ -301,7 +278,7 @@
 		</div>
 	</div>
 	<!-- Code reviews -->
-	<div class="row section">
+<!-- 	<div class="row section">
 		<div class="col-md-12">
 			<div style="margin-bottom: 15px;">			
 				<button class="btn btn-primary btn-sm pull-right" ng-click="addCodeReview();" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
@@ -338,7 +315,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- Systems -->
 	<div class="row section">
 		<div class="col-md-12">

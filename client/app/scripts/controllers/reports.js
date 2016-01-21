@@ -368,7 +368,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      * TODO document all param
      */
     $scope.updateReport = function(modifiedProperty, prevValue, isArray, index, arrayName) {
-      var updateCommand;
+      var updateCommand,
+          defer = $q.defer(),
+          deferUndo = $q.defer();;
+
 
       if (!$scope.currentReport) {
         console.log('updateReport: no current report');
@@ -381,7 +384,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         pV: prevValue,
         iA: isArray,
         i: index,
-        aN: arrayName
+        aN: arrayName,
+        promise: defer.promise,
+        undoPromise: deferUndo.promise
       };
 
       if (isArray && typeof index == 'number' && arrayName) {
@@ -404,6 +409,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
         $scope.currentReport.$update(function() {
           $scope.$emit('report-change-' + updateCommand.mP);
+          defer.resolve();
         }, handleUpdateError);
       };
 
@@ -417,8 +423,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           } else {
             $scope.currentReport[updateCommand.mP] = updateCommand.pV;
           }
+
           $scope.currentReport.$update(function() {
             $scope.$emit('report-change-' + updateCommand.mP);
+            deferUndo.resolve();
           }, handleUpdateError);
         };
       }
@@ -454,7 +462,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $scope.updateReportYear = function(newYear, oldYear) {
       var tmpMaxWeekOldYear,
           tmpMaxWeekNewYear,
-          updateCommand;
+          updateCommand,
+          defer = $q.defer(),
+          deferUndo = $q.defer();
 
      tmpMaxWeekOldYear = helper.getMaxWeeksPerYear(oldYear);
      //if max week was selected, recalculate week.
@@ -468,19 +478,23 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       } else {
         $scope.updateReport('year', parseInt(oldYear), false);
       }
-
+      //special undo treatment because two fields change at once
       function adjustAndPersistWeek() {
         //save prev values
         updateCommand = {
-          prev: {
-            week: parseInt($scope.currentReport.week),
-            year: parseInt(oldYear)
-          }
+          'prev': {
+            'week': parseInt($scope.currentReport.week),
+            'year': parseInt(oldYear)
+          },
+          'promise': defer.promise,
+          'undoPromise': deferUndo.promise
         };
 
         updateCommand.execute = function() {
           $scope.currentReport.week = parseInt(tmpMaxWeekNewYear);         
-          $scope.currentReport.$update(angular.noop, handleUpdateError);
+          $scope.currentReport.$update(function() {
+            defer.resolve();
+          }, handleUpdateError);
           $scope.$emit('report-change-year');
         }
 
@@ -488,7 +502,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           var cYear = $scope.currentReport.year;
           $scope.currentReport.week = updateCommand.prev.week;
           $scope.currentReport.year = updateCommand.prev.year;        
-          $scope.currentReport.$update(angular.noop, handleUpdateError);
+          $scope.currentReport.$update(function() {
+            deferUndo.resolve();
+          }, handleUpdateError);
           $scope.$emit('report-change-year');
         }
 
