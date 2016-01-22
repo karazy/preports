@@ -108,7 +108,7 @@ angular.module('PReports.services').service('commandService', [
 				var undoCommand;
 
 			      if(commands.length > 0) {
-						undoCommand = commands.shift();
+						undoCommand = commands.pop();
 			        if(undoCommand.undoPromise) {
 			        	if(undosPending.length === 0) {
 			        		undosPending.push(undoCommand);
