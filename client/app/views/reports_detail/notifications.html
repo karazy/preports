@@ -1,6 +1,6 @@
 <!-- Notifications -->
 <div style="margin-bottom: 15px;">			
-	<button class="btn btn-primary btn-sm pull-right" ng-click="addRecipient();" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
+	<button class="btn btn-primary btn-sm pull-right" ng-click="addCollectionElement('recipient');" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
 	<p l="report.notification" class="section-header">Notification</p>
 </div>
 <div ng-repeat="recipient in currentReport.settings.notification.recipients" style="margin-bottom: 15px;">
@@ -19,7 +19,7 @@
 			</div>					
 		</div>					
 		<div class="col-md-2">						
-			<button class="btn btn-warning btn-xs pull-right" ng-click="removeRecipient($index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>					
+			<button class="btn btn-warning btn-xs pull-right" ng-click="removeCollectionElement('recipient', $index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>					
 		</div>
 	</div>
 </div>

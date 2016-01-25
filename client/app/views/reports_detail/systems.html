@@ -1,0 +1,41 @@
+<div style="margin-bottom: 15px;">			
+	<button class="btn btn-primary btn-sm pull-right" ng-click="addCollectionElement('system');" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
+	<p l="report.systems" class="section-header">Systems</p>			
+</div>
+<div ng-repeat="record in currentReport.systems" style="margin-bottom: 15px;">
+	<div class="row section-row">
+		<div class="col-md-5">	
+			<div simple-property-editor editor-title="report.systems.name" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'systems');" editor-placeholder="report.systems.name.ph" editor-field="name" editor-entity="currentReport.systems[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
+				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
+					<span l="report.systems.name.ph" ng-hide="currentReport.systems[$index].name" class="simple-property-placeholder" >Enter name</span>
+					{{record.name}}
+				</p>
+			</div>
+		</div>
+		<div class="col-md-5">						
+			<div simple-property-editor editor-title="report.systems.url" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'systems');" editor-placeholder="report.systems.url.ph" editor-field="url" editor-entity="currentReport.systems[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">							
+				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
+					<span l="report.systems.url.ph" ng-hide="currentReport.systems[$index].url" class="simple-property-placeholder" >Enter url</span>
+					{{record.url}}
+				</p>
+			</div>
+			<!-- class="btn btn-info btn-xs hidden-print pull-left" -->
+			<a ng-href="{{currentReport.systems[$index].url}}" target="_blank" ng-show="isUrl(currentReport.systems[$index].url)" class="hidden-print">
+				<i class="glyphicon glyphicon-globe"></i> Link
+			</a>
+		</div>
+		<div class="col-md-2">						
+			<button class="btn btn-warning btn-xs pull-right" ng-click="removeCollectionElement('system', $index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>					
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div simple-property-editor editor-title="report.systems.remarks" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'systems');" editor-placeholder="report.systems.remarks.ph" editor-field="remarks" editor-entity="currentReport.systems[$index]" editor-type="textarea" editor-enabled="!currentReport.locked">
+				<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
+					<span l="report.systems.remarks.ph" ng-hide="currentReport.systems[$index].remarks" class="simple-property-placeholder">Enter remarks</span>
+					<span ng-bind-html="currentReport.systems[$index].remarks | breakFilter"></span>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>

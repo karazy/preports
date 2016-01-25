@@ -958,8 +958,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $scope.addCollectionElement = function(type) {
       var updateCommand = {},
           defer = $q.defer(),
-          deferUndo = $q.defer(),
-          collectionToModify;
+          deferUndo = $q.defer();
 
       if (!$scope.currentReport) {
         $log.log('addSystem: no current report');
@@ -970,7 +969,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         if (!$scope.currentReport.milestones) {
           $scope.currentReport.milestones = [];
         }
-        collectionToModify = $scope.currentReport.milestones;
       } else if(type == 'recipient') {
         //init correct notification settings structure if it does not already exist
         if (!$scope.currentReport.settings) {
@@ -983,12 +981,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         } else if (!$scope.currentReport.settings.notification.recipients) {
           $scope.currentReport.settings.notification.recipients = [];
         }
-        collectionToModify = $scope.currentReport.settings.notification.recipients;
       } else if(type == 'system') {
         if (!$scope.currentReport.systems) {
           $scope.currentReport.systems = [];
         }
-        collectionToModify = $scope.currentReport.systems;
       } else {
         $log.log('addCollectionElement: unknown type');
         return;
@@ -997,8 +993,11 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
       convertYearAndWeekToInt($scope.currentReport);
 
+      updateCommand.promise = defer.promise;
+      updateCommand.undoPromise = deferUndo.promise;
+
       updateCommand.execute = function() {
-        collectionToModify.push({});
+        getReportCollectionByType(type).push({});
         $scope.currentReport.$update().then(function() {
           defer.resolve();
         }).catch(function(response) {
@@ -1007,7 +1006,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       }
 
       updateCommand.undo = function() {
-        collectionToModify.pop();
+        getReportCollectionByType(type).pop();
         $scope.currentReport.$update().then(function() {
           deferUndo.resolve();
         }).catch(function(response) {
@@ -1018,6 +1017,18 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       storeAndExecute(updateCommand);
     }
 
+    function getReportCollectionByType(type) {
+      if(type == 'milestone') {
+        return $scope.currentReport.milestones;
+      } else if(type == 'recipient') {
+        return $scope.currentReport.settings.notification.recipients;
+      } else if(type == 'system') {
+        return $scope.currentReport.systems;
+      } else {
+        throw 'getReportCollectionByType: ' + type + ' collection type unknown';
+      }
+    }
+
     /**
      * Removes an object from a collection
      * @param {String} type
@@ -1026,7 +1037,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      */
     $scope.removeCollectionElement = function(type, index) {
       var updateCommand = {},
-          collectionToModify,
           defer = $q.defer(),
           deferUndo = $q.defer(),
           objectToRemove;
@@ -1045,21 +1055,18 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         if (!$scope.currentReport.milestones || $scope.currentReport.milestones.length == 0 || !$scope.currentReport.milestones[index]) {
           return;
         }
-        collectionToModify = $scope.currentReport.milestones;
       } else if(type == 'recipient') {
         if (!$scope.currentReport.settings || !$scope.currentReport.settings.notification || !$scope.currentReport.settings.notification.recipients || $scope.currentReport.settings.notification.recipients.length == 0 || !$scope.currentReport.settings.notification.recipients[index]) {
           $log.log('removeCollectionElement: precondition checks on settings object failed');
           return;
         }
-        collectionToModify = $scope.currentReport.settings.notification.recipients;
       } else if(type == 'system') {
         if (!$scope.currentReport.systems || $scope.currentReport.systems.length == 0 || !$scope.currentReport.systems[index]) {
           return;
         }
-        collectionToModify = $scope.currentReport.systems;
       } else {
         $log.log('removeCollectionElement: unknown type');
-        return;
+       // return;
       }
 
       convertYearAndWeekToInt($scope.currentReport);
@@ -1068,17 +1075,21 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       updateCommand.undoPromise = deferUndo.promise;
 
       updateCommand.execute = function() {
-        objectToRemove = collectionToModify[index];
-        collectionToModify.splice(index, 1);
+        var collection = getReportCollectionByType(type);
+        
+        objectToRemove = collection[index];
+        collection.splice(index, 1);
         $scope.currentReport.$update().then(function() {
           defer.resolve();
         }).catch(function(response) {
           defer.reject();
         });
-      }
+      }            
 
       updateCommand.undo = function() {
-        collectionToModify.splice(index, 0, objectToRemove);
+        var collection = getReportCollectionByType(type);
+
+        collection.splice(index, 0, objectToRemove);
         $scope.currentReport.$update().then(function() {
           deferUndo.resolve();
         }).catch(function(response) {
@@ -1533,7 +1544,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           combo: 'ctrl+z',
           description: 'Undo',
           callback: function() {
-            $log.log('Hotkey');
             $scope.removeAndUndoLastCommand();
           }
         }
