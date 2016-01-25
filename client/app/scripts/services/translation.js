@@ -176,6 +176,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Name",
 			"EN" : "Name"
 		},
+		"report.milestones.milestone.name.ph" : {
+			"DE" :  "Neuer Meilenstein",
+			"EN" : "New milestone"
+		},
 		"report.lastweektasks" : {
 			"DE" :  "Ergebnisse",
 			"EN" : "Achievements"

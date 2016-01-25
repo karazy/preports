@@ -25,7 +25,10 @@
 			</div>
 			<div class="col-md-6">	
 				<div simple-property-editor editor-title="report.milestones" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'milestones');" editor-placeholder="report.milestones.ph" editor-required editor-field="name" editor-entity="currentReport.milestones[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
-					<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">{{m.name}}</p>
+					<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
+					<span l="report.milestones.milestone.name.ph" ng-hide="currentReport.milestones[$index].name" class="simple-property-placeholder" >New milestone</span>
+					{{m.name}}
+					</p>
 				</div>
 			</div>
 			<div class="col-md-2">
