@@ -84,16 +84,28 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         axis: 'y',
         update: function(event, ui) {
           var updateCommand = {},
-            oldOrder = angular.copy($scope.currentReport.milestones);
+              defer = $q.defer(),
+              deferUndo = $q.defer(),
+              oldOrder = angular.copy($scope.currentReport.milestones);
+
+          updateCommand.promise = defer.promise;
+          updateCommand.undoPromise = deferUndo.promise;
 
           updateCommand.execute = function() {
-            $scope.currentReport.$update();
+            $scope.currentReport.$update().then(function() {
+              defer.resolve();
+            }).catch(function(response) {
+              handleUpdateError(response, defer);
+            });
           };
 
           updateCommand.undo = function() {
-            //arraymove($scope.currentReport.milestones,)
             $scope.currentReport.milestones = oldOrder;
-            $scope.currentReport.$update();
+            $scope.currentReport.$update().then(function() {
+              deferUndo.resolve();
+            }).catch(function() {
+              handleUpdateError(response, deferUndo);
+            });
           };
 
           function arraymove(arr, fromIndex, toIndex) {
@@ -410,7 +422,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         $scope.currentReport.$update(function() {
           $scope.$emit('report-change-' + updateCommand.mP);
           defer.resolve();
-        }, handleUpdateError);
+        }, function(response) {
+          handleUpdateError(response, defer);
+        });
       };
 
       //only add update command when a modified property exists
@@ -427,7 +441,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           $scope.currentReport.$update(function() {
             $scope.$emit('report-change-' + updateCommand.mP);
             deferUndo.resolve();
-          }, handleUpdateError);
+          }, function(response) {
+            handleUpdateError(response, deferUndo);
+          });
         };
       }
 
@@ -494,7 +510,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           $scope.currentReport.week = parseInt(tmpMaxWeekNewYear);         
           $scope.currentReport.$update(function() {
             defer.resolve();
-          }, handleUpdateError);
+          }, function(response) {
+            handleUpdateError(response, defer);
+          });
           $scope.$emit('report-change-year');
         }
 
@@ -504,7 +522,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           $scope.currentReport.year = updateCommand.prev.year;        
           $scope.currentReport.$update(function() {
             deferUndo.resolve();
-          }, handleUpdateError);
+          }, function(response) {
+            handleUpdateError(response, deferUndo);
+          });
           $scope.$emit('report-change-year');
         }
 
@@ -777,80 +797,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       }
 
       storeAndExecute(updateCommand);
-
     }
 
-    /**
-     * Adds a new code review to currentReport.codeReviews.
-     *
-     */
-    $scope.addCodeReview = function() {
-      var updateCommand = {};
-
-      if (!$scope.currentReport) {
-        console.log('addCodeReview: no current report');
-        return;
-      }
-
-      if (!$scope.currentReport.codeReviews) {
-        $scope.currentReport.codeReviews = [];
-      }
-
-      convertYearAndWeekToInt($scope.currentReport);
-
-      updateCommand.execute = function() {
-        $scope.currentReport.codeReviews.push({
-          authors: 'Add authors',
-        });
-        $scope.currentReport.$update();
-      }
-
-      updateCommand.undo = function() {
-        $scope.currentReport.codeReviews.pop();
-        $scope.currentReport.$update();
-      }
-
-      storeAndExecute(updateCommand);
-    }
-
-    /**
-     * Removes a code review from currentReport.
-     * @param {Integer} index
-     *   Index of code review to remove.
-     */
-    $scope.removeCodeReview = function(index) {
-      var updateCommand = {},
-        codeReviewToRemove;
-
-      if (!$scope.currentReport) {
-        console.log('removeCodeReview: no current report');
-        return;
-      }
-
-      if (!index && index !== 0) {
-        console.log('removeCodeReview: no index given');
-        return;
-      }
-
-      if (!$scope.currentReport.codeReviews || $scope.currentReport.codeReviews.length == 0 || !$scope.currentReport.codeReviews[index]) {
-        return;
-      }
-
-      convertYearAndWeekToInt($scope.currentReport);
-
-      updateCommand.execute = function() {
-        codeReviewToRemove = $scope.currentReport.codeReviews[index];
-        $scope.currentReport.codeReviews.splice(index, 1);
-        $scope.currentReport.$update();
-      }
-
-      updateCommand.undo = function() {
-        $scope.currentReport.codeReviews.splice(index, 0, codeReviewToRemove);
-        $scope.currentReport.$update();
-      }
-
-      storeAndExecute(updateCommand);
-    }
 
     /**
      * Adds a system (DEV, QA ...) currentReport.systems.
@@ -935,6 +883,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         return;
       }
 
+      //init correct notification settings structure if it does not already exist
       if (!$scope.currentReport.settings) {
         $scope.currentReport.settings = {};
         $scope.currentReport.settings.notification = {};
@@ -1003,8 +952,145 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     }
 
     /**
-     * Sends a notification (email) to recipients listed in $scope.currentReport.settings.notification.recipients.
-     * Uses PReports.service.notification.
+     * Adds a empty object to a collection.
+     * @param {String} type
+     */
+    $scope.addCollectionElement = function(type) {
+      var updateCommand = {},
+          defer = $q.defer(),
+          deferUndo = $q.defer(),
+          collectionToModify;
+
+      if (!$scope.currentReport) {
+        $log.log('addSystem: no current report');
+        return;
+      }
+
+      if(type == 'milestone') {
+        if (!$scope.currentReport.milestones) {
+          $scope.currentReport.milestones = [];
+        }
+        collectionToModify = $scope.currentReport.milestones;
+      } else if(type == 'recipient') {
+        //init correct notification settings structure if it does not already exist
+        if (!$scope.currentReport.settings) {
+          $scope.currentReport.settings = {};
+          $scope.currentReport.settings.notification = {};
+          $scope.currentReport.settings.notification.recipients = [];
+        } else if (!$scope.currentReport.settings.notification) {
+          $scope.currentReport.settings.notification = {};
+          $scope.currentReport.settings.settings.notification.recipients = [];
+        } else if (!$scope.currentReport.settings.notification.recipients) {
+          $scope.currentReport.settings.notification.recipients = [];
+        }
+        collectionToModify = $scope.currentReport.settings.notification.recipients;
+      } else if(type == 'system') {
+        if (!$scope.currentReport.systems) {
+          $scope.currentReport.systems = [];
+        }
+        collectionToModify = $scope.currentReport.systems;
+      } else {
+        $log.log('addCollectionElement: unknown type');
+        return;
+      }
+
+
+      convertYearAndWeekToInt($scope.currentReport);
+
+      updateCommand.execute = function() {
+        collectionToModify.push({});
+        $scope.currentReport.$update().then(function() {
+          defer.resolve();
+        }).catch(function(response) {
+          handleUpdateError(response, defer);
+        });
+      }
+
+      updateCommand.undo = function() {
+        collectionToModify.pop();
+        $scope.currentReport.$update().then(function() {
+          deferUndo.resolve();
+        }).catch(function(response) {
+          handleUpdateError(response, deferUndo);
+        });
+      }
+
+      storeAndExecute(updateCommand);
+    }
+
+    /**
+     * Removes an object from a collection
+     * @param {String} type
+     * @param {Number} index
+     *   Index of object to remove.
+     */
+    $scope.removeCollectionElement = function(type, index) {
+      var updateCommand = {},
+          collectionToModify,
+          defer = $q.defer(),
+          deferUndo = $q.defer(),
+          objectToRemove;
+
+      if (!$scope.currentReport) {
+        $log.log('removeCollectionElement: no current report');
+        return;
+      }
+
+      if (!index && index !== 0) {
+        $log.log('removeCollectionElement: no index given');
+        return;
+      }
+
+      if(type == 'milestone') {
+        if (!$scope.currentReport.milestones || $scope.currentReport.milestones.length == 0 || !$scope.currentReport.milestones[index]) {
+          return;
+        }
+        collectionToModify = $scope.currentReport.milestones;
+      } else if(type == 'recipient') {
+        if (!$scope.currentReport.settings || !$scope.currentReport.settings.notification || !$scope.currentReport.settings.notification.recipients || $scope.currentReport.settings.notification.recipients.length == 0 || !$scope.currentReport.settings.notification.recipients[index]) {
+          $log.log('removeCollectionElement: precondition checks on settings object failed');
+          return;
+        }
+        collectionToModify = $scope.currentReport.settings.notification.recipients;
+      } else if(type == 'system') {
+        if (!$scope.currentReport.systems || $scope.currentReport.systems.length == 0 || !$scope.currentReport.systems[index]) {
+          return;
+        }
+        collectionToModify = $scope.currentReport.systems;
+      } else {
+        $log.log('removeCollectionElement: unknown type');
+        return;
+      }
+
+      convertYearAndWeekToInt($scope.currentReport);
+
+      updateCommand.promise = defer.promise;
+      updateCommand.undoPromise = deferUndo.promise;
+
+      updateCommand.execute = function() {
+        objectToRemove = collectionToModify[index];
+        collectionToModify.splice(index, 1);
+        $scope.currentReport.$update().then(function() {
+          defer.resolve();
+        }).catch(function(response) {
+          defer.reject();
+        });
+      }
+
+      updateCommand.undo = function() {
+        collectionToModify.splice(index, 0, objectToRemove);
+        $scope.currentReport.$update().then(function() {
+          deferUndo.resolve();
+        }).catch(function(response) {
+          deferUndo.reject();
+        });
+      }
+
+      storeAndExecute(updateCommand);
+    }
+
+    /**
+     * Sends a notification to recipients listed in $scope.currentReport.settings.notification.recipients.
      */
     $scope.sendNotifications = function() {
       var subject,
@@ -1187,15 +1273,20 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
       //save prev values
       var updateCommand = {
-        prev: {
-          hoursExternal: $scope.currentReport.hoursExternal,
-          hoursInternal: $scope.currentReport.hoursInternal,
-          hoursNearshoring: $scope.currentReport.hoursNearshoring,
-          costsCurrent: $scope.currentReport.costsCurrent,
-          // costsRest: $scope.currentReport.costsRest,
-          costsDelta: $scope.currentReport.costsDelta
-        }
-      };
+            prev: {
+              hoursExternal: $scope.currentReport.hoursExternal,
+              hoursInternal: $scope.currentReport.hoursInternal,
+              hoursNearshoring: $scope.currentReport.hoursNearshoring,
+              costsCurrent: $scope.currentReport.costsCurrent,
+              // costsRest: $scope.currentReport.costsRest,
+              costsDelta: $scope.currentReport.costsDelta
+            }
+          },          
+          defer = $q.defer(),
+          deferUndo = $q.defer();
+
+      updateCommand.promise = defer.promise;
+      updateCommand.undoPromise = deferUndo.promise;
 
 
       updateCommand.execute = function() {
@@ -1230,7 +1321,11 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           $scope.currentReport.costsDelta = null;
         }
 
-        $scope.currentReport.$update(angular.noop, handleUpdateError);
+        $scope.currentReport.$update().then(function() {
+          defer.resolve();
+        }).catch(function(response) {
+          handleUpdateError(response, defer);
+        });
 
         //remove the temp costs
         delete $scope.temp.costs;
@@ -1246,7 +1341,11 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         // $scope.currentReport.costsRest =  updateCommand.prev.costsRest;
         $scope.currentReport.costsDelta = updateCommand.prev.costsDelta;
 
-        $scope.currentReport.$update(angular.noop, handleUpdateError);
+        $scope.currentReport.$update().then(function() {
+          deferUndo.resolve();
+        }).catch(function(response) {
+          handleUpdateError(response, deferUndo);
+        });
 
         //remove the temp costs
         delete $scope.temp.costs;

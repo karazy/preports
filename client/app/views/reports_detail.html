@@ -198,7 +198,7 @@
 	<div class="row section">
 		<div class="col-md-12">
 			<div style="margin-bottom: 15px;">			
-				<button class="btn btn-primary btn-sm pull-right" ng-click="addMilestone();" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
+				<button class="btn btn-primary btn-sm pull-right" ng-click="addCollectionElement('milestone');" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
 				<p class="section-header"><span l="report.milestones">Milestones</span>
 				<i class="glyphicon glyphicon-question-sign hidden-print" data-toggle="tooltip" title="Drag & Drop milestones to rearrange" data-placement="top"></i>
 				</p>							
@@ -277,50 +277,11 @@
 			</div>		
 		</div>
 	</div>
-	<!-- Code reviews -->
-<!-- 	<div class="row section">
-		<div class="col-md-12">
-			<div style="margin-bottom: 15px;">			
-				<button class="btn btn-primary btn-sm pull-right" ng-click="addCodeReview();" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
-				<p l="report.codereviews" class="section-header">Code reviews</p>			
-			</div>
-			<div ng-repeat="cr in currentReport.codeReviews" style="margin-bottom: 15px;">
-				<div class="row section-row">
-					<div class="col-md-5">	
-						<div simple-property-editor editor-title="report.codereviews.reviewer" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'codeReviews');" editor-placeholder="report.codereviews.reviewer.ph" editor-required editor-field="authors" editor-entity="currentReport.codeReviews[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">{{cr.authors}}</p>
-						</div>
-					</div>
-					<div class="col-md-5">
-						<div simple-property-editor editor-title="report.codereviews.topic" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'codeReviews');" editor-placeholder="report.codereviews.topic.ph" editor-required editor-field="underReview" editor-entity="currentReport.codeReviews[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
-								<span l="report.codereviews.topic.ph" ng-hide="currentReport.codeReviews[$index].underReview" class="simple-property-placeholder" >Enter topic</span>
-								{{cr.underReview}}
-							</p>
-						</div>
-					</div>				
-					<div class="col-md-2">
-						<button class="btn btn-warning btn-xs pull-right" ng-click="removeCodeReview($index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<div simple-property-editor editor-title="report.codereviews.content" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'codeReviews');" editor-placeholder="report.codereviews.content.ph" editor-required editor-field="results" editor-entity="currentReport.codeReviews[$index]" editor-type="textarea" editor-enabled="!currentReport.locked">
-							<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content">
-								<span l="report.codereviews.content.ph" ng-hide="currentReport.codeReviews[$index].results" class="simple-property-placeholder" >Enter results</span>
-								<span ng-bind-html="currentReport.codeReviews[$index].results | breakFilter"></span>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div> -->
 	<!-- Systems -->
 	<div class="row section">
 		<div class="col-md-12">
 			<div style="margin-bottom: 15px;">			
-				<button class="btn btn-primary btn-sm pull-right" ng-click="addSystem();" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
+				<button class="btn btn-primary btn-sm pull-right" ng-click="addCollectionElement('system');" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
 				<p l="report.systems" class="section-header">Systems</p>			
 			</div>
 			<div ng-repeat="record in currentReport.systems" style="margin-bottom: 15px;">
@@ -346,7 +307,7 @@
 						</a>
 					</div>
 					<div class="col-md-2">						
-						<button class="btn btn-warning btn-xs pull-right" ng-click="removeSystem($index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>					
+						<button class="btn btn-warning btn-xs pull-right" ng-click="removeCollectionElement('system', $index);" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-minus"></i></button>					
 					</div>
 				</div>
 				<div class="row">
