@@ -84,7 +84,7 @@ module.exports = function (grunt) {
       },
       test: {
         options: {
-          port: 9001,
+          port: 9000,
           base: [
             '.tmp',
             'test',
@@ -96,6 +96,22 @@ module.exports = function (grunt) {
         options: {
           base: '<%= yeoman.dist %>'
         }
+      },
+      protractor: {
+        options: {
+          configFile: "test/protractor-conf.js",
+          keepAlive: true, // If false, the grunt process stops when the test fails. 
+          noColor: false, // If true, protractor will not use colors in its output. 
+          args: {
+            // Arguments passed to the command 
+          }
+        },
+        e2e: {   // Grunt requires at least one target to run so you can simply put 'all: {}' here too. 
+          options: {
+            //configFile: "e2e.conf.js", // Target-specific config file 
+            args: {} // Target-specific arguments 
+          }
+        },
       }
     },
 
@@ -439,6 +455,14 @@ module.exports = function (grunt) {
     'autoprefixer',
     'connect:test',
     'karma'
+  ]);
+
+  grunt.registerTask('e2e-test', [
+    'clean:server',
+    'concurrent:test',
+    'autoprefixer',
+    'connect:test',
+    'protractor:e2e'
   ]);
 
   grunt.registerTask('build', [
