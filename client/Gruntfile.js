@@ -96,25 +96,8 @@ module.exports = function (grunt) {
         options: {
           base: '<%= yeoman.dist %>'
         }
-      },
-      protractor: {
-        options: {
-          configFile: "test/protractor-conf.js",
-          keepAlive: true, // If false, the grunt process stops when the test fails. 
-          noColor: false, // If true, protractor will not use colors in its output. 
-          args: {
-            // Arguments passed to the command 
-          }
-        },
-        e2e: {   // Grunt requires at least one target to run so you can simply put 'all: {}' here too. 
-          options: {
-            //configFile: "e2e.conf.js", // Target-specific config file 
-            args: {} // Target-specific arguments 
-          }
-        },
-      }
+      },      
     },
-
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
@@ -424,7 +407,23 @@ module.exports = function (grunt) {
           ]
         }
       }
-    }
+    },
+    protractor: {
+        options: {
+          configFile: "test/protractor-conf.js",
+          keepAlive: false, // If false, the grunt process stops when the test fails. 
+          noColor: false, // If true, protractor will not use colors in its output. 
+          args: {
+            // Arguments passed to the command 
+          }
+        },
+        e2e: {   // Grunt requires at least one target to run so you can simply put 'all: {}' here too. 
+          options: {
+            //configFile: "e2e.conf.js", // Target-specific config file 
+            args: {} // Target-specific arguments 
+          }
+        },
+      }
   });
 
 
