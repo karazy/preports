@@ -120,7 +120,6 @@ angular.module('PReports.services').service('commandService', [
 			        } else {
 			        	undoCommand.undo();
 			        }
-			        
 			      } else {
 			        $log.log('undo: no commands in queue');
 			      }
@@ -141,17 +140,6 @@ angular.module('PReports.services').service('commandService', [
 				pending = [];
 				undosPending = [];
 			}
-			// ,
-
-			// createCommand: function(createDeffered) {
-			// 	var command = {};
-
-			// 	if(createDeffered) {
-			// 		command.
-			// 	}
-
-			// 	return command;
-			// }
 		}
 
 		function undoPrevCmd() {
@@ -162,8 +150,6 @@ angular.module('PReports.services').service('commandService', [
 					command.undoPromise.then(function() {
 						//promise resolved
 						undosPending.shift();
-						//remove command
-			        	//commands.pop();
 						undoPrevCmd();
 					}, function() {
 						//promise rejected
@@ -172,12 +158,10 @@ angular.module('PReports.services').service('commandService', [
 						undosPending = [];
 						$log.log('commandService: failed to undo command. Clear pending undos.');
 					});
-					//call actual command action
+					//call actual undo action
 					command.undo();
 				}
-			} //else {
-			//	$log.log('commandService: undosPending queue is empty');
-			//}
+			}
 		}
 
 		function executeNextCmd() {
@@ -199,19 +183,8 @@ angular.module('PReports.services').service('commandService', [
 						});
 						//call actual command action
 						command.execute();
-
 					}
-				// } catch (e) {
-				// 	//TODO try catch needed?
-				// 	$log.log('executeNextCmd: failed to execute command. ' + e);
-				// 	commands.pop(command);
-				// 	pending = [];
-				// 	alert('commmand execution failed!');
-				// 	return;
-				// }
-			} //else {
-			//	$log.log('commandService: pending queue is empty');
-			//}
+			}
 		}
 
 		return _service;

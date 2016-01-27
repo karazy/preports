@@ -1329,7 +1329,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           combo: 'plus',
           description: 'Increase report week',
           callback: function() {
-            $log.log('Hotkey');
             $scope.incrementalUpdateReportWeek('inc');
           }
         }
@@ -1339,7 +1338,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           combo: '-',
           description: 'Decrease report week',
           callback: function() {
-            $log.log('Hotkey');
             $scope.incrementalUpdateReportWeek('dec');
           }
         }
@@ -1349,7 +1347,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           combo: 'l',
           description: 'Lock report',
           callback: function() {
-            $log.log('Hotkey');
             $scope.toggleReportLock();
           }
         }
