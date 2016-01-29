@@ -26,7 +26,7 @@ var config = {
     //Authentication settings. Depending on chosen strategy.
 	'authentication': {
         //set disabled true to deactivate
-        //'disabled': true,
+        'disabled': true,
         'strategy': 'cas',
         'version': 'CAS3.0',
         'validateURL': '/serviceValidate',
