@@ -122,6 +122,6 @@ exports.getConfiguredProviders = function(req, res) {
 		});
 	};
 
-	res.send(200, providersStripped);
+	res.status(200).send(providersStripped);
 	res.end();
 }

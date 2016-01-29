@@ -2,8 +2,8 @@
 
 var http = require('http');
 var express = require('express');
-//var session = require('express-session');
-var MongoStore = require('connect-mongo')(express);
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var reports = require('./routes/reports');
 var notifications = require('./routes/notifications');
 var logout = require('./routes/logout/logout.controller');
@@ -11,6 +11,10 @@ var auth = require('./auth/authstrategy');
 var passport = require('./config/passport');
 var config = require('./config/environment');
 var cookieParser = require('cookie-parser');
+var methodOverride = require('method-override');
+var multer  = require('multer');
+var upload = multer({ dest: 'uploads/' });
+var bodyParser = require('body-parser');
 var mongo = require('./database/mongo');
 
 
@@ -42,13 +46,14 @@ var App = function() {
     //Be sure to stick to the initialization order!
     //Otherwise problems are likely.
     self.app.use('/', express.static(__dirname + '/dist'));
-    self.app.use(express.bodyParser({
-        keepExtensions: true
-    }));
+    //{
+    //     keepExtensions: true
+    // }
+    self.app.use(bodyParser());
     self.app.set('views', config.root + '/server/views');
     self.app.engine('html', require('ejs').renderFile);
     self.app.set('view engine', 'html');
-    self.app.use(express.methodOverride());
+    self.app.use(methodOverride());
     self.app.use(cookieParser());
     self.app.use(allowCrossDomain);  
 
@@ -58,7 +63,7 @@ var App = function() {
 
     //use express session management. Needed for passport to work.
     mongo.getDB(function(dbInstance) {
-        self.app.use(express.session(
+        self.app.use(session(
             { 
                 secret: 'preports_secret', 
                 saveUninitialized: false, // don't create session until something stored
@@ -74,7 +79,7 @@ var App = function() {
     //setup passport (see config/pasport.js)
     passport.initialize(self.app);
 
-    self.app.use(self.app.router);    
+    //self.app.use(self.app.router);
 
     //init reports controller with upload directory
     reports.setup(self.uploadDir);
@@ -96,7 +101,7 @@ var App = function() {
     self.app.get('/reports/:id', auth.ensureAuthenticated, reports.getById);
     self.app.get('/reports/:id/version', auth.ensureAuthenticated, reports.getReportVersion);
     self.app.get('/reports/:id/images', auth.ensureAuthenticated, reports.getReportImages);
-    self.app.post('/reports', auth.ensureAuthenticated, reports.createReport);
+    self.app.post('/reports', auth.ensureAuthenticated, upload.single('image'), reports.createReport);
     self.app.put('/reports/:id', auth.ensureAuthenticated, reports.updateReport);
     self.app.post('/reports/:id/images', auth.ensureAuthenticated, reports.uploadImage);
     self.app.get('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.getImage);

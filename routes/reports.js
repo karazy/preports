@@ -269,7 +269,7 @@ exports.getById = function(req, res) {
  			report = htmlExport.transformReport(report);
  		}
 
-		res.send(status, report);
+		res.status(status).send(report);
 		res.end();
 	});
 
@@ -540,7 +540,7 @@ exports.updateReport = function(req, res) {
 
 	if(!docToUpdate) {
 		console.log('updateReport: no report given');
-		res.send(500);
+		res.sendStatus(500);
 		res.end();
 		return;
 	}
@@ -758,7 +758,7 @@ exports.deleteReport = function(req, res) {
 
 exports.uploadImage = function(req, res) {
 	var _id = req.params.id,
-		filename,		
+		filename,
 		newAbsFilename,
 		uploadPath =  getUploadPath(),
 		pathDelim = pathHelper.sep,
@@ -1027,7 +1027,7 @@ exports.getProjectNames = function(req, res) {
 
 			res.set('Content-Type', 'text/plain');
 
-			res.send(200, values);
+			res.status(200).send(values);
 			res.end();
 		});
 	}

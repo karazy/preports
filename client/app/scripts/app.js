@@ -75,7 +75,7 @@ angular.module('PReports', [
         redirectTo: '/reports'
       });
 
-      $httpProvider.defaults.headers.common['Accept'] = 'application/json, application/hal+json';
+      $httpProvider.defaults.headers.common['Accept'] = 'application/hal+json';
 
       //Configure TextAngular Options
       $provide.decorator('taOptions', ['$delegate', function(taOptions){
