@@ -27,6 +27,8 @@ $signal-color-green: green;
 		border-radius: $signal-radius;
 		border: 1px solid #c3c3c3;
 		margin: 3px 0 3px 0;
+		-webkit-transition: background-color 1;
+    	transition: background-color 1s;
 
 		&.red {
 			background-color: $signal-color-red !important;
