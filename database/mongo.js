@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * Helper class that init db connection and can be reused accros the application.
 */
@@ -10,8 +12,12 @@ var mongo = require('mongodb'),
 	Server,
 	ObjectID,
 	db,
-	MAX_RETRIES = 10,
-	DB_IDENTIFIER = 'preports';
+	MAX_RETRIES = 15,	
+	DB_IDENTIFIER = 'preports',
+	BSON,
+	MongoClient;
+
+const MAX_CON_RETRIES = 10;
 
 //setup mongo variables
 Db = mongo.Db;
@@ -72,18 +78,34 @@ function formatConnectionString(con) {
 
 
 exports.connect = function(connectionUrl) {
+	var retryCount = 0;
 
 	console.log('Connecting to mongo db: ' + connectionUrl);
 
-    MongoClient.connect(connectionUrl, {
-    	'maxPoolSize': 5
-    }, function(err, _db) {
-        test.equal(null, err); 
-        test.ok(_db != null);
-        console.log("Connected to 'project report' database");
-        db = _db;
-        createIndexes();
-    });
+	connectionAttempt();
+
+	function connectionAttempt() {
+		MongoClient.connect(connectionUrl, {
+	    	'maxPoolSize': 5
+	    }, function(err, _db) {
+	    	if(!err) {
+	    		console.log("Connected to 'project report' database");
+	        	db = _db;
+	        	createIndexes();	
+	    	} else {
+	    		if(retryCount <= MAX_CON_RETRIES) {
+	    			setTimeout(function() {
+						retryCount++;
+						connectionAttempt();
+					}, 500);
+	    			
+	    		} else {
+	    			console.log('Mongo.connect: failed after '+ MAX_CON_RETRIES +' tries with reason: ' + err);	
+	    		}	    		
+	    	}
+	    });  
+	}
+	  
 };
 
 exports.getDB = function(cb) {
@@ -118,10 +140,6 @@ exports.getDB = function(cb) {
 		
 	}
 
-	//if(!db && retryCount >= MAX_RETRIES) {
-	//	throw new "No connection to database";
-	//}
-
 	return db;
 }
 
@@ -152,7 +170,42 @@ function createIndexes() {
 	}
 }
 
-getReportsCollection = function(callback) {
+exports.getDBPromise = function() {
+	var retryCount = 0,
+		promise;
+
+	promise = new Promise(function(resolve, reject) {
+		
+		if(db) {
+			resolve(db);
+		} else {
+			waitForConnect();
+		}
+
+		//Wait for a connection to the database for MAX_RETRIES
+		function waitForConnect() {		
+			if(!db && retryCount <= MAX_RETRIES) {
+
+				setTimeout(function() {
+					retryCount++;
+					waitForConnect();
+				}, 500);
+			} else {
+				if(db) {
+					resolve(db);
+				} else {
+					reject('Could not establish database connection');
+				}
+			}
+			
+		}
+	});
+
+	return promise;
+
+}
+
+function getReportsCollection(callback) {
 	 db.collection('reports', function(error, reports_collection) {
     	if( error ) {
     		console.log('getReportsCollection: error');

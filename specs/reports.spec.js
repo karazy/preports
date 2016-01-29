@@ -14,21 +14,15 @@ var app = require('../app').app,
 
 before(function(done) {
 
-	checkDbConnection();
-
 	fs.mkdirsSync('.tmp/.preports');
 	fs.copySync('./specs/data', '.tmp/.preports/', function (err) {
 	  console.log('Copied test files');
 	});
 
-	function checkDbConnection() {
-		if(mongo.getDB() == null) {
-			setTimeout(checkDbConnection, 500);
-		} else {
-			console.log('Database is running... starting tests');
-			done();
-		}
-	}
+	mongo.getDBPromise().then(function() {
+		console.log('Database is running... starting tests');
+		done();
+	});
 });
 
 after(function(done) {

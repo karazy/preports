@@ -25,12 +25,13 @@ module.exports.initialize = function(app) {
 	var users = {};
 
 	passport.serializeUser(function(user, done) {
-		users[user.id] = user;
+		//Is this correct?
 		done(null, user);
 	});
 
-	passport.deserializeUser(function(user, done) {
-		done(null, users[user.id]);
+	passport.deserializeUser(function(id, done) {
+		//Is this correct?
+		done(null, id);	
 	});
 
 	app.use(passport.initialize());
