@@ -47,6 +47,7 @@ var //the json object consumed by slack.
 
 		if(!config.notificationProviders.slack.host) {
 			console.log('slack.send: config has no url');
+			callback(true);
 			return;
 		}
 
@@ -58,17 +59,24 @@ var //the json object consumed by slack.
 
 		if(!recipients || !recipients.length) {
 			console.log('slack.send: report has no recipients');
+			callback(true);
 			return;
 		}
 
 		notification = payload;
 		notification.text = strTpl(TEMPLATE, report);
 
+		//count slack recipients
+		recipients.forEach(function(r) {
+			if(r.type == PROVIDER_TYPE && r.email) {
+				status.usersToNotify++;
+			}
+		});
+
 		//create one notification for each recipient and send it
 		recipients.forEach(function(r) {
 			if(r.type == PROVIDER_TYPE && r.email) {
 				handle = true;
-				status.usersToNotify++;
 
 				var slackNotification = clone(notification);
 
@@ -84,24 +92,21 @@ var //the json object consumed by slack.
 				  }
 				};
 
-				var req = https.request(options, function(res) {
-				  res.setEncoding('utf8');
-				  res.on('end', function() {
+				var req = https.request(options, function(res) {					
 				    status.send++;
 					if(status.send == status.usersToNotify) {
 						console.log('slack.send: finished sending');
 						if(errors.length > 0) {
 							formatErrors(errors);
 							callback(false, errors);
-						}
-
-						callback(true);
+						} else {
+							callback(true);	
+						}						
 					}
-				  })
 				});
 
 				req.on('error', function(e) {
-				  console.log('problem with request: ' + e.message);
+				  	console.log('problem with request: ' + e.message);
 					errors.push(e.message);
 					status.send++;
 					if(status.send == status.usersToNotify) {

@@ -76,8 +76,6 @@ var config = require('../../config/environment'),
 				handle = true;
 			}			
 		});
-
-		console.log('bisnode.send: notification data ' + notification);
 		
 		if(handle) {
 			console.log('Sending bisnode notification.');

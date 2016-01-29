@@ -43,7 +43,7 @@ exports.sendNotifications = function(req, res) {
 			reportUrl;
 
 		if(status != 200) {
-			res.send(status, data);
+			res.status(status).send(data);
 			res.end();
 			return;
 		}
@@ -81,7 +81,7 @@ exports.sendNotifications = function(req, res) {
 					res.sendStatus(200);					
 					res.end();
 				} else {
-					res.sendStatus(500, errors);
+					res.status(500).send(errors);
 					res.end();
 				}
 			}

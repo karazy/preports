@@ -38,6 +38,7 @@ exports.send = function(report, callback, reportUrl) {
 		handle = false;
 
 	if(!isConfigValid()) {
+		callback(true);
 		return;
 	}
 
@@ -45,6 +46,7 @@ exports.send = function(report, callback, reportUrl) {
 
 	if(!recipients || !recipients.length) {
 		console.log('mail.send: report has no recipients');
+		callback(true);
 		return;
 	}
 
