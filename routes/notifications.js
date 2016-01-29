@@ -15,14 +15,14 @@ exports.sendNotifications = function(req, res) {
 
 	if(!_id) {
 		console.log('sendNotifications: no id given');
-		res.send(500, "Missing report id.");
+		res.status(500).send("Missing report id.");
 		return;
 	}
 
 	//no sending of notifications
 	if(config.demo === true) {
 		console.log('sendNotifications: disabled in demo mode');
-		res.send(403, "error.demo");
+		res.status(403).send("error.demo");
 		res.end();
 		return;
 	}
@@ -50,7 +50,7 @@ exports.sendNotifications = function(req, res) {
 
 		if(!data.settings || !data.settings.notification) {
 			console.log('notifications.sendNotifications: no notification settings for report exist');
-			res.send(200);
+			res.sendStatus(200);
 			res.end();
 			return;
 		}
@@ -78,10 +78,10 @@ exports.sendNotifications = function(req, res) {
 			if(providerCallFinished == providers.length) {
 				console.log('notifications.sendNotifications: all providers returned');
 				if(errors.length == 0) {
-					res.send(200);					
+					res.sendStatus(200);					
 					res.end();
 				} else {
-					res.send(500, errors);
+					res.sendStatus(500, errors);
 					res.end();
 				}
 			}
@@ -108,7 +108,7 @@ exports.getConfiguredProviders = function(req, res) {
 
 	if(!config || !config.notificationProviders) {
 		console.log('notifications.sendNotifications: no providers setup');
-		res.send(200);
+		res.sendStatus(200);
 		res.end();
 		return;
 	}

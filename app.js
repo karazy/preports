@@ -13,7 +13,7 @@ var config = require('./config/environment');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 var multer  = require('multer');
-var upload = multer({ dest: 'uploads/' });
+var upload = multer({ dest: 'tmp_uploads/' });
 var bodyParser = require('body-parser');
 var mongo = require('./database/mongo');
 
@@ -49,13 +49,13 @@ var App = function() {
     //{
     //     keepExtensions: true
     // }
-    self.app.use(bodyParser());
+    self.app.use(bodyParser.json());
     self.app.set('views', config.root + '/server/views');
     self.app.engine('html', require('ejs').renderFile);
     self.app.set('view engine', 'html');
     self.app.use(methodOverride());
     self.app.use(cookieParser());
-    self.app.use(allowCrossDomain);  
+    self.app.use(allowCrossDomain);
 
     //Create mongodb connection
     self.dbConnect = mongo.createConnectionString();
@@ -101,9 +101,9 @@ var App = function() {
     self.app.get('/reports/:id', auth.ensureAuthenticated, reports.getById);
     self.app.get('/reports/:id/version', auth.ensureAuthenticated, reports.getReportVersion);
     self.app.get('/reports/:id/images', auth.ensureAuthenticated, reports.getReportImages);
-    self.app.post('/reports', auth.ensureAuthenticated, upload.single('image'), reports.createReport);
+    self.app.post('/reports', auth.ensureAuthenticated, reports.createReport);
     self.app.put('/reports/:id', auth.ensureAuthenticated, reports.updateReport);
-    self.app.post('/reports/:id/images', auth.ensureAuthenticated, reports.uploadImage);
+    self.app.post('/reports/:id/images', auth.ensureAuthenticated, upload.single('image'), reports.uploadImage);
     self.app.get('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.getImage);
     self.app.delete('/reports/:id/images/:imgId', auth.ensureAuthenticated, reports.deleteImage);
     self.app.delete('/reports/:id', auth.ensureAuthenticated, reports.deleteReport);
