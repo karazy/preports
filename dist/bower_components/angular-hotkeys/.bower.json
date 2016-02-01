@@ -26,5 +26,6 @@
   },
   "_source": "git://github.com/chieffancypants/angular-hotkeys.git",
   "_target": "~1.6.0",
-  "_originalSource": "chieffancypants/angular-hotkeys"
+  "_originalSource": "chieffancypants/angular-hotkeys",
+  "_direct": true
 }
