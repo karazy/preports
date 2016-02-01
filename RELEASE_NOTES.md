@@ -1,5 +1,12 @@
 #Release Notes
 
+###v1.6.2 Jolly Jaguar
+- Animation for status signals
+- Small bugfixes
+
+###v1.6.1 Jolly Jaguar
+- Small bugfixes
+
 ###v1.6.0 Jolly Jaguar
 - New Feature: hotkeys (type ?) based on angular-hotkeys
 - Added e-mail as notification provider (previous mail provider was Bisnode specific)
