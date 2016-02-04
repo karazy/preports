@@ -1,7 +1,8 @@
 var config = require('../../config/environment'),
 	clone = require('clone'),
 	https = require('https'),
-	strTpl = require("string-template");
+	strTpl = require("string-template"),
+	logger = require('../../components/logger');
 
 var //the json object consumed by slack.
 	payload = {
@@ -34,19 +35,19 @@ var //the json object consumed by slack.
 		report.reportUrl = reportUrl;
 
 		if(!config.notificationProviders.slack) {
-			console.log('slack.send: config has no url');
+			logger.info('slack.send: config has no url');
 			callback(true);
 			return;
 		}
 
 		if(!report) {
-			console.log('slack.send: Missing report.');
+			logger.info('slack.send: Missing report.');
 			callback(true);
 			return;
 		}
 
 		if(!config.notificationProviders.slack.host) {
-			console.log('slack.send: config has no url');
+			logger.info('slack.send: config has no url');
 			callback(true);
 			return;
 		}
@@ -58,7 +59,7 @@ var //the json object consumed by slack.
 		recipients = report.settings.notification.recipients;
 
 		if(!recipients || !recipients.length) {
-			console.log('slack.send: report has no recipients');
+			logger.info('slack.send: report has no recipients');
 			callback(true);
 			return;
 		}
@@ -95,7 +96,7 @@ var //the json object consumed by slack.
 				var req = https.request(options, function(res) {					
 				    status.send++;
 					if(status.send == status.usersToNotify) {
-						console.log('slack.send: finished sending');
+						logger.info('slack.send: finished sending');
 						if(errors.length > 0) {
 							formatErrors(errors);
 							callback(false, errors);
@@ -106,7 +107,7 @@ var //the json object consumed by slack.
 				});
 
 				req.on('error', function(e) {
-				  	console.log('problem with request: ' + e.message);
+				  	logger.info('problem with request: ' + e.message);
 					errors.push(e.message);
 					status.send++;
 					if(status.send == status.usersToNotify) {
@@ -122,7 +123,7 @@ var //the json object consumed by slack.
 		});
 
 		if(!handle) {
-			console.log('slack.send: No handlers found.');
+			logger.info('slack.send: No handlers found.');
 			callback(true);
 		}
 	}

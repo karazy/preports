@@ -8,19 +8,30 @@
 var winston 	= require('winston');
 var uuid 		= require('node-uuid');
 var path		= require('path');
+var config		= require('../../config/environment');
 
-var loggingConfig = require('../../config/environment').logging;
+module.exports = function (callingModule) {
 
-module.exports = function () {
-	var lconfig = [
-		new (winston.transports.File)({ filename: path.resolve(loggingConfig.logFile)})
-	];
-/*	if (config.runMode === 'dev') {
-		lconfig.push(new (winston.transports.Console)({level:'debug'}));
-	}*/
-	var logger = new (winston.Logger)({
-		transports: lconfig
-	});
+	var logger = new winston.Logger({
+	    level: getLogLevel(),
+    	transports: [
+      		new (winston.transports.Console)({
+      			prettyPrint: true,
+  				colorize: true,
+  				silent: false,
+  				timestamp: true,
+  				label: getLabel(callingModule)
+/*      			timestamp: function() {
+        			return (new Date()).toISOString();
+      			},
+      			formatter: function(options) {
+        		// Return string will be passed to logger.
+        		return options.timestamp() +' '+ options.level.toUpperCase() +' '+ (undefined !== options.message ? options.message : '') +
+          			(options.meta && Object.keys(options.meta).length ? '\n\t'+ JSON.stringify(options.meta) : '' );
+      			}*/
+      		})
+    	]
+  	});
 	
 	var _errorLogger = logger.error;
 	logger.error = function (msg, customData) {
@@ -38,3 +49,24 @@ module.exports = function () {
 
 	return logger;
 }();
+
+/*
+* Returns the log level.
+* @return loglevel as specified in config. Defaults to info.
+*/
+function getLogLevel() {
+	if(config && config.logging && config.logging.level) {
+		return config.logging.level;
+	}
+
+	return 'info';
+}
+
+function getLabel(callingModule) {
+	if(!callingModule) {
+		return '';
+	}
+
+    var parts = callingModule.filename.split('/');
+    return parts[parts.length - 2] + '/' + parts.pop();
+};

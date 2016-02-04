@@ -2,7 +2,8 @@
 
 var providerManager = require('./notification-providers'),
 	config = require('../config/environment'),
-	report = require('./reports');
+	report = require('./reports'),
+	logger = require('../components/logger');
 
 
 /**
@@ -14,25 +15,25 @@ exports.sendNotifications = function(req, res) {
 	var _id = req.params.id;
 
 	if(!_id) {
-		console.log('sendNotifications: no id given');
+		logger.info('sendNotifications: no id given');
 		res.status(500).send("Missing report id.");
 		return;
 	}
 
 	//no sending of notifications
 	if(config.demo === true) {
-		console.log('sendNotifications: disabled in demo mode');
+		logger.info('sendNotifications: disabled in demo mode');
 		res.status(403).send("error.demo");
 		res.end();
 		return;
 	}
 
 	if(!config || !config.notificationProviders) {
-		console.log('notifications.sendNotifications: no providers setup');
+		logger.info('notifications.sendNotifications: no providers setup');
 		return;
 	}
 
-	console.log('sendNotifications: for report with id ' + _id);	
+	logger.info('sendNotifications: for report with id ' + _id);	
 	
 	report.findReport(_id, doSend);
 
@@ -49,7 +50,7 @@ exports.sendNotifications = function(req, res) {
 		}
 
 		if(!data.settings || !data.settings.notification) {
-			console.log('notifications.sendNotifications: no notification settings for report exist');
+			logger.info('notifications.sendNotifications: no notification settings for report exist');
 			res.sendStatus(200);
 			res.end();
 			return;
@@ -60,7 +61,7 @@ exports.sendNotifications = function(req, res) {
 
 		//send via registered providers
 		providers.forEach(function(p) {			
-			console.log('Calling provider ' + p.getProviderType());
+			logger.info('Calling provider ' + p.getProviderType());
 			p.send(data, evaluateStatus, reportUrl);
 		});
 
@@ -76,7 +77,7 @@ exports.sendNotifications = function(req, res) {
 
 			//all calls finished send response
 			if(providerCallFinished == providers.length) {
-				console.log('notifications.sendNotifications: all providers returned');
+				logger.info('notifications.sendNotifications: all providers returned');
 				if(errors.length == 0) {
 					res.sendStatus(200);					
 					res.end();
@@ -107,7 +108,7 @@ exports.getConfiguredProviders = function(req, res) {
 		providersStripped = [];
 
 	if(!config || !config.notificationProviders) {
-		console.log('notifications.sendNotifications: no providers setup');
+		logger.info('notifications.sendNotifications: no providers setup');
 		res.sendStatus(200);
 		res.end();
 		return;

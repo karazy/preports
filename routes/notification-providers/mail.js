@@ -2,7 +2,8 @@
 
 var nodemailer = require('nodemailer'),
 	config = require('../../config/environment'),
-	strTpl = require("string-template");
+	strTpl = require("string-template"),
+	logger = require('../../components/logger');
 
 const PROVIDER_TYPE = 'email';
 const SUBJECT_TPL = 'Project report {name} CW {week}|{year}';
@@ -45,7 +46,7 @@ exports.send = function(report, callback, reportUrl) {
 	recipients = report.settings.notification.recipients;
 
 	if(!recipients || !recipients.length) {
-		console.log('mail.send: report has no recipients');
+		logger.info('mail.send: report has no recipients');
 		callback(true);
 		return;
 	}
@@ -62,7 +63,7 @@ exports.send = function(report, callback, reportUrl) {
 			handle = true;
 
 			mailData.to = r.email;
-			console.log('mail.send: before send');
+			logger.info('mail.send: before send');
 			transporter.sendMail(mailData, function(err, info) {
 
 				status.send++;
@@ -70,11 +71,11 @@ exports.send = function(report, callback, reportUrl) {
 				
 				if(err) {
 					errors.push(err);
-					console.log('mail.send: error sending email ' + err);
+					logger.info('mail.send: error sending email ' + err);
 				}
 
 				if(status.send == status.usersToNotify) {
-					console.log('mail.send: finished sending');
+					logger.info('mail.send: finished sending');
 					if(errors.length > 0) {
 						callback(false, formatErrors(errors));
 					}
@@ -86,7 +87,7 @@ exports.send = function(report, callback, reportUrl) {
 	});	
 
 	if(!handle) {
-		console.log('mail.send: No handlers found.');
+		logger.info('mail.send: No handlers found.');
 		callback(true);
 	}
 }
@@ -114,12 +115,12 @@ function setupMailTransport() {
 function isConfigValid() {
 
 	if(!config || !config.notificationProviders) {
-		console.log('mail.setupMailTransport: no providers setup');
+		logger.info('mail.setupMailTransport: no providers setup');
 		return false;
 	}
 
 	if(!config.notificationProviders[PROVIDER_TYPE]) {
-		console.log('mail.setupMailTransport: mail provider config missing');
+		logger.info('mail.setupMailTransport: mail provider config missing');
 		return false;
 	}
 

@@ -1,7 +1,8 @@
 var config = require('../../config/environment'),
 	clone = require('clone'),
 	http = require('http'),
-	strTpl = require("string-template");
+	strTpl = require("string-template"),
+	logger = require('../../components/logger');
 
 /**
 * Services that interacts with Bisnode NotificationService.
@@ -43,13 +44,13 @@ var config = require('../../config/environment'),
 	exports.send = function(report, callback, reportUrl) {
 
 		if(!config || !config.notificationProviders) {
-			console.log('PReports.services.com-bisnode-notification.send: config missing');
+			logger.info('PReports.services.com-bisnode-notification.send: config missing');
 			callback(true);
 			return;
 		}
 
 		if(!config.notificationProviders.bisnode) {
-			console.log('PReports.services.com-bisnode-notification.send: config has no url');
+			logger.info('PReports.services.com-bisnode-notification.send: config has no url');
 			callback(true);
 			return;
 		}
@@ -78,7 +79,7 @@ var config = require('../../config/environment'),
 		});
 		
 		if(handle) {
-			console.log('Sending bisnode notification.');
+			logger.info('Sending bisnode notification.');
 
 				//make the call
 				var options = {
@@ -95,16 +96,16 @@ var config = require('../../config/environment'),
 				var req = http.request(options, function(res) {
 				  res.setEncoding('utf8');
 				  res.on('data', function (chunk) {
-				    console.log('BODY: ' + chunk);			    
+				    logger.info('BODY: ' + chunk);			    
 				  });
 				  res.on('end', function() {
-				  	console.log('bisnode.send: succesfully send notifications');
+				  	logger.info('bisnode.send: succesfully send notifications');
 				    callback(true);
 				  })
 				});
 
 				req.on('error', function(e) {
-				  console.log('problem with request: ' + e.message);
+				  logger.info('problem with request: ' + e.message);
 				  //$log.error("Failed so send slack notification for user " + r + ". Status: " + response.status);
 					callback(false, e);
 				});
@@ -113,7 +114,7 @@ var config = require('../../config/environment'),
 				req.write(JSON.stringify(notificationRequest));
 				req.end();
 			} else {
-				console.log('bisnode.send: No handlers found.');
+				logger.info('bisnode.send: No handlers found.');
 				callback(true);
 			}
 		

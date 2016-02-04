@@ -31,7 +31,8 @@ var config = {
       'baseDirectory' : getConfigRootPath() + '/application'
     },
     'logging': {
-      'logFile': getConfigRootPath() + '/preports.log'
+        'level' : 'info',
+        'logFile': getConfigRootPath() + '/preports.log'
     },
     'notificationProviders': {
         //no notifications in demo mode

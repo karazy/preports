@@ -1,7 +1,8 @@
 'use strict';
 
-var passport = require('passport');
-var config = require('./environment');	
+var passport = require('passport'),
+	config = require('./environment'),
+	logger = require('../components/logger');
 
 /**
 * Configures Passport depending on configured strategy.
@@ -9,12 +10,12 @@ var config = require('./environment');
 module.exports.initialize = function(app) {
 	var strategy;
 
-	console.log('Initialize passport');
+	logger.info('Initialize passport');
 	
 	//check if auth is disabled
 	if(!config.authentication || config.authentication.disabled) {
 		//No authentication configured. Skip passport.
-		console.log('Authentication disabled');
+		logger.info('Authentication disabled');
 		return;
 	}
 

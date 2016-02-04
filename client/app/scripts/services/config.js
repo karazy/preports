@@ -12,9 +12,9 @@ angular.module('PReports.services').provider('config', function() {
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : '',
-		'servicePort' : '',
-		'version' : '1.6.1 Jolly Jaguar',
+		'serviceUrl' : 'http://127.0.0.1',
+		'servicePort' : '3000',
+		'version' : '1.6.2 Jolly Jaguar',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {
 			'EUR': '$1,$2 €',
