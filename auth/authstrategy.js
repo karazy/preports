@@ -14,17 +14,18 @@ module.exports = function() {
      */
     myret.ensureAuthenticated = function(req, res, next) {
             if(config.authentication.disabled) {
-                console.log('Skip authentication request!');
+                logger.warn('Skip authentication request!');
                 next();
                 return;
             }
             if (req.isAuthenticated()) {
                 var user = req.session.passport.user;
-                console.log("Authenticated", user.user);
+                logger.info("Authenticated", user.user);
  
                 return next();
             }
-            console.log("User not authenticated.");
+
+            logger.info("User not authenticated.");
 
            //var authResult = passport.authenticate('cas')(req, res, next);
            //console.log('AUTH ' + authResult);
@@ -41,23 +42,23 @@ module.exports = function() {
      * @return {[type]}        [description]
      */
     myret.casAuth = function(req, res, next) {
-        console.log('authstrategy: starting cas authentication');
+        console.info('authstrategy: starting cas authentication');
         passport.authenticate('cas', function(err, data, info) {
             console.log('authstrategy: cas callback');
             if (err) {
-                console.error(err, " casAuth: error")
+                logger.error(err, " casAuth: error")
                 return next(err);
             }
 
             if (!data) {
-                console.log(" casAuth: error not enogh data. Message: " + info.message)
+                logger.error(" casAuth: error not enogh data.", info.message)
                 return res.send(500, 'Error during authentifaction attempt.');
             }
 
             req.login(data, function(err) {
 
                 if (err) {
-                    console.error(err, " casAuth: failed during login call")
+                    logger.error("casAuth: failed during login call", err)
                     return next(err);
                 }
 
@@ -66,14 +67,14 @@ module.exports = function() {
                 }
                 
                 req.session.user = data.user;
-                console.log("Cas login successfull for user " + data.user + ". redirecting to /")
+                logger.info("Cas login successfull for user " + data.user + ". redirecting to /")
                 return res.redirect('/');
             });
         })(req, res, next);
     }
 
     myret.logOut = function(req, res, next) {
-        console.log('authstrategy: logout called');
+        logger.debug('authstrategy: logout called');
         req.logOut();
         res.set('Access-Control-Allow-Origin', '*');
         res.redirect(302, config.authentication.ssoBaseURL + '/logout');

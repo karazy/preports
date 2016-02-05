@@ -60,9 +60,7 @@ exports.getAll = function(req, res) {
 		totalPages,
 		skipFactor = 0;
 
-	debugObject(req.query, 'getAll: query params');	
-
-
+	logger.debug('getAll: query params', req.query);
 
 	if(req.accepts('text/plain') && !req.accepts('text/html')) {
 		//TODO handle query params here as well?
@@ -201,7 +199,7 @@ function addMetaWrapperToReports(reports, page, limit, miscParams, count) {
 		rangeId = '';
 
 	if(!reports) {
-		logger.info('addMetaWrapperToReports: no reports given')
+		logger.warn('addMetaWrapperToReports: no reports given')
 		return;
 	}
 
@@ -248,7 +246,7 @@ exports.getById = function(req, res) {
 	var _id = req.params.id;
 
 	if(!_id) {
-		logger.info('getById: no id given');
+		logger.warn('getById: no id given');
 	}
 
 	logger.info('getById: load report with id ' + _id);	
@@ -283,7 +281,7 @@ exports.findReport = function(id, callback) {
 function findReport(id, callback) {
 
 	if(!id) {
-		logger.info('findReport: no id given');
+		logger.warn('findReport: no id given');
 	}
 
 	getReportsCollection(loadReport);
@@ -368,12 +366,12 @@ function addReportMetadata(report) {
 
 function addReportImageLinks(image, reportId) {
 	if(!image) {
-		logger.info('addReportImageLinks: no image given');
+		logger.warn('addReportImageLinks: no image given');
 		return;
 	}
 
 	if(!reportId) {
-		logger.info('addReportImageLinks: no reportId given');
+		logger.warn('addReportImageLinks: no reportId given');
 		return;
 	}
 
@@ -425,7 +423,7 @@ function persistReportImage(report, image, callback) {
 			$inc: {version: 1}
 			}, function(err) {
 			if(err) {
-				logger.info(err);
+				logger.error(err);
 				callback(500);
 				return;
 			}
@@ -494,14 +492,14 @@ exports.createReport = function(req, res) {
 				}
 
 			} else {
-				logger.info('createReport: Cannot clone images. srcDir does not exist.');
+				logger.warn('createReport: Cannot clone images. srcDir does not exist.');
 				reportToSave.images = null;
 				status = 409;
 			}			
 		}
 
 		reports.insertOne(reportToSave, function(err, writeOpResult) {
-			logger.info("Called reports.insert");
+			logger.debug("Called reports.insert");
 			if(err) {
 				res.send(500);
 				res.end();
@@ -511,7 +509,7 @@ exports.createReport = function(req, res) {
 					//This is a copy report. Copy the images to new folder.
 					copyReportImages(reportToSave.copyOf, writeOpResult.ops[0]._id, function(err) {
 						if(err) {
-							logger.info('createReport: failed to copy images for ' + writeOpResult.ops[0]._id);
+							logger.error('createReport: failed to copy images for ' + writeOpResult.ops[0]._id);
 						}
 					});
 				}
@@ -533,14 +531,14 @@ exports.updateReport = function(req, res) {
 		lastModified = (new Date()).getTime();;
 
 	if(!_id) {
-		logger.info('updateReport: no id given');
+		logger.warn('updateReport: no id given');
 		res.send(500);
 		res.end();
 		return;
 	}
 
 	if(!docToUpdate) {
-		logger.info('updateReport: no report given');
+		logger.warn('updateReport: no report given');
 		res.sendStatus(500);
 		res.end();
 		return;
@@ -559,7 +557,7 @@ exports.updateReport = function(req, res) {
 
 		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, function(err, item) {
 			if(err) {
-				logger.info(err);
+				logger.error(err);
 				callback(500, err);
 				return;
 			}
@@ -586,7 +584,7 @@ exports.updateReport = function(req, res) {
 
 		reports.updateOne({'_id': ObjectID.createFromHexString(_id)}, docToUpdate, function(err, numberOfUpdatedDocs) {
 			if(err) {
-				logger.info(err);
+				logger.error(err);
 				res.status(500);
 				res.end();
 				return;
@@ -602,21 +600,6 @@ exports.updateReport = function(req, res) {
 				}
 				
 			});
-
-			// reports.updateOne({'_id': ObjectID.createFromHexString(_id)}, { $inc: { version: 1 } }, function(err, numberOfUpdatedDocs) {
-			// 	docToUpdate._id = _id;
-			// 	//save an additional db load and manually increase version
-			// 	if(docToUpdate.version) {
-			// 		docToUpdate.version++;	
-			// 	} else {
-			// 		docToUpdate.version = 1;
-			// 	}
-				
-			// 	logger.info('Updated ' + _id + '  report. New version ' + docToUpdate.version);
-			// 	res.send(200, docToUpdate);
-			// 	res.end();
-			// });
-
 			
         });
 	}
@@ -628,7 +611,7 @@ exports.updateReport = function(req, res) {
 */
 updateReportVersion = function(_id, report, collection, callback) {
 	if(!_id || !report || !collection) {
-		logger.info('updateReportVersion: param requirements not met');
+		logger.warn('updateReportVersion: param requirements not met');
 		return;
 	}
 
@@ -665,7 +648,7 @@ exports.getReportVersion = function(req, res) {
 	var _id = req.params.id;
 
 	if(!_id) {
-		logger.info('updateReportVersion: param requirements not met');
+		logger.warn('updateReportVersion: param requirements not met');
 		return;
 	}
 
@@ -680,7 +663,7 @@ exports.getReportVersion = function(req, res) {
 
 		reports.findOne({'_id': ObjectID.createFromHexString(_id)}, {'version':1}, function(err, item) {
 			if(err) {
-				logger.info(err);
+				logger.error(err);
 				res.sendStatus(500);
 				return;
 			}
@@ -701,7 +684,7 @@ exports.deleteReport = function(req, res) {
 	var _id = req.params.id;
 
 	if(!_id) {
-		logger.info('deleteReport: no id given');
+		logger.warn('deleteReport: no id given');
 	}
 	
 	getReportsCollection(callback);
@@ -727,7 +710,7 @@ exports.deleteReport = function(req, res) {
 						if(!err) {
 							logger.info('deleteReport: deleting image ' + imgFullPath);				
 						} else {
-							logger.info('deleteReport: failed deleting image ' + imgFullPath);
+							logger.error('deleteReport: failed deleting image ' + imgFullPath);
 						}
 					});
         		}
@@ -736,7 +719,7 @@ exports.deleteReport = function(req, res) {
 						if(!err) {
 							logger.info('deleteReport: deleting image dir ' + imgPath);											
 						} else {
-							logger.info('deleteReport: failed deleting image dir ' + imgPath + ' Err: ' + err);
+							logger.error('deleteReport: failed deleting image dir ' + imgPath + ' Err: ' + err);
 						}
 				});
         	}
@@ -745,7 +728,7 @@ exports.deleteReport = function(req, res) {
 
 		reports.remove({'_id': ObjectID.createFromHexString(_id)}, function(err, numberOfRemovedDocs) {
 			if(err) {
-				logger.info(err);
+				logger.error(err);
 				res.status(500);
 				res.end();
 				return;
@@ -776,7 +759,7 @@ exports.uploadImage = function(req, res) {
     debugObject(req.file, 'uploadImage: req.file');
 
 	if(!req.file) {
-		logger.info('uploadImage: no image received');
+		logger.error('uploadImage: no image received');
 		res.sendStatus(500);
 		res.end();
 		return;
@@ -799,13 +782,13 @@ exports.uploadImage = function(req, res) {
 	try {
 		fs.readdirSync(pathHelper.join(uploadPath, _id));
 	} catch(err) {
-		logger.info('uploadImage: creating upload directory');
+		logger.error('uploadImage: creating upload directory');
 		fs.mkdirsSync(pathHelper.join(uploadPath, _id));
 	}
 
 	mv(req.file.path, newAbsFilename, function(err) {
 		if(err) {
-			logger.info('uploadImage: failed to move image ' + err);
+			logger.error('uploadImage: failed to move image ' + err);
 			res.sendStatus(500);
 			res.end();
 			return;
@@ -867,21 +850,21 @@ exports.getImage = function(req, res) {
 			return;
 		}
 
-		//logger.info('getImage: trying to load image ' + imgId);
+		logger.debug('getImage: trying to load image ' + imgId);
 
 		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : imgId},
 			{ images: { $elemMatch: { '_id': imgId } } } ,
 			  function(err, item) {
 			//elemMatch is used to filter retrieved array
 			if(err) {
-				logger.info(err);
+				logger.error(err);
 				res.sendStatus(500);
 				res.end();
 				return;
 			}
 
 			if(!item) {
-				logger.info('getImage: image not found. _id ' + _id + ' imgId ' + imgId);
+				logger.error('getImage: image not found. _id ' + _id + ' imgId ' + imgId);
 				res.sendStatus(404);
 				res.end();
 				return;
@@ -931,7 +914,7 @@ exports.deleteImage = function(req, res) {
 		reports.findOne({'_id': ObjectID.createFromHexString(_id), 'images._id' : imgId},
 			 { images: { $elemMatch: { '_id': imgId } } } , function(err, item) {
 			if(err) {
-				logger.info(err);
+				logger.error(err);
 				res.sendStatus(500);
 				res.end();
 				return;
@@ -985,14 +968,14 @@ exports.deleteImage = function(req, res) {
 			},
 			function(err) {
 				if(err) {
-					logger.info('deleteImage: delete failed ' + err);
+					logger.error('deleteImage: delete failed ' + err);
 					callback(500);
 					return;
 				}
 
 				fs.unlink(imgPath, function(err) {
 					if(err) {
-						logger.info('deleteImage: file already deleted? ' + err);
+						logger.error('deleteImage: file already deleted? ' + err);
 						//continue nevertheless also the file may still exist					
 					}
 
@@ -1033,7 +1016,7 @@ exports.getReportImages = function(req, res) {
 	var _id = req.params.id;
 	//method is ment for debugging
 
-	logger.info('getReportImages');
+	logger.debug('getReportImages');
 
 	getReportsCollection(loadImageMetaData);
 
@@ -1061,7 +1044,7 @@ exports.getReportImages = function(req, res) {
 *
 */
 exports.getReportsCount = function(req, res) {
-	logger.info('getReportsCount');
+	logger.debug('getReportsCount');
 
 	getReportsCollection(countReports);
 
@@ -1074,9 +1057,9 @@ exports.getReportsCount = function(req, res) {
 
 		//TODO as soon as this is used often create an index and look out for performance issues
 
-		logger.info('getReportsCount: counting');
+		logger.debug('getReportsCount: counting');
 		reports.count(function(err, count) {
-			logger.info('getReportsCount: counted ' + count);
+			logger.debug('getReportsCount: counted ' + count);
 			//send as string otherwise interpreted as status
 		    res.status(200).send(count +'');
 		    res.end();
@@ -1102,7 +1085,7 @@ function copyReportImages(srcDirId, destDirId, callback) {
 	try {
 		fs.readdirSync(destDir);
 	} catch(err) {
-		logger.info('uploadImage: creating upload directory ' + destDir);
+		logger.error('uploadImage: creating upload directory ' + destDir);
 		fs.mkdirsSync(destDir);
 	}
 
@@ -1110,7 +1093,7 @@ function copyReportImages(srcDirId, destDirId, callback) {
 
 	fs.copySync(srcDir, destDir, function(err) {
 		if(err) {
-			logger.info('copyReportImages: copy failed ' + err);
+			logger.error('copyReportImages: copy failed ' + err);
 		}
 		callback(err);
 	});
@@ -1124,7 +1107,7 @@ getReportsCollection = function(callback) {
 	 getDB(function(db) {
 	 	db.collection('reports', function(error, collection) {
     	if( error ) {
-    		logger.info('getReportsCollection: failed ' + error);
+    		logger.error('getReportsCollection: failed ' + error);
     		callback(error);
     	} else if(!collection) {
     		logger.info('getReportsCollection: creating collection reports');
@@ -1154,7 +1137,7 @@ debugObject = function(obj, title) {
 	  }
 	}
 	} catch(e) {
-		logger.error('RepV.util.Helper.debugObject: failed to debug object ' + e);
+		logger.error('debugObject: failed to debug object ' + e);
 	}
 }
 
