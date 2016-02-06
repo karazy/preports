@@ -265,8 +265,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Enter remarks (e.g. credentials)"
 		},
 		"report.images" : {
-			"DE" :  "Architektur-Diagramme",
-			"EN" : "Architecture diagrams"
+			"DE" :  "Bilder",
+			"EN" : "Pictures"
 		},
 		"report.delete.title" : {
 			"DE" :  "Report löschen",
