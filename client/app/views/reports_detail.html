@@ -268,6 +268,8 @@
 			<span ng-show="currentReport.createdOn"><span l="report.createdon">Creation date</span>: {{currentReport.createdOn | date:'yyyy-MM-dd HH:mm:ss'}}</span>
 			<span ng-show="currentReport.createdOn && currentReport.lastModified"> | </span>
 			<span ng-show="currentReport.lastModified"> <span l="report.lastmodified">Last modified</span>: {{currentReport.lastModified | date:'yyyy-MM-dd HH:mm:ss'}} </span>
+            <span ng-show="currentReport.lastModified"> | </span>
+            <span ng-include src="'views/reports_detail/raw_report.html'"></span>
 		</div>
 	</div>
 </div>
