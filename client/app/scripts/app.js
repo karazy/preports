@@ -57,8 +57,7 @@ angular.module('PReports', [
   'ui.bootstrap',
   'ui.sortable',
   'textAngular',
-  'cfp.hotkeys',
-  'ngPrettyJson'
+  'cfp.hotkeys'
 ]).config(['$routeProvider', '$httpProvider', '$provide', function ($routeProvider, $httpProvider, $provide) {
     $routeProvider
       .when('/reports', {

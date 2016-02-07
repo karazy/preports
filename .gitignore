@@ -9,4 +9,3 @@ preports-local.yml
 docker-compose.override.yml
 /config/environment/local.js
 tmp_uploads/
-.vscode/
