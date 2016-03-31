@@ -85,7 +85,7 @@ Install
 - `npm install -g forever` (To run your script continously)
 - [MongoDB](https://www.mongodb.org/) preferably on another server
 
-####Docker (experimental)
+####Docker
 Install
 - Docker obviously and docker-compose
 - Tune env variables in docker-compose.yml to suite your needs
@@ -96,7 +96,7 @@ Install
 3. Adjust config and env variables
 4. RUN `npm install`
 5. RUN `forever app.js`
-  1. or RUN `docker-compose -d up` when using docker
+  1. or RUN `docker-compose up -d` when using docker
 
 This may not be the best approach. One might want to check out
 [Strongloop](https://strongloop.com) as a tool for node app building and deployment.

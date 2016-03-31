@@ -3,11 +3,10 @@ FROM node:4.2
 MAINTAINER Frederik Reifschneider
 
 # global variables
-ENV APP_TYPE node
+ENV APP_DIR preports
 ENV NODE_ENV production
-ENV USER_NAME bi-yukon
 
-RUN mkdir -p /opt/yukon/node
+RUN mkdir -p /opt/preports
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
@@ -16,15 +15,13 @@ RUN npm -v
 # install necessary npm packages
 RUN npm install forever -g
 
+ENV HOME /opt/${APP_DIR}
 
-# assign home
-ENV HOME /opt/yukon/${APP_TYPE}
+WORKDIR /opt/${APP_DIR}
 
-WORKDIR /opt/yukon/${APP_TYPE}
-
-VOLUME [ "/opt/yukon/${APP_TYPE}" ]
+VOLUME [ "/opt/${APP_DIR}" ]
 
 EXPOSE 3000
 
 ENTRYPOINT ["/usr/local/bin/forever"]
-CMD ["app.js"]
+CMD ["app/app.js"]
