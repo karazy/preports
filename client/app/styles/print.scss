@@ -94,5 +94,34 @@
         page-break-after: always;
     }
   }
+  
+//    .report-brand {
+//         height: 100px;
+//         position: fixed;
+//         top: 0px;
+//         right: 0px;
+        
+        
+//         img {
+//             max-height: 100%;
+//         }
+//     }
+    
+    .report-title {
+    display: flex;
+    
+    div {
+       flex: 1; 
+    }
+    
+    .report-brand {
+        height: 73px;
+        flex: 0;
+        
+        img {
+            max-height: 100%;
+        }
+    }
+}
 
 }

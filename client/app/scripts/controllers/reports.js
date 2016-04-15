@@ -1297,6 +1297,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       $rootScope.search.year = $scope.currentCalYear;
       $rootScope.search.week = $scope.currentCalWeek;
     }
+    
+    function getLogo() {
+        $scope.brandLogo = config.getCombinedServiceUrl() + '/config/logo';
+    }
 
     /**
      * Register event handlers.
@@ -1306,7 +1310,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       $scope.$on('report-change-year', function(eventData) {
         fillWeeks();
       });
-    }
+    }      
 
     /**
     * Resgister hotkeys for report detail view.
@@ -1531,6 +1535,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         unregisterWatchForSearch();
         registerReportDetailHotkeys();
         $scope.loadReport($routeParams.reportId);
+        getLogo();
       } else {
         $scope.loadReports();
         loadProjectNames();

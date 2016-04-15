@@ -5,6 +5,7 @@ var express = require('express');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var reports = require('./routes/reports');
+var configRoute = require('./routes/config');
 var notifications = require('./routes/notifications');
 var logout = require('./routes/logout/logout.controller');
 var auth = require('./auth/authstrategy');
@@ -89,7 +90,7 @@ mongo.getDBPromise().then(function(dbInstance) {
     self.app.get('/logout', auth.logOut, logout.index);
 
 
-    //Reports CRUD API
+    //Reports API
     self.app.get('/reports', auth.ensureAuthenticated, reports.getAll);
     self.app.get('/reports/names', auth.ensureAuthenticated, reports.getProjectNames);
     self.app.get('/reports/count', auth.ensureAuthenticated, reports.getReportsCount);
@@ -104,6 +105,7 @@ mongo.getDBPromise().then(function(dbInstance) {
     self.app.delete('/reports/:id', auth.ensureAuthenticated, reports.deleteReport);
     self.app.post('/reports/:id/notifications', auth.ensureAuthenticated, notifications.sendNotifications);
     self.app.get('/notifications/providers', auth.ensureAuthenticated, notifications.getConfiguredProviders);
+    self.app.get('/config/logo', configRoute.getLogo);
 
 
     self.startServer();
