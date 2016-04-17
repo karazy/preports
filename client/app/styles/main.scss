@@ -288,13 +288,17 @@ body {
 
 .about-wrapper {
     .credits {
-        a {
-            display: block;
-            margin-bottom: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        
+        a, div {            
+            display: inline-block;
+            margin:10px 5px 5px 2%;
+            flex-grow: 1;                        
         }
 
         img {
-            max-width: 200px;
+            height:100px;
         }
     }
 
