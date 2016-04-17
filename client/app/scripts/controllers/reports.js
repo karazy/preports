@@ -1298,8 +1298,13 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       $rootScope.search.week = $scope.currentCalWeek;
     }
     
+    /**
+     * Load brand logo.
+     */
     function getLogo() {
-        $scope.brandLogo = config.getCombinedServiceUrl() + '/config/logo';
+        
+        $scope.brandLogoExists = config.brandLogoExists;
+        $scope.brandLogo = config.brandLogo;
     }
 
     /**

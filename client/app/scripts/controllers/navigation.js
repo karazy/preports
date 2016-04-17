@@ -68,6 +68,3 @@ angular.module('PReports').controller('NavigationCtrl',  ['$scope', '$route', 'l
 		getReportsCount();
 	}
 }]);
-
-//PReports.NavigationCtrl.$inject = ['$scope', '$route', 'language', 'config', '$location', '$http', '$log', '$rootScope'];
-
