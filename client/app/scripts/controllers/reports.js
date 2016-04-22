@@ -71,6 +71,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     * Notification providers available for use.
     */
     $scope.notificationProviders = null;
+    
+    activate();
 
 
 
@@ -1526,30 +1528,39 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         $scope.notificationProviders = providers;
       });
     }
-
-    //Setup File Upload immediately. Otherwise there will be erors like
-    //https://github.com/nervgh/angular-file-upload/issues/183    
-    setupFileUpload();
-
-    registerEventHandlers();
+   
 
     //## Init Section
-    //initially load reports or report entity based on url
-    $timeout(function() {
-      if ($routeParams.reportId) {
-        unregisterWatchForSearch();
-        registerReportDetailHotkeys();
-        $scope.loadReport($routeParams.reportId);
-        getLogo();
-      } else {
-        $scope.loadReports();
-        loadProjectNames();
-        registerWatchForSearch();
-        registerReportSearchHotkeys();
-      }
-    }, 50);
 
-    getNotificationProviders();
+    
+    /**
+     * Handles all controller initialization logic.
+     */
+    function activate() {
+        
+        //initially load reports or report entity based on url
+        $timeout(function() {
+        if ($routeParams.reportId) {
+            unregisterWatchForSearch();
+            registerReportDetailHotkeys();
+            $scope.loadReport($routeParams.reportId);
+            getLogo();
+        } else {
+            $scope.loadReports();
+            loadProjectNames();
+            registerWatchForSearch();
+            registerReportSearchHotkeys();
+        }
+        }, 50);
+        
+         //Setup File Upload immediately. Otherwise there will be erors like
+        //https://github.com/nervgh/angular-file-upload/issues/183    
+        setupFileUpload();
+
+        registerEventHandlers();
+        
+        getNotificationProviders();
+    }
 
     //##Init section end
 
