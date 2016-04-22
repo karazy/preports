@@ -106,6 +106,7 @@ mongo.getDBPromise().then(function(dbInstance) {
     self.app.post('/reports/:id/notifications', auth.ensureAuthenticated, notifications.sendNotifications);
     self.app.get('/notifications/providers', auth.ensureAuthenticated, notifications.getConfiguredProviders);
     self.app.get('/config/logo', configRoute.getLogo);
+    self.app.get('/config/costtypes', auth.ensureAuthenticated, configRoute.getCostTypes);
 
 
     self.startServer();

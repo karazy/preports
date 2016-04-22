@@ -47,7 +47,19 @@ var config = {
     },
     'notificationProviders': {
         //put your providers here
-    }
+    },
+    'costTypes' : [
+        {
+            'name' : 'Intern',
+            'costsPerUnit' : 68,
+            'unit' : 'h'
+        },
+        {
+            'name' : 'Extern',
+            'costsPerUnit' : 85,
+            'unit' : 'h'
+        }
+    ]
 };
 
 

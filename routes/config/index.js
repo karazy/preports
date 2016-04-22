@@ -1,7 +1,8 @@
 'use strict';
 
 var fs = require('fs-extra'),
-    logger = require('../../components/logger');
+    logger = require('../../components/logger'),
+    config = require('../../config/environment');
     
 const LOGO_PATH = 'resources/logo.png';
 
@@ -29,6 +30,19 @@ exports.getLogo = function(req, res) {
         res.end();
         return;
     }
+}
+
+/**
+ * Returns the configured cost types.
+ */
+exports.getCostTypes = function(req, res) {
+    
+    if(!config.costTypes) {
+        res.status(200).send([]);
+        return;
+    }
+    
+    res.status(200).send(config.costTypes);
 }
 
 /**

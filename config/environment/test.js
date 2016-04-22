@@ -55,7 +55,19 @@ var config = {
                 'pass': 'secret'
             }
         }
-    }
+    },
+     'costTypes' : [
+        {
+            'name' : 'Intern',
+            'costsPerUnit' : 68,
+            'unit' : 'h'
+        },
+        {
+            'name' : 'Extern',
+            'costsPerUnit' : 85,
+            'unit' : 'h'
+        }
+    ]
 };
 
 

@@ -90,16 +90,10 @@ angular.module('PReports.services').service('config', ['$http', function($http) 
 			self.config_['currencyFormats'][a1] = a2;
 		}
 	};
-
-	// self.$get = ['$http', function($http_) {
-        
-    //     $http = $http_;
-        
-	// 	return self.config_;
-	// }];
     
-    
-    
+    /**
+     * Loads brand logo and stores it for printing display.
+     */
     function getBrandLogo() {
         $http.get(self.config_['getCombinedServiceUrl']() + '/config/logo', {'responseType': 'blob'}).then(function(response) {
             if(response.status == 200) {
