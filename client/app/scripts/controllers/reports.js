@@ -27,10 +27,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         PAGINATION_LIMIT = 25;
 
     /**
-     * Size of the command queue that holds undo events.
-     */
-    // $scope.COMMAND_QUEUE_SIZE = 20;
-    /**
     * Reports retrieved after search.
     */
     $scope.reports = [];
@@ -71,6 +67,11 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     * Notification providers available for use.
     */
     $scope.notificationProviders = null;
+    
+    //Function to load an individual report.
+    $scope.loadReport = loadReport;
+    
+    $scope.loadReports = loadReports;
     
     activate();
 
@@ -124,7 +125,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
     jQuery('[data-toggle="tooltip"]').tooltip();
 
-    $scope.loadReports = function(direction) {
+    function loadReports(direction) {
       var page,
         limit;
       console.log('loadReports');
@@ -245,7 +246,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      * @param {String} id
      *   Id of report to load.
      */
-    $scope.loadReport = function(id) {
+    function loadReport(id) {
       if (!id) {
         $log.log('loadReport: No Id provided.');
         return;
@@ -1054,131 +1055,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       return helper.isUrl(url);
     }
 
-    $scope.calculateCosts = function() {
-      if (!$scope.currentReport) {
-        console.log('copyReport: no currentReport');
-        return;
-      }
-
-      //save prev values
-      var updateCommand = {
-            prev: {
-              hoursExternal: $scope.currentReport.hoursExternal,
-              hoursInternal: $scope.currentReport.hoursInternal,
-              hoursNearshoring: $scope.currentReport.hoursNearshoring,
-              costsCurrent: $scope.currentReport.costsCurrent,
-              // costsRest: $scope.currentReport.costsRest,
-              costsDelta: $scope.currentReport.costsDelta
-            }
-          },          
-          defer = $q.defer(),
-          deferUndo = $q.defer();
-
-      updateCommand.promise = defer.promise;
-      updateCommand.undoPromise = deferUndo.promise;
-
-
-      updateCommand.execute = function() {
-        console.log('calculateCosts: execute');
-        var currentCosts = 0;
-
-        if ($scope.temp.costs.hoursExternal) {
-          $scope.currentReport.hoursExternal = $scope.temp.costs.hoursExternal;
-          currentCosts = $scope.config.COST_EXTERNAL * $scope.temp.costs.hoursExternal;
-        }
-
-        if ($scope.temp.costs.hoursInternal) {
-          $scope.currentReport.hoursInternal = $scope.temp.costs.hoursInternal;
-          currentCosts += $scope.config.COST_INTERNAL * $scope.temp.costs.hoursInternal;
-        }
-
-        if ($scope.temp.costs.hoursNearshoring) {
-          $scope.currentReport.hoursNearshoring = $scope.temp.costs.hoursNearshoring;
-          currentCosts += $scope.config.COST_NEARSHORE * $scope.temp.costs.hoursNearshoring;
-        }
-
-        //Adjust for display in k€
-        currentCosts = currentCosts / 1000;
-
-        $scope.currentReport.costsCurrent = Math.round(currentCosts);
-
-        if ($scope.currentReport.costsCurrent && $scope.currentReport.costsPlanned) {
-          // $scope.currentReport.costsRest =   $scope.currentReport.costsPlanned - $scope.currentReport.costsCurrent;
-          $scope.currentReport.costsDelta = calcCostsDelta($scope.currentReport.costsCurrent, $scope.currentReport.costsPlanned);
-        } else {
-          // $scope.currentReport.costsRest = null;
-          $scope.currentReport.costsDelta = null;
-        }
-
-        $scope.currentReport.$update().then(function() {
-          defer.resolve();
-        }).catch(function(response) {
-          handleUpdateError(response, defer);
-        });
-
-        //remove the temp costs
-        delete $scope.temp.costs;
-      }
-
-      updateCommand.undo = function() {
-        console.log('calculateCosts: undo');
-        //restore previous values
-        $scope.currentReport.hoursExternal = updateCommand.prev.hoursExternal;
-        $scope.currentReport.hoursInternal = updateCommand.prev.hoursInternal;
-        $scope.currentReport.hoursNearshoring = updateCommand.prev.hoursNearshoring;
-        $scope.currentReport.costsCurrent = updateCommand.prev.costsCurrent;
-        // $scope.currentReport.costsRest =  updateCommand.prev.costsRest;
-        $scope.currentReport.costsDelta = updateCommand.prev.costsDelta;
-
-        $scope.currentReport.$update().then(function() {
-          deferUndo.resolve();
-        }).catch(function(response) {
-          handleUpdateError(response, deferUndo);
-        });
-
-        //remove the temp costs
-        delete $scope.temp.costs;
-      }
-
-      storeAndExecute(updateCommand);
-    }
-
-
-
-    $scope.toggleCostDialog = function() {
-      var modal = angular.element('#costDialog .modal');
-
-      if (!modal) {
-        console.log('No cost dialog found.');
-      }
-
-
-      $scope.temp = $scope.temp ? $scope.temp : {};
-      //fill dialog with temporary cost values
-      //needed to provide undo functionality
-      $scope.temp.costs = {
-        hoursExternal: $scope.currentReport.hoursExternal,
-        hoursInternal: $scope.currentReport.hoursInternal,
-        hoursNearshoring: $scope.currentReport.hoursNearshoring
-      }
-
-      if (!$scope.currentReport.locked) {
-        modal.modal('toggle');
-      }
-
-    }
-
-    function calcCostsDelta(current, planned) {
-      var delta = current / planned;
-
-      //reduce to precision of 2 
-      delta = Math.round(delta * 100);
-
-      return delta;
-
-    }
-
-
     /**
      * Stores command in queue and executes it. Calls commandService
      * @param {Object} command
@@ -1539,19 +1415,19 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     function activate() {
         
         //initially load reports or report entity based on url
-        $timeout(function() {
+        // $timeout(function() {
         if ($routeParams.reportId) {
             unregisterWatchForSearch();
             registerReportDetailHotkeys();
-            $scope.loadReport($routeParams.reportId);
+            loadReport($routeParams.reportId);
             getLogo();
         } else {
-            $scope.loadReports();
+            loadReports();
             loadProjectNames();
             registerWatchForSearch();
             registerReportSearchHotkeys();
         }
-        }, 50);
+        // }, 50);
         
          //Setup File Upload immediately. Otherwise there will be erors like
         //https://github.com/nervgh/angular-file-upload/issues/183    

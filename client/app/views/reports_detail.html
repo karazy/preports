@@ -91,10 +91,11 @@
 							</div>
 						</td>
 						<td>					
-						<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" ng-click="toggleCostDialog()">
+						<!--<p ng-class="{edit: !currentReport.isSaving(), muted: currentReport.isSaving() || currentReport.locked}" class="section-content" ng-click="toggleCostDialog()">
 							<span l="report.costs.current.ph" ng-hide="currentReport.costsCurrent || isZero(currentReport.costsCurrent)" class="simple-property-placeholder">Current costs</span>    
 						  	{{currentReport.costsCurrent}}
-						</p>
+						</p>-->
+						<cost-type-dialog id="costDialog" report="currentReport"></cost-type-dialog>
 						</td>
 						<td>
 							<div simple-property-editor editor-title="report.costs.rest" editor-on-save="updateReport(modifiedProperty, prevValue);" editor-field="costsRest" editor-entity="currentReport" editor-enabled="!currentReport.locked" editor-placeholder="report.costs.rest.ph">			
@@ -292,5 +293,3 @@
 		</div>
 	</div>
 </div>
-
-<div ng-include src="'views/templates/costDialog.html'" id="costDialog"></div>

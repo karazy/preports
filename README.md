@@ -6,6 +6,7 @@ project reports - create and manage weekly IT project reports
 [Official homepage](http://p-reports.com)
 
 [![Build Status](https://travis-ci.org/karazy/preports.svg?branch=development)](https://travis-ci.org/karazy/preports)
+[![Dependency Status](https://david-dm.org/karazy/preports.svg)](https://david-dm.org/karazy/preports)
 
 [Try it!](https://preports.herokuapp.com) (development branch)
 
