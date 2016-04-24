@@ -155,8 +155,12 @@ function CostTypeController($scope, $log, $q, commandService, config) {
         console.log('No cost dialog found.');
       }
 
-      $scope.temp = $scope.temp ? $scope.temp : {};      
-      $scope.temp.costs = angular.copy($scope.costReport.costs);
+      $scope.temp = $scope.temp ? $scope.temp : {};   
+      if($scope.costReport.costs)  {
+        $scope.temp.costs = angular.copy($scope.costReport.costs);  
+      } else {
+        $scope.temp.costs = [];
+      }      
 
       if (!$scope.costReport.locked) {
         modal.modal('toggle');
@@ -188,9 +192,5 @@ function CostTypeController($scope, $log, $q, commandService, config) {
       }
       
       return cost.quantity*cost.costsPerUnit/1000
-    }
-    
-    function convertCostTypeV1toV2() {
-      //TODO implement migration logic
     }
 }
