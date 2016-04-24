@@ -17,6 +17,7 @@ var multer  = require('multer');
 var upload = multer({ dest: 'tmp_uploads/' });
 var bodyParser = require('body-parser');
 var mongo = require('./database/mongo');
+var updateRoute = require('./routes/update');
 
 
 // Scope
@@ -107,6 +108,7 @@ mongo.getDBPromise().then(function(dbInstance) {
     self.app.get('/notifications/providers', auth.ensureAuthenticated, notifications.getConfiguredProviders);
     self.app.get('/config/logo', configRoute.getLogo);
     self.app.get('/config/costtypes', auth.ensureAuthenticated, configRoute.getCostTypes);
+    self.app.post('/migrate/costtypesv1tov2', auth.ensureAuthenticated, updateRoute.migrateCostTypesV1toV2);
 
 
     self.startServer();

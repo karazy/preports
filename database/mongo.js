@@ -27,6 +27,9 @@ BSON = mongo.BSON;
 ObjectID = mongo.ObjectID;
 MongoClient = mongo.MongoClient; 
 
+exports.getReportsCollectionPromise = getReportsCollectionPromise;
+exports.getObjectId = getObjectId;
+
 /**
 * Creates the mongodb connection string.
 * First configuration that is that gets used in following order:
@@ -219,4 +222,36 @@ function getReportsCollection(callback) {
     		callback(null, reports_collection);
     	}
  	 });
+}
+
+function getReportsCollectionPromise() {
+	var promise;
+	
+	promise = new Promise(function(resolve, reject) {
+		db.collection('reports', function(error, reports_collection) {
+			if( error ) {
+				console.log('getReportsCollection: error');
+				reject(error);
+			} else if(!reports_collection) {
+				console.log('getReportsCollection: creating collection reports');
+				db.createCollection('reports', function(_err, _collection) {
+					resolve({
+						'error' : _err,
+						'reports' : _collection
+					});
+				});
+			} else {
+				resolve({
+					'error' : null,
+					'reports' : reports_collection
+				});
+			}
+		});
+	});
+	
+	return promise;
+}
+
+function getObjectId() {
+	return ObjectID;
 }
