@@ -15,6 +15,7 @@ ObjectID = mongodb.ObjectID;
 var DB_DEFAULT_RESULT_LIMIT = 25,
 	DATA_UPLOAD_PATH = '.preports';
 
+exports.updateReportVersion = updateReportVersion;
 
 exports.setup = function(uploadDirectory) {
     logger.info("directory for upload: " + uploadDirectory);
@@ -609,7 +610,7 @@ exports.updateReport = function(req, res) {
 * Increases the version of a given report.
 * 
 */
-updateReportVersion = function(_id, report, collection, callback) {
+function updateReportVersion(_id, report, collection, callback) {
 	if(!_id || !report || !collection) {
 		logger.warn('updateReportVersion: param requirements not met');
 		return;
