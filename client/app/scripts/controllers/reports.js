@@ -73,6 +73,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     
     $scope.loadReports = loadReports;
     
+    $scope.createNewReport = createNewReport;
+    
     activate();
 
 
@@ -361,7 +363,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       $location.path('reports/' + id);
     };
 
-    $scope.createNewReport = function() {
+    function createNewReport() {
       var newReport = {},
         date = new Date();
 
@@ -370,6 +372,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       newReport.name = $scope.newReportName;
 
       newReport.milestones = [];
+      
+      newReport.costs = angular.copy(config.defaultCostTypes);
 
       saveReport(newReport);
     };

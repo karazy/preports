@@ -51,11 +51,17 @@ angular.module('PReports.directives').directive('costTypeDialog', [
 
 CostTypeController.$inject = ['$scope', '$log', '$q', 'commandService', 'config'];
 
+/**
+ * The directives controller.
+ */
 function CostTypeController($scope, $log, $q, commandService, config) {
 
 	$scope.config = config;
 	$scope.calculateCosts = calculateCosts;
 	$scope.toggleCostDialog = toggleCostDialog;
+  $scope.removeCostType = removeCostType;
+  $scope.addCostType = addCostType;
+  $scope.calculateCostForPosition = calculateCostForPosition;
 	
 	
 	 //$log.log(costReport);
@@ -70,11 +76,8 @@ function CostTypeController($scope, $log, $q, commandService, config) {
       //save prev values
       var updateCommand = {
             prev: {
-              hoursExternal: $scope.costReport.hoursExternal,
-              hoursInternal: $scope.costReport.hoursInternal,
-              hoursNearshoring: $scope.costReport.hoursNearshoring,
+              costs: angular.copy($scope.costReport.costs),
               costsCurrent: $scope.costReport.costsCurrent,
-              // costsRest: $scope.costReport.costsRest,
               costsDelta: $scope.costReport.costsDelta
             }
           },          
@@ -89,31 +92,19 @@ function CostTypeController($scope, $log, $q, commandService, config) {
         console.log('calculateCosts: execute');
         var currentCosts = 0;
 
-        if ($scope.temp.costs.hoursExternal) {
-          $scope.costReport.hoursExternal = $scope.temp.costs.hoursExternal;
-          currentCosts = $scope.config.COST_EXTERNAL * $scope.temp.costs.hoursExternal;
-        }
-
-        if ($scope.temp.costs.hoursInternal) {
-          $scope.costReport.hoursInternal = $scope.temp.costs.hoursInternal;
-          currentCosts += $scope.config.COST_INTERNAL * $scope.temp.costs.hoursInternal;
-        }
-
-        if ($scope.temp.costs.hoursNearshoring) {
-          $scope.costReport.hoursNearshoring = $scope.temp.costs.hoursNearshoring;
-          currentCosts += $scope.config.COST_NEARSHORE * $scope.temp.costs.hoursNearshoring;
-        }
+        angular.forEach($scope.temp.costs, function(cost, index) {
+          currentCosts += cost.quantity * cost.costsPerUnit;
+        });
 
         //Adjust for display in k€
         currentCosts = currentCosts / 1000;
-
+        
+        $scope.costReport.costs = angular.copy($scope.temp.costs);
         $scope.costReport.costsCurrent = Math.round(currentCosts);
 
         if ($scope.costReport.costsCurrent && $scope.costReport.costsPlanned) {
-          // $scope.costReport.costsRest =   $scope.costReport.costsPlanned - $scope.costReport.costsCurrent;
           $scope.costReport.costsDelta = calcCostsDelta($scope.costReport.costsCurrent, $scope.costReport.costsPlanned);
         } else {
-          // $scope.costReport.costsRest = null;
           $scope.costReport.costsDelta = null;
         }
 
@@ -130,11 +121,8 @@ function CostTypeController($scope, $log, $q, commandService, config) {
       updateCommand.undo = function() {
         console.log('calculateCosts: undo');
         //restore previous values
-        $scope.costReport.hoursExternal = updateCommand.prev.hoursExternal;
-        $scope.costReport.hoursInternal = updateCommand.prev.hoursInternal;
-        $scope.costReport.hoursNearshoring = updateCommand.prev.hoursNearshoring;
+        $scope.costReport.costs = updateCommand.prev.costs;
         $scope.costReport.costsCurrent = updateCommand.prev.costsCurrent;
-        // $scope.costReport.costsRest =  updateCommand.prev.costsRest;
         $scope.costReport.costsDelta = updateCommand.prev.costsDelta;
 
         $scope.costReport.$update().then(function() {
@@ -167,17 +155,42 @@ function CostTypeController($scope, $log, $q, commandService, config) {
         console.log('No cost dialog found.');
       }
 
-      $scope.temp = $scope.temp ? $scope.temp : {};
-      //fill dialog with temporary cost values
-      //needed to provide undo functionality
-      $scope.temp.costs = {
-        hoursExternal: $scope.costReport.hoursExternal,
-        hoursInternal: $scope.costReport.hoursInternal,
-        hoursNearshoring: $scope.costReport.hoursNearshoring
-      }
+      $scope.temp = $scope.temp ? $scope.temp : {};      
+      $scope.temp.costs = angular.copy($scope.costReport.costs);
 
       if (!$scope.costReport.locked) {
         modal.modal('toggle');
       }
+    }
+    
+    function removeCostType(index) {
+      $scope.temp.costs.splice(index, 1);      
+    }
+    
+    function addCostType() {
+      var newType = {
+            'name' : 'Type',
+            'costsPerUnit' : 1,
+            'unit' : 'h',
+            'quantity': 0
+      }
+      
+      $scope.temp.costs.push(newType);
+    }
+    
+    function calculateCostForPosition(cost) {
+      if(!cost) {
+        return 0;
+      }
+      
+      if(typeof cost.quantity != 'number' || typeof cost.costsPerUnit != 'number') {
+        return 0;
+      }
+      
+      return cost.quantity*cost.costsPerUnit/1000
+    }
+    
+    function convertCostTypeV1toV2() {
+      //TODO implement migration logic
     }
 }

@@ -11,38 +11,47 @@
       <div class="modal-body">
         <p l="report.costs.dialog.msg">Enter hours spend on the project.</p>
         <form class="form-horizontal">
-          <div class="form-group">
-            <label for="CDINPUT_1" class="col-sm-4 control-label" l="report.dialog.costs.external">External</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" ng-model="temp.costs.hoursExternal" id="CDINPUT_1"/>
-              </div>
-              <p class="col-sm-4 form-control-static">
-              h * {{config.COST_EXTERNAL}}€ = {{temp.costs.hoursExternal*config.COST_EXTERNAL}}
-              </p>
-          </div>
-          <div class="form-group">
-            <label for="CDINPUT_2" class="col-sm-4 control-label" l="report.dialog.costs.internal.bi">Internal BI</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" ng-model="temp.costs.hoursInternal" id="CDINPUT_2"/>
-            </div>
-            <p class="col-sm-4 form-control-static">
-              h * {{config.COST_INTERNAL}}€ = {{temp.costs.hoursInternal*config.COST_INTERNAL}}
-            </p>
-          </div>
-          <div class="form-group">
-            <label for="CDINPUT_3" class="col-sm-4 control-label" l="report.dialog.costs.nearshore">Nearhsoring</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" ng-model="temp.costs.hoursNearshoring" id="CDINPUT_3"/>
-            </div>
-            <p class="col-sm-4 form-control-static">
-              h * {{config.COST_NEARSHORE}}€ = {{temp.costs.hoursNearshoring*config.COST_NEARSHORE}}
-              </p>
-          </div>
+           <div class="table-responsive">
+        <table class="table table-bordered table-striped table-highlight">
+            <thead>
+                <th l="report.costs.dialog.table.type">Type</th>
+                <th l="report.costs.dialog.table.quantity">Quantity</th>
+                <th l="report.costs.dialog.table.unit" style="width: 75px;">Unit</th>
+                <th l="report.costs.dialog.table.costsPerUnit">€/Unit</th>
+                <th style="min-width: 35px;">k€</th>
+                <th></th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="cost in temp.costs">
+                <td>
+                <input type="text" class="form-control" ng-model="cost.name"/>
+                </td>
+                <td>
+                <input type="number" class="form-control" ng-model="cost.quantity" id="COST_INPUT_{{$index}}"/>
+                </td>
+                <td>
+                <input type="text" class="form-control" ng-model="cost.unit"/>
+                </td>
+                <td>
+                <input type="number" class="form-control" ng-model="cost.costsPerUnit"/>
+                </td>
+                <td>
+                <p class="form-control-static">
+                 {{calculateCostForPosition(cost)}}
+                </p>
+                </td>
+                <td>
+                <button class="form-control btn btn-sm btn-danger" l="report.costs.dialog.record.delete" ng-click="removeCostType($index);"><i class="glyphicon glyphicon-minus"></i></button>
+                </td>  
+                </tr>   
+            </tbody>
+        </table>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" l="cancel">Cancel</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="calculateCosts()" l="save">Save</button>
+        <button type="button" class="btn btn-primary" ng-click="addCostType()"><i class="glyphicon glyphicon-plus"></i></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i></button>
+        <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="calculateCosts()"><i class="glyphicon glyphicon-ok"></i></button>
       </div>
     </div>
   </div>

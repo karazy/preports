@@ -23,7 +23,8 @@ angular.module('PReports.services').service('config', ['$http', function($http) 
 		},
 		'COST_EXTERNAL' : 85,
 		'COST_INTERNAL' : 68,
-		'COST_NEARSHORE': 45
+		'COST_NEARSHORE': 45,
+		'defaultCostTypes' : []
 	}
 
 	/**
@@ -109,12 +110,26 @@ angular.module('PReports.services').service('config', ['$http', function($http) 
             self.config_['brandLogoExists'] = false;
         });
     }
-    
-    function init() {
-       getBrandLogo();
+	
+	 /**
+     * Loads default cost types.
+     */
+    function getDefaultCostTypes() {
+        $http.get(self.config_['getCombinedServiceUrl']() + '/config/costtypes', {'responseType': 'application/json'}).then(function(response) {
+            if(response.status == 200) {
+                self.config_['defaultCostTypes'] = response.data;    
+            }              
+        }, function() {
+            
+        });
     }
     
-    init();
+    function activate() {
+       getBrandLogo();
+	   getDefaultCostTypes();
+    }
+    
+    activate();
     
     return self.config_;
 }]);    

@@ -88,8 +88,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Week"
 		},
 		"reports.table.images" : {
-			"DE" :  "Bilder",
-			"EN" : "Images"
+			"DE" :  "Infografiken",
+			"EN" : "Infographics"
 		},
 		"reports.table.actions" : {
 			"DE" :  "Aktion",
@@ -265,8 +265,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Enter remarks (e.g. credentials)"
 		},
 		"report.images" : {
-			"DE" :  "Bilder",
-			"EN" : "Pictures"
+			"DE" :  "Infografiken",
+			"EN" : "Infographics"
 		},
 		"report.delete.title" : {
 			"DE" :  "Report löschen",
@@ -393,24 +393,28 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Remaining"
 		},
 		"report.costs.dialog.title": {
-			"DE" : "Kostenberechnung in Projektstunden",
-			"EN" : "Costs calculations in project hours"
+			"DE" : "Kostenberechnung",
+			"EN" : "Costs calculations"
 		},
 		"report.costs.dialog.msg": {
-			"DE" : "Geben Sie die aufgewendeten Projektstunden ein.",
-			"EN" : "Enter hours spend in project."
+			"DE" : "Geben Sie die aufgewendeten Einheiten für die Kostentypen an.",
+			"EN" : "Enter units spend for cost types."
 		},
-		"report.dialog.costs.external" : {
-			"DE" : "Extern",
-			"EN" : "External"
+		"report.costs.dialog.table.type" : {
+			"DE" : "Typ",
+			"EN" : "Type"
 		},
-		"report.dialog.costs.internal.bi" : {
-			"DE" : "Intern",
-			"EN" : "Internal"
+		"report.costs.dialog.table.quantity" : {
+			"DE" : "Anzahl",
+			"EN" : "Quantity"
 		},
-		"report.dialog.costs.nearshore" : {
-			"DE" : "Nearshoring",
-			"EN" : "Nearshoring"
+		"report.costs.dialog.table.unit" : {
+			"DE" : "Einheit",
+			"EN" : "Unit"
+		},
+		"report.costs.dialog.table.costsPerUnit" : {
+			"DE" : "€/Einh.",
+			"EN" : "€/Unit"
 		},
 		"report.ordernumber.title": {
 			"DE" : "#Projekt Nr.",
