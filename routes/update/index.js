@@ -15,7 +15,8 @@ exports.migrateCostTypesV1toV2 = migrateCostTypesV1toV2;
  * Migrates to new cost structure introduced with version 1.7
  */
 function migrateCostTypesV1toV2(req, res) {
-    var reportsCol;
+    var reportsCol,
+        updatedItems = 0;
     
     reportsCol = mongo.getReportsCollectionPromise().then(migrate);
     
@@ -37,10 +38,11 @@ function migrateCostTypesV1toV2(req, res) {
                             logger.info('Migrate report %s', report._id.toString())
                             migrateCostTypesV1toV2ForReport(report);
                             updateReport(result.reports, report);
+                            updatedItems++;
                         }
                     });	
                 }
-                res.status(200).send();
+                res.status(200).send({'modified' : updatedItems});
         });      
     }
 }
@@ -103,7 +105,7 @@ function updateReport(reportsCol, report) {
             return;
         }               
         
-        reportsRoute.updateReportVersion(_id, report, reportsCol, function(success, reportWIncreasedVersion) {
+        reportsRoute.updateReportVersion(_id.toString(), report, reportsCol, function(success, reportWIncreasedVersion) {
 
             if(!success) {
                 logger.info('Updated report %s', _id.toString());	

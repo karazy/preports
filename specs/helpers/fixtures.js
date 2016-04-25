@@ -22,7 +22,12 @@ exports.reports = [
       "budgetState": 3,
       "timeState": 2,
       "qualityState": 1,
-      "leadDevelopers": "Fred"
+      "leadDevelopers": "Fred",
+      "hoursExternal": 10,
+      "hoursInternal": 20,
+      "hoursNearshoring":30,
+      "currentCosts": 4,
+      "costsPlanned": 10
     },
     {
       "_id": id("564cf435f110b5ef6846f8dc"),
