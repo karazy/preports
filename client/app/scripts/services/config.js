@@ -21,9 +21,6 @@ angular.module('PReports.services').service('config', ['$http', function($http) 
 			'EUR': '$1,$2 €',
 			'USD': '\$ $1.$2'
 		},
-		'COST_EXTERNAL' : 85,
-		'COST_INTERNAL' : 68,
-		'COST_NEARSHORE': 45,
 		'defaultCostTypes' : []
 	}
 

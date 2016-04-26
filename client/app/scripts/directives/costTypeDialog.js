@@ -24,17 +24,6 @@ angular.module('PReports.directives').directive('costTypeDialog', [
           bindToController: true,
           templateUrl: 'views/templates/costTypeDialog.html',
           link: linkFunc
-          // compile: function(element, attrs, transclude) {
-          //   return {
-          //         pre: function preLink(scope, iElement, iAttrs, controller) { 
-                    
-          //         },
-          //         post: function postLink(scope, iElement, iAttrs, controller) {
-          //                 $log.log(controller.costReport);
-
-          //         }
-          //       }
-          // }
     };
 
 	function l(key) {
@@ -42,7 +31,8 @@ angular.module('PReports.directives').directive('costTypeDialog', [
 	}
   
    function linkFunc(scope, el, attr, ctrl) {
-        $log.log(scope);
+       //TODO try to provide the model via scope of directive?!
+       //current problem is that the reference gets replaced after the loadReport method
         scope.costReport = scope.$parent.currentReport;
     }
 
@@ -59,12 +49,9 @@ function CostTypeController($scope, $log, $q, commandService, config) {
 	$scope.config = config;
 	$scope.calculateCosts = calculateCosts;
 	$scope.toggleCostDialog = toggleCostDialog;
-  $scope.removeCostType = removeCostType;
-  $scope.addCostType = addCostType;
-  $scope.calculateCostForPosition = calculateCostForPosition;
-	
-	
-	 //$log.log(costReport);
+    $scope.removeCostType = removeCostType;
+    $scope.addCostType = addCostType;
+    $scope.calculateCostForPosition = calculateCostForPosition;
 	
     function calculateCosts() {
 		
