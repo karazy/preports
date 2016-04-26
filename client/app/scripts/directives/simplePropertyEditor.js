@@ -52,7 +52,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 						createRepeatInput(attrs)+
 					'</div>'+
 					'<div class="row-fluid">'+
-						'<button type="button" ng-click="closeDialog()" class="btn span6" data-dismiss="modal">'+l('common.cancel')+'</button>'+
+						'<button type="button" ng-click="closeDialog()" class="btn btn-default span6" data-dismiss="modal">'+l('common.cancel')+'</button>'+
 						'<button type="submit" class="btn btn-primary span6" ng-disabled="simplePropertyForm.$invalid">'+l('common.save')+'</button>'+
 					'</div>'+
 					'</form>'+
@@ -91,7 +91,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 						// createRepeatedFormInput(editorEntityAttr.translations, attrs) +							
 					'</div>'+
 					'<div class="row-fluid" style="margin-top: 5px">'+
-						'<button type="button" ng-click="closeDialog()" class="btn" data-dismiss="modal" style="margin-right: 5px;">'+l('cancel')+'</button>'+
+						'<button type="button" ng-click="closeDialog()" class="btn btn-default" data-dismiss="modal" style="margin-right: 5px;">'+l('cancel')+'</button>'+
 						'<button type="submit" class="btn btn-primary" ng-disabled="!isValid()">'+l('save')+'</button>'+
 					'</div>'+
 					'</form>'+
@@ -124,10 +124,10 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 		        	var dialog = iElement.find('div.simple-property-editor'),
 		        		mask = iElement.find('div.simple-property-editor-mask'),
 		        		input = iElement.find('input.property-input, input.form-control, textarea.property-input, textarea.form-control'),
-		        		ctrl = scope.simplePropertyForm.simpleProperty,
+		        		ctrl = scope.simplePropertyForm.simpleProperty_name,
 		        		hasEditorEntity = iAttrs.hasOwnProperty('editorEntity');
 
-		        	if(iAttrs.hasOwnProperty('editorValidate')) {
+		        	if(iAttrs.hasOwnProperty('editorValidate') && ctrl) {
 		        		ctrl.$parsers.push(function(value) {
 			        		if(scope.editorValidate) {
 			        			if(scope.editorValidate({'value' : value})) {

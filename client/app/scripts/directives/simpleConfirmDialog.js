@@ -31,7 +31,7 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 					    	'<p l="{{dialogText}}"></p>'+
 				   '</div>  '+
 					'<div class="modal-footer">'+
-					  		'<button type="button" class="btn" data-dismiss="modal" l="cancel">Cancel</button>'+
+					  		'<button type="button" class="btn btn-default" data-dismiss="modal" l="cancel">Cancel</button>'+
 					    	'<button type="button" class="btn '+btnClass+'" data-dismiss="modal" ng-click="confirm()" l="{{dialogConfirmButton}}">Confirm</button>'+
 					'</div>'+
 					'</div>'+
