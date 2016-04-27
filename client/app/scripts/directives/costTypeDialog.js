@@ -80,7 +80,8 @@ function CostTypeController($scope, $log, $q, commandService, config) {
         var currentCosts = 0;
 
         angular.forEach($scope.temp.costs, function(cost, index) {
-          currentCosts += cost.quantity * cost.costsPerUnit;
+          var quantity = cost.quantity || 0;
+          currentCosts += quantity * cost.costsPerUnit;
         });
 
         //Adjust for display in k€
