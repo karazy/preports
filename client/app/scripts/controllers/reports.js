@@ -123,9 +123,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         }
       };
     }
-
-
-    jQuery('[data-toggle="tooltip"]').tooltip();
+    
 
     function loadReports(direction) {
       var page,
@@ -1419,7 +1417,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     function activate() {
         
         //initially load reports or report entity based on url
-        // $timeout(function() {
+       
         if ($routeParams.reportId) {
             unregisterWatchForSearch();
             registerReportDetailHotkeys();
@@ -1431,7 +1429,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
             registerWatchForSearch();
             registerReportSearchHotkeys();
         }
-        // }, 50);
         
          //Setup File Upload immediately. Otherwise there will be erors like
         //https://github.com/nervgh/angular-file-upload/issues/183    
