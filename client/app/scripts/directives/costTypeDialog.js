@@ -39,12 +39,12 @@ angular.module('PReports.directives').directive('costTypeDialog', [
 	return config;
 }]);
 
-CostTypeController.$inject = ['$scope', '$log', '$q', 'commandService', 'config'];
+CostTypeController.$inject = ['$scope', '$log', '$q', 'commandService', 'config', 'helper'];
 
 /**
  * The directives controller.
  */
-function CostTypeController($scope, $log, $q, commandService, config) {
+function CostTypeController($scope, $log, $q, commandService, config, helper) {
 
 	$scope.config = config;
 	$scope.calculateCosts = calculateCosts;
@@ -52,6 +52,7 @@ function CostTypeController($scope, $log, $q, commandService, config) {
     $scope.removeCostType = removeCostType;
     $scope.addCostType = addCostType;
     $scope.calculateCostForPosition = calculateCostForPosition;
+    $scope.isZero = helper.isZero;
 	
     function calculateCosts() {
 		
