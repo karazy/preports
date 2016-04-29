@@ -2,7 +2,7 @@
 	<button class="btn btn-primary btn-sm pull-right" ng-click="addCollectionElement('system');" ng-hide="currentReport.locked"><i class="glyphicon glyphicon-plus"></i></button>
 	<p l="report.systems" class="section-header">Systems</p>			
 </div>
-<div ng-repeat="record in currentReport.systems" style="margin-bottom: 15px;">
+<div ng-repeat="record in currentReport.systems" class="section-collection section-collection-sep">
 	<div class="row section-row">
 		<div class="col-md-5">	
 			<div simple-property-editor editor-title="report.systems.name" editor-on-save="updateReport(modifiedProperty, prevValue, true, $index, 'systems');" editor-placeholder="report.systems.name.ph" editor-field="name" editor-entity="currentReport.systems[$index]" editor-type="textfield" editor-enabled="!currentReport.locked">

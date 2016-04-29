@@ -217,12 +217,33 @@ body {
       color: $tertiary-color;
       font-size: 10px;
     }
+    
+    .section-collection {
+        margin-bottom: 15px;
+    }
+    
+    // .section-collection-sep {
+    //     border-bottom: 1px solid black;                
+    // }    
+    
+    .section-collection-sep:last-child:after {
+        border-bottom: none;        
+    }
+    
+    .section-collection-sep:after {
+        content: "";
+        left: 5%;
+        position: absolute;
+        height: 1px;
+        width: 90%;
+        border-bottom: 1px solid #ddd;
+    }
+    
 }
 
 .section-content {
     font-size: 16px;   
 }
-
 
     
 .report-brand {
