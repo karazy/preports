@@ -60,7 +60,8 @@
 				<th l="reports.table.year">Year</th>
 				<th><i class="glyphicon glyphicon-euro"></i></th>
 				<th><i class="glyphicon glyphicon-hourglass"></i></th>
-				<th><i class="glyphicon glyphicon-thumbs-up"></i></th>			
+				<th><i class="glyphicon glyphicon-thumbs-up"></i></th>
+				<th>Δ%</th>			
 				<th><i class="glyphicon glyphicon-picture"></i></th>
 				<th l="reports.table.actions">Actions</th>
 			</thead>
@@ -78,6 +79,7 @@
 					<td>
 					<div class="state-marker" ng-class="getStateColor(r.qualityState)"></div>
 					</td>
+					<td>{{r.costsDelta}}</td>
 					<td>{{r.images.length}}</td>
 					<td>
 						<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(r)" dialog-confirm-button="copy">

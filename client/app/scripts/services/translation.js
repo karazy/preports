@@ -284,10 +284,12 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "This is a copy"
 		},
 		"report.lastmodified" : {
-			"DE" :  "Zuletzt geändert"
+			"DE" :  "Zuletzt geändert",
+			"EN" : "Last modified"
 		},
 		"report.createdon" : {
-			"DE" :  "Erzeugt am"
+			"DE" :  "Erstellt am",
+			"EN" : "Created on"
 		},
 		"report.killing.msg" : {
 			"DE" :  "Lösche Report {{reportToDelete.name}} in "
