@@ -12,6 +12,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 			editorPatternText: '@',
 			editorOnSave: '&',			
 			editorEnabled: '=',
+			//validation expression e.g. 'value >=0'
 			editorValidate: '&',
 			editorValidateText: '@',
 			editorPlaceholder: '@',
@@ -27,6 +28,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 				pattern = attrs.hasOwnProperty('editorPattern') ? "ng-pattern='"+attrs.editorPattern+"'" : "",
 				editorFieldAttr = attrs.hasOwnProperty('editorField') ? attrs.editorField : null,
 				editorEntityAttr = attrs.hasOwnProperty('editorEntity') ? attrs.editorEntity : null,
+				editorValidateText =  attrs.hasOwnProperty('editorValidateText') ? attrs.editorValidateText : 'propertyeditor.error.custom',
 				html;
 
 			if(!editorFieldAttr || !editorEntityAttr) {
@@ -41,11 +43,11 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					 			createFormInput(attrs)+
 					 			'<i class="glyphicon glyphicon-remove" ng-click="clearInput()"></i>'+
 								'<div class="help-inline text-danger" ng-show="simplePropertyForm.$dirty && simplePropertyForm.$invalid">'+
-									'<span ng-show="simplePropertyForm.$error.required">'+ l('propertyeditor.error.required') +'</span>'+
-									'<span ng-show="simplePropertyForm.$error.number">'+ l('propertyeditor.error.number') +'</span>'+
-									'<span ng-show="simplePropertyForm.$error.pattern">'+ l('propertyeditor.error.pattern') +'</span>'+
-									'<span ng-show="simplePropertyForm.$error.custom">'+ l('propertyeditor.error.custom') +'</span>'+
-									'<span ng-show="simplePropertyForm.$error.email" >'+ l('propertyeditor.error.email')+'</span>'+									
+									'<p ng-show="simplePropertyForm.$error.required && !simplePropertyForm.$error.custom">'+ l('propertyeditor.error.required') +'</p>'+
+									'<p ng-show="simplePropertyForm.$error.number && !simplePropertyForm.$error.custom">'+ l('propertyeditor.error.number') +'</p>'+
+									'<p ng-show="simplePropertyForm.$error.pattern && !simplePropertyForm.$error.custom">'+ l('propertyeditor.error.pattern') +'</p>'+
+									'<p ng-show="simplePropertyForm.$error.custom">'+ l(editorValidateText) +'</p>'+
+									'<p ng-show="simplePropertyForm.$error.email && !simplePropertyForm.$error.custom" >'+ l('propertyeditor.error.email')+'</p>'+									
 								'</div>'+
 							'</div>'+
 						'</div>'+
@@ -53,7 +55,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					'</div>'+
 					'<div class="row-fluid">'+
 						'<button type="button" ng-click="closeDialog()" class="btn btn-default span6" data-dismiss="modal">'+l('common.cancel')+'</button>'+
-						'<button type="submit" class="btn btn-primary span6" ng-disabled="simplePropertyForm.$invalid">'+l('common.save')+'</button>'+
+						'<button type="submit" class="btn btn-success span6" ng-disabled="simplePropertyForm.$invalid">'+l('common.save')+'</button>'+
 					'</div>'+
 					'</form>'+
 				'</div>';
@@ -69,11 +71,11 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					 		'<div class="controls">'+
 					 			createFormInput(attrs)+					 			
 								'<div class="help-inline text-danger" ng-show="simplePropertyForm.$dirty && simplePropertyForm.$invalid">'+
-									'<span ng-show="simplePropertyForm.$error.required">'+ l('propertyeditor.error.required') +'</span>'+
-									'<span ng-show="simplePropertyForm.$error.number">'+ l('propertyeditor.error.number') +'</span>'+
-									'<span ng-show="simplePropertyForm.$error.pattern">'+ l('propertyeditor.error.pattern') +'</span>'+
-									'<span ng-show="simplePropertyForm.$error.custom">'+ l('propertyeditor.error.custom') +'</span>'+
-									'<span ng-show="simplePropertyForm.$error.email" >'+ l('propertyeditor.error.email')+'</span>'+									
+									'<p ng-show="simplePropertyForm.$error.required && !simplePropertyForm.$error.custom">'+ l('propertyeditor.error.required') +'</p>'+
+									'<p ng-show="simplePropertyForm.$error.number && !simplePropertyForm.$error.custom">'+ l('propertyeditor.error.number') +'</p>'+
+									'<p ng-show="simplePropertyForm.$error.pattern && !simplePropertyForm.$error.custom">'+ l('propertyeditor.error.pattern') +'</p>'+
+									'<p ng-show="simplePropertyForm.$error.custom">'+ l(editorValidateText) +'</p>'+
+									'<p ng-show="simplePropertyForm.$error.email && !simplePropertyForm.$error.custom" >'+ l('propertyeditor.error.email')+'</p>'+									
 								'</div>'+
 							'</div>'+
 						'</div>'+
@@ -92,7 +94,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
 					'</div>'+
 					'<div class="row-fluid" style="margin-top: 5px">'+
 						'<button type="button" ng-click="closeDialog()" class="btn btn-default" data-dismiss="modal" style="margin-right: 5px;">'+l('cancel')+'</button>'+
-						'<button type="submit" class="btn btn-primary" ng-disabled="!isValid()">'+l('save')+'</button>'+
+						'<button type="submit" class="btn btn-success" ng-disabled="!isValid()">'+l('save')+'</button>'+
 					'</div>'+
 					'</form>'+
 				'</div>';
@@ -130,8 +132,11 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
                     if(scope.editorField) {
                         ctrl = scope.simplePropertyForm["simpleProperty_" + scope.editorField];
                     }
-
+										
 		        	if(iAttrs.hasOwnProperty('editorValidate') && ctrl) {
+						//remove existing parser
+		        		ctrl.$parsers.pop();
+						
 		        		ctrl.$parsers.push(function(value) {
 			        		if(scope.editorValidate) {
 			        			if(scope.editorValidate({'value' : value})) {

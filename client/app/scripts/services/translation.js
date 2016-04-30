@@ -1,7 +1,6 @@
 'use strict';
 
 /**
-*	@name Cloobster.Translations
 *	Module provides data used for translation.
 *	Other modules can depend on this, and resolve service instances
 *	with angulars depency injection.
@@ -38,10 +37,6 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		   "DE" : "Es liegt eine Serverstörung vor. Wir arbeiten an einer Lösung.",
 	       "EN" : "The service has been temporarily interrupted. We are working on a solution."
 	    },
-		"common.error.footer" : {
-			"DE" : "Falls dieser Fehler weiterhin besteht, konktaktieren sie <a href='mailto:support@cloobster.com'>support@cloobster.com</a>.",
-			"EN" : "If this error persists, contact <a href='mailto:support@cloobster.com'>support@cloobster.com</a>."
-		},
 		"common.sending" : {
 			"DE" :  "Sende...",
 			"EN" :  "Sending..."
@@ -326,16 +321,6 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" : "Benachrichtigung an eingetragene Empfänger mit Link zu diesem Report schicken?",
 			"EN" : "Send a notification to recipients with a link to this report?"
 		},
-		// "notification.subject.template" : {
-		// 	"DE" : "Technischer Report {{name}} KW {{week}}|{{year}}",
-		// 	"EN" : "Technical report {{name}} CW {{week}}|{{year}}"
-		// },
-		// "notification.content.template" : {
-		// 	"DE" : "Der technische Report fuer {{name}} - KW {{week}}|{{year}} ist verfuegbar unter"+
-		// 	" {{url}} Dies ist eine automatisch generierte Benachrichtigung von preports.",
-		// 	"EN" : "Technical report for {{name}} - CW {{week}}|{{year}} is available under"+
-		// 	" {{url}} This is an automatically generated notification from preports."
-		// },
 		"report.notification.recipient" : {
 			"DE" : "Empfänger",
 			"EN" : "Recipient"
@@ -375,6 +360,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"report.costs.plan" : {
 			"DE" : "Geplant",
 			"EN" : "Plan"
+		},
+		"report.costs.plan.invalid" : {
+			"DE" : "Bitte Zahl größer 0 eingeben.",
+			"EN" : "Please enter value bigger 0"
 		},
 		"report.costs.plan.ph" : {
 			"DE" : "Eingabe in K€",
