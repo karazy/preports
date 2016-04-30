@@ -11,6 +11,7 @@ $global-border-radius: 3px;
 $primary-color: #000;
 $secondary-color: #FF8300;
 $tertiary-color: #06799F;
+$section-seperator-color: #ddd;
 
 /* Additional icons from IcoMoon */
 @font-face {
@@ -220,11 +221,7 @@ body {
     
     .section-collection {
         margin-bottom: 15px;
-    }
-    
-    // .section-collection-sep {
-    //     border-bottom: 1px solid black;                
-    // }    
+    } 
     
     .section-collection-sep:last-child:after {
         border-bottom: none;        
@@ -236,14 +233,17 @@ body {
         position: absolute;
         height: 1px;
         width: 90%;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid $section-seperator-color;
     }
+    
     
 }
 
 .section-content {
     font-size: 16px;   
 }
+
+
 
     
 .report-brand {
