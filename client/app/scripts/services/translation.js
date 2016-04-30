@@ -538,6 +538,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"propertyeditor.error.email" : {
 			"DE" : "Bitte gültige E-Mail eingeben.",
 			"EN" : "Please enter a valid email."
+		},
+		"propertyeditor.error.number" : {
+			"DE" : "Bitte gültige Zahl eingeben.",
+			"EN" : "Please enter a valid number."
 		}
 	};
 
