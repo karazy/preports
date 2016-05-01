@@ -41,7 +41,7 @@
                 </p>
                 </td>
                 <td>
-                <button class="form-control btn btn-sm btn-warning" l="report.costs.dialog.record.delete" ng-click="removeCostType($index);"><i class="glyphicon glyphicon-minus"></i></button>
+                <button type="button" class="form-control btn btn-sm btn-warning" l="report.costs.dialog.record.delete" ng-click="removeCostType($index);"><i class="glyphicon glyphicon-minus"></i></button>
                 </td>  
                 </tr>   
             </tbody>
@@ -51,7 +51,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="addCostType()"><i class="glyphicon glyphicon-plus"></i></button>
         <button type="button" class="btn btn-default" data-dismiss="modal" l="cancel"></button>
-        <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="calculateCosts()" l="save"></button>
+        <button type="submit" class="btn btn-success" data-dismiss="modal" ng-click="calculateCosts()" l="save"></button>
       </div>
     </div>
   </div>
