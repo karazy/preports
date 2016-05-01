@@ -1,5 +1,11 @@
 #Release Notes
 
+###1.7.0 Keen Kiwi
+- Custom cost types
+- Show your brands logo in print mode
+- Proper Logging with Winston
+- Bugfixes and small improvements
+
 ###v1.6.2 Jolly Jaguar
 - Animation for status signals
 - Small bugfixes
