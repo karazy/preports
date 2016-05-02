@@ -13,8 +13,8 @@ angular.module('PReports.services').service('config', ['$http', function($http) 
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : 'http://127.0.0.1',
-		'servicePort' : '3000',
+		'serviceUrl' : '',
+		'servicePort' : '',
 		'version' : '1.7.0 Keen Kiwi',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {
