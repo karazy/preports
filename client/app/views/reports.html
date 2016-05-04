@@ -9,7 +9,7 @@
 	<form role="form" class="col-md-12">	
 		<div class="form-group">
 			<div class="input-group">
-				<input id="report_new_title_field" type="text" class="form-control" l="reports.new" l-attribute="placeholder" placeholder="New report" ng-model="newReportName" typeahead="name for name in projectNames | filter:$viewValue | limitTo:8"></input>
+				<input id="report_new_title_field" type="text" class="form-control" l="reports.new" l-attribute="placeholder" placeholder="New report" ng-model="newReportName" typeahead="name for name in projectNames | filter:$viewValue | limitTo:8" autocomplete="off"></input>
 				<span class="input-group-btn">
 					<button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName"><i class="glyphicon glyphicon-plus"></i></button>	 
 				</span>
