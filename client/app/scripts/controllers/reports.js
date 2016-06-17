@@ -47,15 +47,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $rootScope.search.limit = PAGINATION_LIMIT;
     $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
     
-    $scope.actionBar = {        
-        undo: language.translate('undo'),
-        copy: language.translate('copy'),
-        print: language.translate('print'),
-        send: language.translate('send'),
-        lock: language.translate('lock'),
-        delete: language.translate('delete')
-    }
-    
     
     $scope.config = config;
 
@@ -83,6 +74,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $scope.loadReports = loadReports;
     
     $scope.createNewReport = createNewReport;
+
+    $scope.language = language;
     
     activate();
 
