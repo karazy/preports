@@ -1,26 +1,30 @@
 <!-- Action bar: buttons at the top of the report to perform various actions -->
 <div id="actionBar" class="btn-toolbar pull-right" role="toolbar">
-<div class="btn-group" role="group">
-	<button type="button" class="btn btn-info btn-sm" ng-click="removeAndUndoLastCommand();" style="margin-top: 0px;" ng-disabled="commandService.getAmount() == 0 || ajaxLoading" ng-hide="currentReport.locked"><i class="icon-undo"></i> x {{commandService.getAmount()}}</button>
-	</div>
-<div class="btn-group" role="group">
-	<span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(currentReport)" dialog-confirm-button="copy">
+    <div class="btn-group" role="group" tooltip-popup-delay='1000' uib-tooltip-html='actionBar.undo' tooltip-placement="bottom">
+        <button type="button" class="btn btn-info btn-sm" ng-click="removeAndUndoLastCommand();" style="margin-top: 0px;" ng-disabled="commandService.getAmount() == 0 || ajaxLoading"
+        ng-hide="currentReport.locked"><i class="icon-undo"></i> x {{commandService.getAmount()}}</button>
+    </div>
+    <div class="btn-group" role="group" tooltip-popup-delay='1000' uib-tooltip-html='actionBar.copy' tooltip-placement="bottom">
+        <span simple-confirm-dialog dialog-title="report.copy.title" dialog-text="report.copy.text" dialog-on-confirm="copyReport(currentReport)"
+        dialog-confirm-button="copy">
 		<button class="btn btn-primary btn-info copy-button btn-sm" style="margin-top: 0px;"><i class="icon-copy"></i></button>
-	</span>
-	</div>
-<div class="btn-group" role="group">
-	<button type="button" class="btn btn-sm btn-info" ng-click="printReport();" style="margin-top: 0px;"><i class="glyphicon glyphicon-print"></i></button>
-	</div>
-<div class="btn-group" role="group">
-	<span simple-confirm-dialog dialog-title="report.notification.title" dialog-text="report.notification.text" dialog-on-confirm="sendNotifications()" dialog-confirm-button="send">
+	    </span>
+    </div>
+    <div class="btn-group" role="group" tooltip-popup-delay='1000' uib-tooltip-html='actionBar.print' tooltip-placement="bottom">
+        <button type="button" class="btn btn-sm btn-info" ng-click="printReport();" style="margin-top: 0px;"><i class="glyphicon glyphicon-print"></i></button>
+    </div>
+    <div class="btn-group" role="group" tooltip-popup-delay='1000' uib-tooltip-html='actionBar.send' tooltip-placement="bottom">
+        <span simple-confirm-dialog dialog-title="report.notification.title" dialog-text="report.notification.text" dialog-on-confirm="sendNotifications()"
+        dialog-confirm-button="send">
 		<button type="button" class="btn btn-info btn-sm" style="margin-top: 0px;" ng-disabled="!currentReport.settings.notification || currentReport.settings.notification.recipients.length == 0"><i class="glyphicon glyphicon-envelope"></i></button>
 	</span>
+    </div>
+    <div class="btn-group" role="group" tooltip-popup-delay='1000' uib-tooltip-html='actionBar.lock' tooltip-placement="bottom">
+        <button class="btn btn-primary btn-info btn-sm" style="margin-top: 0px;" ng-click="toggleReportLock();"><i ng-class="{'icon-unlock':!currentReport.locked, 'icon-lock':currentReport.locked}"></i></button>
+    </div>
+    <div class="btn-group" simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport()"
+    dialog-confirm-button="delete" dialog-confirm-btn-cls="btn-danger" role="group" tooltip-popup-delay='1000' uib-tooltip-html='actionBar.delete' tooltip-placement="bottom">
+        <button type="button" class="btn btn-danger btn-sm" style="margin-top: 0px;"><i class="glyphicon glyphicon-trash" role="group"></i></button>
+    </div>
 </div>
-<div class="btn-group" role="group">
-	<button class="btn btn-primary btn-info btn-sm" style="margin-top: 0px;" ng-click="toggleReportLock();"><i ng-class="{'icon-unlock':!currentReport.locked, 'icon-lock':currentReport.locked}"></i></button>
-
 </div>
-	<div class="btn-group" simple-confirm-dialog dialog-title="report.delete.title" dialog-text="report.delete.text" dialog-on-confirm="deleteReport()" dialog-confirm-button="delete" dialog-confirm-btn-cls="btn-danger" role="group">
-		<button type="button" class="btn btn-danger btn-sm" style="margin-top: 0px;"><i class="glyphicon glyphicon-trash" role="group"></i></button>
-	</div>	
-</div>		

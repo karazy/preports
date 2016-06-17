@@ -442,7 +442,7 @@ angular.module('PReports.directives').directive('simplePropertyEditor', ['$timeo
                 	'<button type="button" class="btn btn-default" ng-click="clearInput()"><i class="glyphicon glyphicon-remove"></i></button>'+
               	'</span>'+			 								 				
  			'</p>'+
- 			'<datepicker '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" show-weeks="true"></datepicker>';			 			 
+ 			'<uib-datepicker '+placeholder+' name="'+ inputName + '" ng-model="' + modelBinding + '" show-weeks="true"></uib-datepicker>';			 			 
 		} else if(type == 'richtext') {
 			inputHtml = 
 			'<div text-angular ng-model="' + modelBinding + '"></div>';

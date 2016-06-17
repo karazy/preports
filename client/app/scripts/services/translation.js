@@ -492,6 +492,22 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Kopieren",
 			"EN" : "Copy"
 		},
+        "print" : {
+            "DE" : "Drucken",
+            "EN" : "Print"
+        },
+        "undo" : {
+            "DE" : "Rückgängig",
+            "EN" : "Undo"
+        },
+        "lock" : {
+            "DE" : "Editierfunktion sperren",
+            "EN" : "Disable edit mode"
+        },
+        "send" : {
+            "DE" : "Benachrichtigung senden",
+            "EN" : "Send notifications"
+        },
 		"error.title" : {
 			"DE" :  "Fehler",
 			"EN" : "Error"
