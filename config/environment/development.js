@@ -43,7 +43,7 @@ var config = {
       'baseDirectory' : getConfigRootPath() + '/application'
     },
     'logging': {
-        'level' : 'info',
+        'level' : 'debug',
         'logFile': getConfigRootPath() + '/preports.log'
     },
     'notificationProviders': {

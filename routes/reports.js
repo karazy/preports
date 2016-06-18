@@ -41,6 +41,8 @@ exports.getAll = function(req, res) {
 		year = req.query.year || (new Date()).getFullYear(),
 		week = req.query.week,
 		limit = req.query.limit || DB_DEFAULT_RESULT_LIMIT,
+		sortProperty = req.query.sortProperty || 'week',
+		sortDirection = req.query.sortDirection || 'asc',
 		page = req.query.page || 0,
 		nextPage = req.query.next || page,
 		rangeId = req.query.rangeid,
@@ -102,6 +104,9 @@ exports.getAll = function(req, res) {
 			relLinkParams.name = req.query.name;
 		}
 
+		relLinkParams.sortProperty = req.query.sortProperty;
+		relLinkParams.sortDirection = req.query.sortDirection;
+
 		limit = parseInt(limit);
 		page = parseInt(page);
 		nextPage = parseInt(nextPage);		
@@ -144,13 +149,11 @@ exports.getAll = function(req, res) {
 		 			skipFactor = nextPage*limit;
 	 			}	 			
 	 		} else {
+				 logger.debug('getAll: sort options property=%s, direction=%s', sortProperty, sortDirection);
 	 			//non opitimized pagination without rangeId
 	 			skipFactor = nextPage * limit;
-	 			sortParams = [['year','asc'], ['week','asc']];
+	 			sortParams = [[sortProperty, sortDirection]];
 	 		}
-	 		//debugObject(searchParams, 'getAll: searchParams');
-	 		//debugObject(searchParams._id, 'getAll: searchParams_id');	
-	 		// logger.info('skipFactor ' + skipFactor);
 
 	 	//images included needed for making copies. As alternative
 	 	//exlclude {'images' : 0} and alter copy logic

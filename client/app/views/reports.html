@@ -55,8 +55,15 @@
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
-				<th l="reports.table.name">Project name</th>
-				<th l="reports.table.week">Week</th>
+				<th><span l="reports.table.name">Project name</span> 
+					 <!--<i class="glyphicon glyphicon-arrow-up" ng-show="search.sortProperty == 'name' && search.sortDirection == 'desc'"></i>
+					<i class="glyphicon glyphicon-arrow-down" ng-show="search.sortProperty == 'name' && search.sortDirection == 'asc'"></i> -->
+				</th>
+				<th ng-click="sortList('week')" style="width:70px" class="column-sortable">
+					<span l="reports.table.week">Week</span>
+					<i class="glyphicon glyphicon-arrow-down" ng-show="search.sortProperty == 'week' && search.sortDirection == 'desc'"></i>
+					<i class="glyphicon glyphicon-arrow-up" ng-show="search.sortProperty == 'week' && search.sortDirection == 'asc'"></i>
+				</th>
 				<th l="reports.table.year">Year</th>
 				<th><i class="glyphicon glyphicon-euro"></i></th>
 				<th><i class="glyphicon glyphicon-hourglass"></i></th>
@@ -66,7 +73,7 @@
 				<th l="reports.table.actions">Actions</th>
 			</thead>
 			<tbody>
-				<tr ng-repeat="r in reports | orderBy:['year','week']" ng-click="showReport(r._id, $event)" ng-class="{'row-selected' : $index == selectedReportSearchRow}">
+				<tr ng-repeat="r in reports | orderBy:['year']" ng-click="showReport(r._id, $event)" ng-class="{'row-selected' : $index == selectedReportSearchRow}">
 					<td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
 					<td>{{r.week}}</td>
 					<td>{{r.year}}</td>

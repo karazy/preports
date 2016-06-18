@@ -46,6 +46,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
     $rootScope.search.limit = PAGINATION_LIMIT;
     $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
+    $rootScope.search.sortProperty = 'week';
+    $rootScope.search.sortDirection = 'desc';      
     
     
     $scope.config = config;
@@ -79,7 +81,26 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     
     activate();
 
+    $scope.sortList = function(property) {
 
+      if(!property) {
+        return;
+      }
+
+      if(property != $rootScope.search.sortProperty) {
+        $rootScope.search.sortDirection = 'asc';
+        $rootScope.search.sortProperty = property;
+      } else {
+        if($rootScope.search.sortDirection == 'asc') {
+          $rootScope.search.sortDirection = 'desc';
+        } else {
+          $rootScope.search.sortDirection = 'asc';
+        }        
+      }
+
+      $scope.loadReports();
+
+    }
 
     function updateSortableOptions() {
       /**
@@ -159,7 +180,9 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           'week': $rootScope.search.week,
           'name': $rootScope.search.name,
           'page': $rootScope.search.page,
-          'limit': PAGINATION_LIMIT
+          'limit': PAGINATION_LIMIT,
+          'sortProperty' : $rootScope.search.sortProperty,
+          'sortDirection' : $rootScope.search.sortDirection
         },
         function(value) {
           $scope.reports = $scope.reportsWrapper.reports;

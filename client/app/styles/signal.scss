@@ -30,6 +30,10 @@ $signal-color-green: green;
 		-webkit-transition: background-color 1;
     	transition: background-color 1s;
 
+		&:hover {
+			border-width: 2px;
+		}
+
 		&.red {
 			background-color: $signal-color-red !important;
 			border-color: darken($signal-color-red, 10%);
