@@ -1,5 +1,6 @@
 var mongodb = require('mongodb'),
 	mongo = require('../database/mongo'),
+	dbUtil = require('../database/util'),
 	fs = require('fs-extra'),
 	mv = require('mv'),
 	queryString = require('querystring'),
@@ -463,6 +464,8 @@ exports.createReport = function(req, res) {
 
 		reportToSave.lastModified = modifyDate;
 		reportToSave.version = 1;
+		//normalize name to make it sortable
+		reportToSave.name_normalized = dbUtil.normalizeString(reportToSave.name);
 
 		//This is a copy report. Assign new image ids.
 		if(reportToSave.copyOf && reportToSave.images) {
@@ -532,7 +535,7 @@ exports.createReport = function(req, res) {
 exports.updateReport = function(req, res) {
 	var _id = req.params.id,
 		docToUpdate = req.body,
-		lastModified = (new Date()).getTime();;
+		lastModified = (new Date()).getTime();
 
 	if(!_id) {
 		logger.warn('updateReport: no id given');
@@ -584,6 +587,7 @@ exports.updateReport = function(req, res) {
 
 	function doUpdate(reports) {
 		docToUpdate.lastModified = lastModified;
+		docToUpdate.name_normalized = dbUtil.normalizeString(docToUpdate.name);
 		
 
 		reports.updateOne({'_id': ObjectID.createFromHexString(_id)}, docToUpdate, function(err, numberOfUpdatedDocs) {
