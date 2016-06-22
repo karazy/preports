@@ -109,7 +109,7 @@ mongo.getDBPromise().then(function(dbInstance) {
     self.app.get('/config/logo', configRoute.getLogo);
     self.app.get('/config/costtypes', auth.ensureAuthenticated, configRoute.getCostTypes);
     self.app.post('/migrate/costtypesv1tov2', auth.ensureAuthenticated, updateRoute.migrateCostTypesV1toV2);
-
+    self.app.post('/migrate/normalizereportnames', auth.ensureAuthenticated, updateRoute.normalizeReportNames);
 
     self.startServer();
 }).catch(function(err) {

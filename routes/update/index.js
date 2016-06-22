@@ -5,11 +5,13 @@
  */
 
 var mongo = require('../../database/mongo'),
+    dbUtil = require('../../database/util'),
     logger = require('../../components/logger'),
     reportsRoute = require('../reports');
     
 
 exports.migrateCostTypesV1toV2 = migrateCostTypesV1toV2;
+exports.normalizeReportNames = normalizeReportNames;
 
 /**
  * Migrates to new cost structure introduced with version 1.7
@@ -116,4 +118,40 @@ function updateReport(reportsCol, report) {
         });
         
     });
+}
+
+/*
+* Normalizes report names and stores them as name_normalized.
+* Used to enable proper name sorting in mongodb.
+*/
+function normalizeReportNames(req, res) {
+        var reportsCol,
+        updatedItems = 0;
+    
+    reportsCol = mongo.getReportsCollectionPromise().then(doNormalize);
+
+    function doNormalize(result) {
+        logger.info('Starting to normalize report names');
+        
+        if(result.error) {
+            logger.error('Failed to load reports collection.', result.error);
+            res.status(500).send();
+            return;
+        }                
+        
+        result.reports.find({}, {})		
+            .toArray(function(err, items) {
+                logger.info('Loaded %s reports', items.length);
+                if(items) {
+                    items.forEach(function(report) {
+                        if(!report.name_normalized) {
+                            logger.info('Normalize name for report %s', report._id.toString())
+                            updateReport(result.reports, report);
+                            updatedItems++;
+                        }
+                    });	
+                }
+                res.status(200).send({'modified' : updatedItems});
+        });      
+    }
 }
