@@ -152,8 +152,14 @@ exports.getAll = function(req, res) {
 	 		} else {
 				 logger.debug('getAll: sort options property=%s, direction=%s', sortProperty, sortDirection);
 	 			//non opitimized pagination without rangeId
-	 			skipFactor = nextPage * limit;
+	 			skipFactor = nextPage * limit;				
 	 			sortParams = [[sortProperty, sortDirection]];
+				
+				//If not sorting by week always add in addition.
+				//E.g. when sorting by name and searching for name simultaneously desc/asc wouldn't make a difference
+				if(sortProperty != 'week') {
+					sortParams.push(['week', sortDirection])
+				}
 	 		}
 
 	 	//images included needed for making copies. As alternative
