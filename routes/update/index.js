@@ -146,6 +146,7 @@ function normalizeReportNames(req, res) {
                     items.forEach(function(report) {
                         if(!report.name_normalized) {
                             logger.info('Normalize name for report %s', report._id.toString())
+                            report.name_normalized = dbUtil.normalizeString(report.name);
                             updateReport(result.reports, report);
                             updatedItems++;
                         }

@@ -66,7 +66,7 @@ exports.reports = [
       "_id": id("564da94cfa2a698677b0cc61"),
       "year": (new Date()).getFullYear(),
       "week": 47,
-      "name": "Report with missing file",
+      "name": "Report with missing file !§$%&/())",
       "milestones": [],
       "lastModified": 1447930197110,
       "version": 3,

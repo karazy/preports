@@ -84,3 +84,47 @@ describe('When updating custom cost types from v1 to v2', function() {
     }      
     });
 });
+
+
+describe('When generating name_normalized', function() {
+	
+    beforeEach(function(done) {
+		populateDB(done);
+	});
+
+	afterEach(function(done) {
+		cleanDB(done);
+	});
+
+	it('it should remove special characters', function(done) {
+        
+    request(app)
+        .post('/migrate/normalizereportnames')
+        .send()
+        .expect(200)
+        .end(function(err, res){
+    	    if (err) throw err;
+             
+            expect(res.body.modified).to.be.equal(3);
+            //use supertest-as-promised to avoid nested callbacks
+            //https://www.npmjs.com/package/supertest-as-promised
+            validate();
+  		});
+          
+    function validate() {
+        request(app)
+        .get('/reports/564da94cfa2a698677b0cc61')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .end(function(err, res){
+    	    if (err) throw err;
+            console.log("after migration");
+            console.log(res.body);
+            expect(res.body.name).to.be.equal("Report with missing file !§$%&/())");
+            expect(res.body.name_normalized).to.be.equal("report with missing file");
+    		done();
+  		});
+    }      
+    });
+});

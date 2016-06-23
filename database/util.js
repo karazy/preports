@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * Utility methods mainly for use with the database.
+ */
+
 exports.removeSpecialChar = removeSpecialChar;
 exports.normalizeString = normalizeString;
 
@@ -11,6 +15,10 @@ function isNumber (text) {
   return false;
 }
 
+/**
+ * Removes special characters from a string.
+ * Inspired by: http://stackoverflow.com/questions/6555182/remove-all-special-characters-except-space-from-a-string-using-javascript/26482650#26482650
+ */
 function removeSpecialChar(text) {
   if(text) {
     var lower = text.toLowerCase();
@@ -32,7 +40,7 @@ function normalizeString(text) {
     if(text) {
         normalized = removeSpecialChar(text);
 
-        return normalized.toLowerCase();
+        return normalized.toLowerCase().trim();
     }
 
     return '';
