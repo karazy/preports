@@ -391,6 +391,16 @@ $state-color-green: green;
 .actionbar-row {
     min-height: 30px;
 
+    @media (max-width: 991px) {
+        .col-md-4 {
+            float: left;
+        }
+
+        .col-md-8{
+            float: right;
+        }
+    }
+
     .actionbar-affix {
         top: 0px;
         width: 100%;
@@ -404,5 +414,6 @@ $state-color-green: green;
         }
     }
 }
+
 
 
