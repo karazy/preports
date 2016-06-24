@@ -22,7 +22,9 @@
 		<button ng-click="delayDoomsday()" class="btn btn-warning" l="cancel">Cancel</button>
 	</div>	
 	<!-- Report detail view. -->
-	<div class="row hidden-print">
+	<div class="row hidden-print actionbar-row">
+		<div class="col-md-12 actionbar-affix" id="actionbar-affix">
+			<div class="row">
 		<div class="col-md-4">
 			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="reports.back">Reports</span></a>
 			<!-- <a href="#/reports/{{currentReport.copyOf}}" ng-show="currentReport.copyOf" class="pull-right"><i class="glyphicon glyphicon-download"></i> <span l="report.copyof">This is a copy.</span></a>		 -->
@@ -31,6 +33,19 @@
 		<div class="col-md-8">
 			<div ng-include src="'views/reports_detail/actionbar.html'"></div>
 		</div>
+			</div>
+		</div>
+		<script>
+    $('#actionbar-affix').affix({
+		offset: {
+			top: 52,
+			bottom: 0 
+			//function () {
+			//return (this.bottom = $('.footer').outerHeight(true))
+			//}
+		}
+    });
+</script>
 	</div>
     <!-- Display company logo in print view-->
     <div class="visible-print-inline">

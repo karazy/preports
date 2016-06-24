@@ -79,7 +79,7 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Year"
 		},
 		"reports.table.week" : {
-			"DE" :  "KW",
+			"DE" :  "Woche",
 			"EN" : "Week"
 		},
 		"reports.table.images" : {
@@ -116,8 +116,8 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"EN" : "Year"
 		},
 		"report.week" : {
-			"DE" :  "Report Kalenderwoche",
-			"EN" : "Report calendar week"
+			"DE" :  "Kalenderwoche",
+			"EN" : "Calendar week"
 		},
 		"report.leaddevelopers.title" : {
 			"DE" :  "Lead developers",

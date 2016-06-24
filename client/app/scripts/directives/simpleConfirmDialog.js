@@ -1,5 +1,5 @@
 'use strict';
-angular.module('PReports.directives').directive('simpleConfirmDialog', ['language', '$log', '$timeout', function(langService, $log, $timeout) {
+angular.module('PReports.directives').directive('simpleConfirmDialog', ['language', '$log', '$timeout', '$compile', '$document', function(langService, $log, $timeout, $compile, $document) {
 	var //directive configuration
 		config = {
 		restrict: 'A',
@@ -19,8 +19,16 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 				btnClass = attrs.hasOwnProperty('dialogConfirmBtnCls') ? attrs.dialogConfirmBtnCls : "btn-primary";
 
 			html = 
-			'<span class="toggler" ng-transclude></span>'+
-			'<div class="modal confirm-modal">'+
+			'<span class="toggler" ng-transclude></span>'			
+
+			return html;
+		},
+		compile: function(element, attrs, transclude) {
+			var tId = Date.now() + '_scd',
+				btnClass = attrs.hasOwnProperty('dialogConfirmBtnCls') ? attrs.dialogConfirmBtnCls : "btn-primary";
+
+			var modalTpl =
+			'<div class="modal confirm-modal" id="'+tId+'" >'+
 				'<div class="modal-dialog">'+
 					'<div class="modal-content">'+
 				 	'<div class="modal-header">'+
@@ -38,16 +46,15 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 				'</div>'+
 			'</div>';
 
-			return html;
-		},
-		compile: function(element, attrs, transclude) {
-
 			return {
 		        pre: function preLink(scope, iElement, iAttrs, controller) { 
 		        	
 		        },
 		        post: function postLink(scope, iElement, iAttrs, controller) {
 		        	var dialog = iElement.find('.simple-confirm-dialog');
+
+					var modalCompiled = $compile(modalTpl)(scope);
+					$document.find('body').prepend(modalCompiled);
 	
 		        	scope.confirm = function () {		        		
 						dialog.modal('hide');						
@@ -58,8 +65,9 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 		        	
 		        	iElement.find('.toggler').bind('click', function() { 
 		        		var modal;
-		        		if(!scope.dialogDisabled) {
-		        			modal = iElement.find(".confirm-modal");
+		        		if(!scope.dialogDisabled) {	
+							modal = angular.element($document[0].body).find("#"+tId);						
+		        			//modal = iElement.find(".confirm-modal");
 		        			modal.modal('toggle');	
 		        		}		        		
 		        		

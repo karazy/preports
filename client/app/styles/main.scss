@@ -7,7 +7,7 @@ $icon-font-path: '../bower_components/bootstrap-sass/assets/fonts/bootstrap/';
 
 @import 'signal';
 
-$global-border-radius: 3px;
+$global-border-radius: 1px;
 $primary-color: #000;
 $secondary-color: #FF8300;
 $tertiary-color: #06799F;
@@ -201,7 +201,7 @@ body {
 }
 
 .section {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 
     .section-row {
         padding-top: 6px;
@@ -386,6 +386,23 @@ $state-color-green: green;
 
 .column-sortable {
     cursor: pointer;
+}
+
+.actionbar-row {
+    min-height: 30px;
+
+    .actionbar-affix {
+        top: 0px;
+        width: 100%;
+
+        &.affix {
+            background-color: white;
+            z-index: 10;
+            box-shadow: 1px 1px 1px #888888;
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+    }
 }
 
 
