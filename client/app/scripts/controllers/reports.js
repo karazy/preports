@@ -24,7 +24,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     helper, hotkeys, notificationService, commandService, $q) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
-        PAGINATION_LIMIT = 3;
+        PAGINATION_LIMIT = 25;
 
     /**
     * Reports retrieved after search.
