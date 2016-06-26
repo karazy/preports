@@ -62,7 +62,8 @@ angular.module('PReports', [
     $routeProvider
       .when('/reports', {
         templateUrl: 'views/reports.html',
-        controller: 'ReportCtrl'
+        controller: 'ReportCtrl',
+        reloadOnSearch: false
       })
        .when('/reports/:reportId', {
         templateUrl: 'views/reports_detail.html',

@@ -148,10 +148,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     }
     
 
-    function loadReports(direction) {
+    function loadReports(direction, searchParams) {
       var page,
         limit;
-      console.log('loadReports');
+      $log.log('loadReports');
 
       $scope.selectedReportSearchRow = null;
 
@@ -185,10 +185,64 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           'sortDirection' : $rootScope.search.sortDirection
         },
         function(value) {
+          $log.debug("Callback for Report.query");
           $scope.reports = $scope.reportsWrapper.reports;
           //page is  based
           $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
+          updateAddressBarWithSearchParams($rootScope.search);
         }, errorHandler);
+    }
+
+    function updateAddressBarWithSearchParams(searchParams) {
+      var reportQuery = normalizeSearchParameters(searchParams);
+      $location.search(reportQuery);
+    }
+
+    function extractSearchParamsFromAddressBar() {
+
+      var searchParams = $location.search(),
+          normalized;
+
+      if(Object.keys(searchParams).length == 0)
+        return;
+      
+      normalized = normalizeSearchParameters(searchParams);
+      
+      $rootScope.search = normalized;
+    }
+
+    function normalizeSearchParameters(searchParams) {
+      var reportQuery = {};
+
+      if(searchParams) {
+              if(searchParams.week) {
+                reportQuery.week = parseInt(searchParams.week);
+              }
+              
+              if(searchParams.year) {
+                reportQuery.year = parseInt(searchParams.year);
+              } else {
+                reportQuery.year = (new Date()).getFullYear();
+              }
+
+              if(searchParams.name) {
+                reportQuery.name = searchParams.name;
+              }
+
+              if(searchParams.page) {
+                reportQuery.page = searchParams.page;
+              }
+
+            if($rootScope.search.sortDirection) {
+                reportQuery.sortDirection = $rootScope.search.sortDirection;
+            }
+
+             if($rootScope.search.sortProperty) {
+                reportQuery.sortProperty = $rootScope.search.sortProperty;
+            }
+      }
+
+      return reportQuery;
     }
 
     /**
@@ -201,6 +255,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         tmpHandle,
         tmpMaxWeekOldYear,
         tmpMaxWeekNewYear;
+
+      $log.debug('registerWatchForSearch');
 
       if (!$rootScope.watchHandles) {
         $rootScope.watchHandles = [];
@@ -324,55 +380,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       });
     }
 
-    /**
-     * Uses search parameters (if exist) and adds them 
-     * as query parameters to current url.
-     */
-    $scope.setSearchAsQueryParams = function() {
-      //set url to query params
-      //set it to empty object
-      $location.$$search = {};
-
-      if ($rootScope.search.week) {
-        $location.search('week', $rootScope.search.week);
-      }
-
-      if ($rootScope.search.year) {
-        $location.search('year', $rootScope.search.year);
-      }
-
-      if ($rootScope.search.name) {
-        $location.search('name', $rootScope.search.name);
-      }
-    }
-
-    /**
-     * Uses query params from url and adds them to 
-     * $rootScope.search object
-     */
-    function setQueryParamsAsSearch() {
-      var queryParams = $location.search();
-      if (queryParams) {
-        if (queryParams.week) {
-          $rootScope.search.week = parseInt(queryParams.week);
-        }
-        if (queryParams.year) {
-          $rootScope.search.year = queryParams.year;
-        }
-        if (queryParams.name) {
-          $rootScope.search.name = queryParams.name;
-        }
-      }
-    }
-
-    /**
-     * Delete query params in URL.
-     */
-    function resetQueryParams() {
-      $location.$$search = {};
-      $location.url($location.path());
-    }
-
     $scope.showReport = function(id, event) {
       if (!id || !event) {
         return;
@@ -383,7 +390,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         return;
       }
 
-      $location.path('reports/' + id);
+      $location.path('reports/' + id).search({});
     };
 
     function createNewReport() {
@@ -1440,15 +1447,18 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
      * Handles all controller initialization logic.
      */
     function activate() {
+
+        $log.debug('activate');
         
         //initially load reports or report entity based on url
        
-        if ($routeParams.reportId) {
-            unregisterWatchForSearch();
+        if ($routeParams.reportId) {            
+            unregisterWatchForSearch();            
             registerReportDetailHotkeys();
             loadReport($routeParams.reportId);
-            getLogo();
+            getLogo();            
         } else {
+            extractSearchParamsFromAddressBar();
             loadReports();
             loadProjectNames();
             registerWatchForSearch();
