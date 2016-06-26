@@ -24,7 +24,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     helper, hotkeys, notificationService, commandService, $q) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
-        PAGINATION_LIMIT = 25;
+        PAGINATION_LIMIT = 3;
 
     /**
     * Reports retrieved after search.
@@ -46,8 +46,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
     $rootScope.search.limit = PAGINATION_LIMIT;
     $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
-    $rootScope.search.sortProperty = 'week';
-    $rootScope.search.sortDirection = 'desc';      
+    $rootScope.search.sortProperty = $rootScope.search.sortProperty || 'week';
+    $rootScope.search.sortDirection = $rootScope.search.sortDirection || 'desc';      
     
     
     $scope.config = config;
@@ -163,6 +163,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
             $rootScope.search.page = wrapper.currentPage - 1;
+            updateAddressBarWithSearchParams($rootScope.search);
           }).error(errorHandler);
           return;
         } else if (direction == 'prev' && $scope.reportsWrapper._links.prev) {
@@ -170,6 +171,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
             $scope.reportsWrapper = wrapper;
             $scope.reports = wrapper.reports;
             $rootScope.search.page = wrapper.currentPage - 1;
+            updateAddressBarWithSearchParams($rootScope.search);
           }).error(errorHandler);
           return;
         }
@@ -233,12 +235,12 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
                 reportQuery.page = searchParams.page;
               }
 
-            if($rootScope.search.sortDirection) {
-                reportQuery.sortDirection = $rootScope.search.sortDirection;
+            if(searchParams.sortDirection) {
+                reportQuery.sortDirection = searchParams.sortDirection;
             }
 
-             if($rootScope.search.sortProperty) {
-                reportQuery.sortProperty = $rootScope.search.sortProperty;
+             if(searchParams.sortProperty) {
+                reportQuery.sortProperty = searchParams.sortProperty;
             }
       }
 
