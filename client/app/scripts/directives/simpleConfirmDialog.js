@@ -52,11 +52,10 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 		        	
 		        },
 		        post: function postLink(scope, iElement, iAttrs, controller) {
-		        	//var dialog = iElement.find('.simple-confirm-dialog');
                     
                     scope.uniqueId = 'scd_' + uniqueId++;
 					var modalCompiled = $compile(modalTpl)(scope);
-					$document.find('body').prepend(modalCompiled);
+					$document.find('div[ng-view]').prepend(modalCompiled);
 	
 		        	scope.confirm = function () {
                         var modal;
@@ -72,10 +71,8 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 		        		var modal;
 		        		if(!scope.dialogDisabled) {	
 							modal = angular.element($document[0].body).find('#' + scope.uniqueId);						
-		        			//modal = iElement.find(".confirm-modal");
 		        			modal.modal('toggle');	
-		        		}		        		
-		        		
+		        		}
 					});        	
 
 		        }
