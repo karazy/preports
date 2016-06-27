@@ -1,9 +1,11 @@
 <div class="row">
-	<div class="alert alert-danger" ng-show="deleteTimer">
-		<h4><span l="report.killing.msg">Deleting report {{reportToDelete.name}} in</span> {{remainingSecondsBeforeDoomsday}}</h4>
-		<br/>
-		<button ng-click="delayDoomsday()" class="btn btn-warning" l="cancel">Cancel</button>
-	</div>
+    <div class="col-md-12">
+        <div class="alert alert-danger" ng-show="deleteTimer">
+            <h4><span l="report.killing.msg">Deleting report {{reportToDelete.name}} in</span> {{remainingSecondsBeforeDoomsday}}</h4>
+            <br/>
+            <button ng-click="delayDoomsday()" class="btn btn-warning" l="cancel">Cancel</button>
+        </div>
+    </div>
 </div>
 <div class="row" style="margin-bottom: 10px;">
 	<form role="form" class="col-md-12">	
