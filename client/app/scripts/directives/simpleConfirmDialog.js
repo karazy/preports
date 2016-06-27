@@ -1,11 +1,12 @@
 'use strict';
 angular.module('PReports.directives').directive('simpleConfirmDialog', ['language', '$log', '$timeout', '$compile', '$document', function(langService, $log, $timeout, $compile, $document) {
-	var //directive configuration
+	var uniqueId = 1,
+        //directive configuration
 		config = {
 		restrict: 'A',
 		replace: false,
 		transclude: true,
-		priority: 100,
+		priority: 100,        
 		scope: {
 			dialogTitle: '@',
 			dialogText: '@',
@@ -28,7 +29,7 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 				btnClass = attrs.hasOwnProperty('dialogConfirmBtnCls') ? attrs.dialogConfirmBtnCls : "btn-primary";
 
 			var modalTpl =
-			'<div class="modal confirm-modal" id="'+tId+'" >'+
+			'<div class="modal confirm-modal" id="{{::uniqueId}}" >'+
 				'<div class="modal-dialog">'+
 					'<div class="modal-content">'+
 				 	'<div class="modal-header">'+
@@ -51,13 +52,17 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 		        	
 		        },
 		        post: function postLink(scope, iElement, iAttrs, controller) {
-		        	var dialog = iElement.find('.simple-confirm-dialog');
-
+		        	//var dialog = iElement.find('.simple-confirm-dialog');
+                    
+                    scope.uniqueId = 'scd_' + uniqueId++;
 					var modalCompiled = $compile(modalTpl)(scope);
 					$document.find('body').prepend(modalCompiled);
 	
-		        	scope.confirm = function () {		        		
-						dialog.modal('hide');						
+		        	scope.confirm = function () {
+                        var modal;
+                        
+                        modal = angular.element($document[0].body).find('#' + scope.uniqueId);	        		
+						modal.modal('hide');						
 		        		//TODO workaround. screen stays masked when switching view       		
 		        		$timeout(scope.dialogOnConfirm, 150);		        		
 		        	}
@@ -66,7 +71,7 @@ angular.module('PReports.directives').directive('simpleConfirmDialog', ['languag
 		        	iElement.find('.toggler').bind('click', function() { 
 		        		var modal;
 		        		if(!scope.dialogDisabled) {	
-							modal = angular.element($document[0].body).find("#"+tId);						
+							modal = angular.element($document[0].body).find('#' + scope.uniqueId);						
 		        			//modal = iElement.find(".confirm-modal");
 		        			modal.modal('toggle');	
 		        		}		        		
