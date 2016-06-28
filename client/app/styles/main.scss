@@ -111,34 +111,29 @@ body {
     }
 }
 
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-
-    /* Limit max container size to get achieve a more document like view */
-   /* .container {
-        max-width: 730px;
-    }
-*/
-    /* Remove the padding we set earlier */
-    /*.header,
-    .marketing,
-    .footer {
-        padding-left: 0;
-        padding-right: 0;
-    }*/
-    /* Space out the masthead */
-   /* .header {
-        margin-bottom: 30px;
-    }*/
-    /* Remove the bottom border on the jumbotron for visual effect */
-  /*  .jumbotron {
-        border-bottom: 0;
-    }*/
-}
-
 .navbar-brand {
     color: $secondary-color;
 }
+
+/*
+* Always force navbar-right to float right
+*/
+// .navbar-right {
+//     float: right !important;
+//     margin-right: -15px;
+// }
+
+/*
+* Always force navbar items to float left
+*/
+// .navbar-nav > li {
+//     float: left;
+//     
+//     select {
+//         width: auto;
+//         display: inline;
+//     }
+// }
 
 .loading-indicator {
   height: 16px;

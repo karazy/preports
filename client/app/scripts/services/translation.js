@@ -537,6 +537,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Meilenstein",
 			"EN" : "Milestone"
 		},
+        "about" : {
+            "DE" : "Über",
+            "EN" : "About"
+        },
 		//Property editor
 		"propertyeditor.error.required" : {
 			"DE" :  "Pflichtfeld",
