@@ -77,10 +77,10 @@ To run tests RUN `npm test` in root folder. Make sure mongo is running. ATTENTIO
 *Frontend*
 
 Protractor end to end tests.
-1. Install webdriver-manager and protractor.
-2. RUN webdriver-manager start
-2. CD into client/test
-3. RUN protractor protractor-conf.js 
+1. MongoDB and node backend must be up and running.
+2. Install webdriver-manager and protractor.
+3. RUN webdriver-manager start
+4. RUN grunt e2e-test 
 
 ####Build it
 To have a production build CD into client folder and execute `grunt build --force`.
