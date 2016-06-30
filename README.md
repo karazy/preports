@@ -68,7 +68,19 @@ and you should see something like this.
     ```
 10. Go and code... All changes should be picked up immediately.
 11. visit http://localhost:9000
-12. To run tests RUN `npm test` in root folder. Currently only backend tests exists. Make sure mongo is running. ATTENTION Will wipe your database!!!
+
+####Test it
+*Backend*
+
+To run tests RUN `npm test` in root folder. Make sure mongo is running. ATTENTION Will wipe your database!!!
+
+*Frontend*
+
+Protractor end to end tests.
+1. Install webdriver-manager and protractor.
+2. RUN webdriver-manager start
+2. CD into client/test
+3. RUN protractor protractor-conf.js 
 
 ####Build it
 To have a production build CD into client folder and execute `grunt build --force`.
