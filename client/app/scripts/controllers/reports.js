@@ -19,9 +19,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
   'notification',
   'commandService',
   '$q',
+  'reportsService',
   function($scope, $location, $routeParams, Report, $log, $http, FileUploader, config,
     errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
-    helper, hotkeys, notificationService, commandService, $q) {
+    helper, hotkeys, notificationService, commandService, $q, reportsService) {
 
     var REPORT_DELETE_TIMEOUT = 5000,
         PAGINATION_LIMIT = 25;
@@ -150,7 +151,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
     function loadReports(direction, searchParams) {
       var page,
-        limit;
+          limit;
       $log.log('loadReports');
 
       $scope.selectedReportSearchRow = null;
@@ -176,23 +177,36 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           return;
         }
       }
+      
+      reportsService.getReports($rootScope.search)
+        .then(function(reportsWrapper) {
+            $log.debug("success callback getReports");
+            $scope.reportsWrapper = reportsWrapper;            
+            $scope.reports = $scope.reportsWrapper.reports;
+            //page is  based
+            $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
+            updateAddressBarWithSearchParams($rootScope.search);
+        })
+        .catch(function(response) {
+            errorHandler(response);
+        });
 
-      $scope.reportsWrapper = Report.query({
-          'year': $rootScope.search.year,
-          'week': $rootScope.search.week,
-          'name': $rootScope.search.name,
-          'page': $rootScope.search.page,
-          'limit': PAGINATION_LIMIT,
-          'sortProperty' : $rootScope.search.sortProperty,
-          'sortDirection' : $rootScope.search.sortDirection
-        },
-        function(value) {
-          $log.debug("Callback for Report.query");
-          $scope.reports = $scope.reportsWrapper.reports;
-          //page is  based
-          $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
-          updateAddressBarWithSearchParams($rootScope.search);
-        }, errorHandler);
+    //   $scope.reportsWrapper = Report.query({
+    //       'year': $rootScope.search.year,
+    //       'week': $rootScope.search.week,
+    //       'name': $rootScope.search.name,
+    //       'page': $rootScope.search.page,
+    //       'limit': PAGINATION_LIMIT,
+    //       'sortProperty' : $rootScope.search.sortProperty,
+    //       'sortDirection' : $rootScope.search.sortDirection
+    //     },
+    //     function(value) {
+    //       $log.debug("Callback for Report.query");
+    //       $scope.reports = $scope.reportsWrapper.reports;
+    //       //page is  based
+    //       $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
+    //       updateAddressBarWithSearchParams($rootScope.search);
+    //     }, errorHandler);
     }
 
     function updateAddressBarWithSearchParams(searchParams) {
@@ -421,7 +435,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $scope.updateReport = function(modifiedProperty, prevValue, isArray, index, arrayName) {
       var updateCommand,
           defer = $q.defer(),
-          deferUndo = $q.defer();;
+          deferUndo = $q.defer();
 
 
       if (!$scope.currentReport) {
