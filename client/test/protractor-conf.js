@@ -1,4 +1,4 @@
 exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
-  specs: ['spec/controllers/e2e_report.js']
+  specs: ['spec-e2e/controllers/e2e_report.js']
 };
