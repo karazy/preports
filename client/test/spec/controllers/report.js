@@ -3,23 +3,31 @@
 describe('ReportService', function () {
 
   // load the controller's module
-  beforeEach(module('PReports'));
+  beforeEach(function() {
+      module('PReports');
+  });    
 
   var ReportCtrl,
       ReportService,
       scope;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(inject(function ($controller, $rootScope, _reportsService_) {
     scope = $rootScope.$new();
-    // ReportCtrl = $controller('ReportCtrl', {
-    //   $scope: scope
-    // });
-
-    ReportService = $controller('reportsService', {
+    ReportCtrl = $controller('ReportCtrl', {
       $scope: scope
     });
+
+    ReportService = _reportsService_; 
+    // $controller('reportsService', {
+    //   $scope: scope
+    // });
   }));
+  
+     it('should contain service',
+        inject(function(_reportsService_) {
+            expect(_reportsService_).not.toBe(null);
+    }));
 
   it('should load a list of reports', function() {
       var searchParams = {
@@ -27,15 +35,21 @@ describe('ReportService', function () {
         'year' : 2016
       };
 
-        ReportService.getReports(searchParams)
-        .then(function(reportsWrapper) {
-          //  $log.debug("success callback getReports");
-          expect(reportsWrapper).not.toBe(null);           
-                    
-        })
-        .catch(function(response) {
-            errorHandler(response);
-        });
+       
+        
+         spyOn(ReportService,'getReports').and.callThrough();
+         
+         ReportService.getReports(searchParams)
+            .then(function(reportsWrapper) {
+            //  $log.debug("success callback getReports");
+            expect(reportsWrapper).toBe(null);    
+                        
+            })
+            .catch(function(response) {
+                errorHandler(response);
+            });
+        
+        expect(ReportService.getReports).toHaveBeenCalled();
   });
 
 
