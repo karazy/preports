@@ -16,7 +16,7 @@ angular.module('PReports.services').service('reportsService', [
         
         function getReports(searchParams) {
             $log.debug('getReports called with ' + searchParams);
-            
+
             var query = Report.query({
             'year': searchParams.year,
             'week': searchParams.week,

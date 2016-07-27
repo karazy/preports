@@ -1,6 +1,6 @@
 'use strict';
 
-describe('ReportService', function () {
+describe('Service: ReportService', function () {
 
   // load the controller's module
   beforeEach(function() {
@@ -29,31 +29,19 @@ describe('ReportService', function () {
             expect(_reportsService_).not.toBe(null);
     }));
 
-  it('should load a list of reports', function() {
-      var searchParams = {
-        'week' : 30,
-        'year' : 2016
-      };
+    it('should load a list of reports', function() {
+            var searchParams = {
+                'week' : 30,
+                'year' : 2016
+            }, 
+            promise;
+                               
+            spyOn(ReportService,'getReports').and.callThrough();
+            
+            promise = ReportService.getReports(searchParams);
+            
+            expect(ReportService.getReports).toHaveBeenCalled();
+            expect(promise).not.toBe(null);
+    });
 
-       
-        
-         spyOn(ReportService,'getReports').and.callThrough();
-         
-         ReportService.getReports(searchParams)
-            .then(function(reportsWrapper) {
-            //  $log.debug("success callback getReports");
-            expect(reportsWrapper).toBe(null);    
-                        
-            })
-            .catch(function(response) {
-                errorHandler(response);
-            });
-        
-        expect(ReportService.getReports).toHaveBeenCalled();
-  });
-
-
-  // it('should attach a list of awesomeThings to the scope', function () {
-  //   expect(scope.awesomeThings.length).toBe(3);
-  // });
 });
