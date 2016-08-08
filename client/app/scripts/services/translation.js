@@ -90,6 +90,22 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Aktion",
 			"EN" : "Action"
 		},
+        "reports.search.clear" : {
+            "DE" : "Suche löschen",
+            "EN" : "Clear search"
+        },
+        "reports.search.today" : {
+            "DE" : "Aktuelle KW",
+            "EN" : "Current calendar week"
+        },
+        "reports.search.all" : {
+            "DE" : "Alle Wochen",
+            "EN" : "All weeks"
+        },
+        "reports.search.refresh" : {
+            "DE" : "Aktualisieren",
+            "EN" : "Refresh"
+        },
 		//report
 		"report.name" : {
 			"DE" :  "Projektname",
