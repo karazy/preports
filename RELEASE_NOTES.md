@@ -1,5 +1,11 @@
 #Release Notes
 
+###1.8.0 Lumpy Lion
+- Sticky actionbar when editing a report
+- Report search parameters are reflected in URL so you can send someone a prefiltered view.
+- Table sortable by week and name
+- The usual misc stuff
+
 ###1.7.0 Keen Kiwi
 - Custom cost types
 - Show your brands logo in print mode

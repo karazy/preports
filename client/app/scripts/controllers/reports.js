@@ -32,23 +32,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $scope.reports = [];
     $scope.currentReport = null;
     $scope.years = [2014, 2015, 2016, 2017];
-
-    /*
-     * Current calendar week.
-     */
-    $scope.currentCalWeek = (new Date()).getWeek();
-    $scope.currentCalYear = (new Date()).getFullYear();
-
-    //initialize global search parameters if they don't exist on $rootScope
-    $rootScope.search = $rootScope.search || {};
-    $rootScope.search.year = ($rootScope.search.hasOwnProperty('year')) ? $rootScope.search.year : (new Date()).getFullYear();
-    $rootScope.search.week = ($rootScope.search.hasOwnProperty('week')) ? $rootScope.search.week : (new Date()).getWeek();
-    $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
-    //$rootScope.search.limit = PAGINATION_LIMIT;
-    $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
-    $rootScope.search.sortProperty = $rootScope.search.sortProperty || 'week';
-    $rootScope.search.sortDirection = $rootScope.search.sortDirection || 'desc';      
-    
     
     $scope.config = config;
 
@@ -1210,9 +1193,12 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       $scope.weeks = weeks;
     }
 
-    $scope.resetSearchCal = function() {
-      $rootScope.search.year = $scope.currentCalYear;
-      $rootScope.search.week = $scope.currentCalWeek;
+    /**
+     * Resets year and week search params to current date.
+     */
+    $scope.resetSearchCal = function() {       
+      $rootScope.search.year = (new Date()).getFullYear();
+      $rootScope.search.week = (new Date()).getWeek();
     }
     
     /**
