@@ -723,7 +723,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         $scope.doomsdayInterval = null;
       }
     }
-
+    
+    /**
+     * Persist given report.
+     */
     function saveReport(report) {
       var resource;
 
@@ -741,7 +744,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         resource.$create(function(saved) {
           console.log('saved new report');
           $scope.newReportName = null;
-          $location.path('reports/' + resource._id)
+          $location.url('reports/' + resource._id)
 
         }, function(response) {
           if (response.status == 409) {
@@ -753,7 +756,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           if (response.status == 409) {
             //jump to copied report also some problems exist
             $scope.newReportName = null;
-            $location.path('reports/' + response.data._id)
+            $location.url('reports/' + response.data._id)
           }
 
         });
