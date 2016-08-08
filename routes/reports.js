@@ -9,6 +9,8 @@ var mongodb = require('mongodb'),
 	config = require('../config/environment'),
 	logger = require('../components/logger'),
 	db;
+    
+const escapeStringRegexp = require('escape-string-regexp');
 
 ObjectID = mongodb.ObjectID;
 
@@ -62,7 +64,8 @@ exports.getAll = function(req, res) {
 		relLinkParams = {},
 		count,
 		totalPages,
-		skipFactor = 0;
+		skipFactor = 0,
+        escapedName;
 
 	logger.debug('getAll: query params', req.query);
 
@@ -101,7 +104,8 @@ exports.getAll = function(req, res) {
 		}
 
 		if(req.query.name) {
-			searchParams.name = RegExp(".*" + req.query.name +".*", 'i');
+            escapedName = escapeStringRegexp(req.query.name);
+			searchParams.name = RegExp(".*" + escapedName +".*", 'i');
 			relLinkParams.name = req.query.name;
 		}
 
