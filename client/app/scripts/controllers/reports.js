@@ -24,8 +24,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
     helper, hotkeys, notificationService, commandService, $q, reportsService) {
 
-    var REPORT_DELETE_TIMEOUT = 5000,
-        PAGINATION_LIMIT = 25;
+    var REPORT_DELETE_TIMEOUT = 5000;
 
     /**
     * Reports retrieved after search.
@@ -45,7 +44,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     $rootScope.search.year = ($rootScope.search.hasOwnProperty('year')) ? $rootScope.search.year : (new Date()).getFullYear();
     $rootScope.search.week = ($rootScope.search.hasOwnProperty('week')) ? $rootScope.search.week : (new Date()).getWeek();
     $rootScope.search.name = ($rootScope.search.hasOwnProperty('name')) ? $rootScope.search.name : '';
-    $rootScope.search.limit = PAGINATION_LIMIT;
+    //$rootScope.search.limit = PAGINATION_LIMIT;
     $rootScope.search.page = ($rootScope.search.hasOwnProperty('page')) ? $rootScope.search.page : 0;
     $rootScope.search.sortProperty = $rootScope.search.sortProperty || 'week';
     $rootScope.search.sortDirection = $rootScope.search.sortDirection || 'desc';      
@@ -150,8 +149,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     
 
     function loadReports(direction, searchParams) {
-      var page,
-          limit;
+      var page;
       $log.log('loadReports');
 
       $scope.selectedReportSearchRow = null;
@@ -190,23 +188,6 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         .catch(function(response) {
             errorHandler(response);
         });
-
-    //   $scope.reportsWrapper = Report.query({
-    //       'year': $rootScope.search.year,
-    //       'week': $rootScope.search.week,
-    //       'name': $rootScope.search.name,
-    //       'page': $rootScope.search.page,
-    //       'limit': PAGINATION_LIMIT,
-    //       'sortProperty' : $rootScope.search.sortProperty,
-    //       'sortDirection' : $rootScope.search.sortDirection
-    //     },
-    //     function(value) {
-    //       $log.debug("Callback for Report.query");
-    //       $scope.reports = $scope.reportsWrapper.reports;
-    //       //page is  based
-    //       $rootScope.search.page = $scope.reportsWrapper.currentPage - 1;
-    //       updateAddressBarWithSearchParams($rootScope.search);
-    //     }, errorHandler);
     }
 
     function updateAddressBarWithSearchParams(searchParams) {
