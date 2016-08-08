@@ -24,7 +24,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     errorHandler, $rootScope, language, $timeout, $interval, $interpolate,
     helper, hotkeys, notificationService, commandService, $q, reportsService) {
 
-    var REPORT_DELETE_TIMEOUT = 5000;
+    var REPORT_DELETE_TIMEOUT = 3000;
 
     /**
     * Reports retrieved after search.
@@ -244,7 +244,10 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
     /**
      * Registers change listeners for search form.
-     *
+     * Fields to watch
+     *  - name
+     *  - year
+     *  - week
      */
     function registerWatchForSearch() {
       var tempFilterText = '',
@@ -306,7 +309,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     }
 
     /**
-     * Unregister change listeners for search form.
+     * Unregister all change listeners for search form.
      *
      */
     function unregisterWatchForSearch() {
@@ -920,6 +923,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       var subject,
         content,
         templateData;
+        
+      //TODO move method to notificationService
 
       if (!$scope.currentReport) {
         console.log('sendNotifications: no current report');
@@ -1234,7 +1239,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     *
     */
     function registerReportDetailHotkeys() {
-      //hotkeys.del();
+      //Bind to scope. Will unbind the hotkeys when controller scope gets destroyed. 
 
       hotkeys.bindTo($scope).add(
         {
@@ -1304,6 +1309,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     *
     */
     function registerReportSearchHotkeys() {
+        //Bind to scope. Will unbind the hotkeys when controller scope gets destroyed.
 
       hotkeys.bindTo($scope).add(
         {
@@ -1407,7 +1413,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           description: 'Show selected report',
           callback: function() {
             if($scope.selectedReportSearchRow >= 0 && $scope.selectedReportSearchRow < $scope.reports.length) {
-              $location.path('reports/' + $scope.reports[$scope.selectedReportSearchRow]._id);
+              $location.url('reports/' + $scope.reports[$scope.selectedReportSearchRow]._id);
             }
           }
         }
