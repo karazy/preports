@@ -22,7 +22,12 @@ var //directive configuration
 		        	
 		        },
 		        post: function postLink(scope, iElement, iAttrs, controller) {
+                    var mask = iElement.find('div.compose-button-mask'),
+                        composeButton = iElement.find('div.compose-button'),
+                        dialog = iElement.find('div.compose-button-dialog'),
+                        input = iElement.find('#report_new_title_field_compose');
                     
+                    scope.language = langService;
                     
                     jQuery('.compose-button .fab').hover(function () {
                         jQuery(this).toggleClass('active');
@@ -30,55 +35,38 @@ var //directive configuration
                     jQuery(function () {
                         jQuery('.compose-button > [data-toggle="tooltip"]').tooltip()
                     });
-// 		        	var dialog = iElement.find('.signal-body'),
-// 		        		prevValue;
-// 
-// 		        	//scope.signalValue = scope.signalEntity[scope.signalField];
-// 	
-// 		        	scope.switchSignal = function (state) {	
-// 
-// 		        		if(scope.signalEnabled == true || typeof scope.signalEnabled == 'undefined') {
-// 
-// 		        			prevValue = scope.signalEntity[scope.signalField];
-// 
-// 			        		switch(state) {
-// 			        			case 'red':
-// 			        				scope.signalEntity[scope.signalField] = 1;
-// 			        				break;
-// 			        			case 'yellow':
-// 			        				scope.signalEntity[scope.signalField] = 2;
-// 			        				break;
-// 			        			case 'green':
-// 			        				scope.signalEntity[scope.signalField] = 3;
-// 			        				break;
-// 			        		}
-// 
-// 			        		scope.onSignalChange({
-// 			        			'modifiedProperty': scope.signalField, 
-// 			        			'prevValue': prevValue
-// 			        		});
-// 
-// 						}
-// 
-// 		        	}
-// 
-// 		        	scope.isActive = function(state) {
-// 
-// 		        		if(scope.signalEntity && scope.signalEntity[scope.signalField] == state) {
-// 		        			return true;
-// 		        		} else {
-// 		        			return false;
-// 		        		}
-// 		        	}
-
+                    
+                    composeButton.bind('click', function() {
+                        showDialog();
+                    });
+                    
+                    scope.save = function() {
+                        scope.onClick();
+                    } 
+                    
+                    function showDialog() {
+                        var maskHeight,
+                            maskWidth;
+                            
+                        maskHeight = jQuery(document).height();
+                        maskWidth = jQuery(window).width();
+                            //Set height and width to mask to fill up the whole screen
+                        mask.css({'width':maskWidth,'height':maskHeight}); 
+                        mask.show();
+                        dialog.show();
+                        input.focus();
+                    }
+                    
+                    function hideDialog() {
+                        mask.hide();
+                        dialog.hide();
+                    }
+                    
+                    
 		        }
 		      }
 		}
 	};
-
-	function l(key) {
-		return langService.translate(key) || key;
-	}
 
 	return config;
 }]);

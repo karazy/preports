@@ -1,15 +1,30 @@
 <div class="compose-button">
     <div class="fab btn-group show-on-hover dropup">
         <div data-toggle="tooltip" uib-tooltip-html="language.translate('reports.new.button')" tooltip-placement="left" style="margin-left: 42px;">
-            <span simple-confirm-dialog dialog-title="report.new" dialog-text="report.new.text" dialog-on-confirm="" dialog-confirm-button="create">
-                <button type="button" class="btn btn-primary btn-io dropdown-toggle" data-toggle="dropdown">
-                    <span class="fa-stack fa-2x">
-                    <i class="fa fa-circle fa-stack-2x fab-backdrop"></i>
-                    <i class="fa fa-plus fa-stack-1x fa-inverse fab-primary"></i>
-                    <i class="fa fa-pencil fa-stack-1x fa-inverse fab-secondary"></i>
-                    </span>
-                </button>
-            </span>
+            <button type="button" class="btn btn-primary btn-io dropdown-toggle" data-toggle="dropdown">
+                <span class="fa-stack fa-2x">
+                <i class="fa fa-circle fa-stack-2x fab-backdrop"></i>
+                <i class="fa fa-plus fa-stack-1x fa-inverse fab-primary"></i>
+                <i class="fa fa-pencil fa-stack-1x fa-inverse fab-secondary"></i>
+                </span>
+            </button>
         </div>
+    </div>
+</div>
+<div class="compose-button-mask"></div>
+<div class="compose-button-dialog">
+      <div class="row" style="margin-bottom: 10px;">
+        <form role="form" class="col-md-12" ng-submit="save()">	
+            <div class="form-group">
+                <div class="input-group">
+                    <input id="report_new_title_field_compose" type="text" class="form-control" l="reports.new" l-attribute="placeholder" placeholder="New report" ng-model="newReportName" uib-typeahead="name for name in projectNames | filter:$viewValue | limitTo:8" autocomplete="off"></input>
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary" ng-click="createNewReport()" ng-disabled="!newReportName">
+                            <i class="glyphicon glyphicon-plus"></i> <span l="save">Save</span>
+                        </button>	 
+                    </span>
+                </div>
+            </div>		
+        </form>		
     </div>
 </div>
