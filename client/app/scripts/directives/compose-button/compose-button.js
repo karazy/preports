@@ -25,13 +25,14 @@ var //directive configuration
                     var mask = iElement.find('div.compose-button-mask'),
                         composeButton = iElement.find('div.compose-button'),
                         dialog = iElement.find('div.compose-button-dialog'),
-                        input = iElement.find('#report_new_title_field_compose');
+                        input = iElement.find('input');
                     
                     scope.language = langService;
                     
                     jQuery('.compose-button .fab').hover(function () {
                         jQuery(this).toggleClass('active');
                     });
+
                     jQuery(function () {
                         jQuery('.compose-button > [data-toggle="tooltip"]').tooltip()
                     });
@@ -39,10 +40,22 @@ var //directive configuration
                     composeButton.bind('click', function() {
                         showDialog();
                     });
+
+                    mask.bind('click', function() {
+                        hideDialog();
+                    });
+
+                    // dialog.bind('keyup', function(event) {
+					// 	//hide dialog on escape
+					// 	if(event.which == 27) {
+					// 		scope.closeDialog();	
+					// 	}						
+					// });
                     
                     scope.save = function() {
-                        scope.onClick();
-                    } 
+                        scope.onClick()(scope.newReportName);
+                    }
+                    
                     
                     function showDialog() {
                         var maskHeight,
@@ -50,11 +63,12 @@ var //directive configuration
                             
                         maskHeight = jQuery(document).height();
                         maskWidth = jQuery(window).width();
-                            //Set height and width to mask to fill up the whole screen
+                        //Set height and width to mask to fill up the whole screen
                         mask.css({'width':maskWidth,'height':maskHeight}); 
                         mask.show();
                         dialog.show();
-                        input.focus();
+                        //delay to get focus 
+                        input.focus(100);
                     }
                     
                     function hideDialog() {

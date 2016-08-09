@@ -376,13 +376,13 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       $location.path('reports/' + id).search({});
     };
 
-    function createNewReport() {
+    function createNewReport(reportName) {
       var newReport = {},
         date = new Date();
 
       newReport.year = date.getFullYear();
       newReport.week = date.getWeek();
-      newReport.name = $scope.newReportName;
+      newReport.name = reportName || $scope.newReportName;
 
       newReport.milestones = [];
       
@@ -1340,6 +1340,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           callback: function(event, hotkey) {
             event.preventDefault();
             angular.element('#report_new_title_field').focus();
+            angular.element('compose-button .fab').click();
           }
         }
       )
