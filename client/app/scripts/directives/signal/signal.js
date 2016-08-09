@@ -53,7 +53,6 @@ var //directive configuration
 			        			'prevValue': prevValue
 			        		});
 
-							console.log("Set state to " +scope.signalField);
 						}
 
 		        	}
@@ -66,18 +65,6 @@ var //directive configuration
 		        			return false;
 		        		}
 		        	}
-
-
-
-		        	
-		        	iElement.find('.toggler').bind('click', function() { 
-		        		var modal;
-		        		if(!scope.dialogDisabled) {
-		        			modal = iElement.find(".confirm-modal");
-		        			modal.modal('toggle');	
-		        		}		        		
-		        		
-					});        	
 
 		        }
 		      }

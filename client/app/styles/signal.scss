@@ -30,7 +30,7 @@ $signal-color-green: green;
 		-webkit-transition: background-color 1;
     	transition: background-color 1s;
 
-		&:hover {
+		&.active:hover {
 			border-width: 2px;
 		}
 
@@ -47,10 +47,6 @@ $signal-color-green: green;
 		&.green {
 			background-color: $signal-color-green !important;
 			border-color: darken($signal-color-green, 10%);
-		}
-
-		input {
-			display: none;
 		}
 	}
 }
