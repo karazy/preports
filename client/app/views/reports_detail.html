@@ -15,38 +15,43 @@
     </div>
   </div>
 </div>
-<div ng-show="currentReport._id">
-	<div class="alert alert-danger" ng-show="deleteTimer">
-		<h4><span l="report.killing.msg">Deleting report {{reportToDelete.name}} in</span> {{remainingSecondsBeforeDoomsday}}</h4>
-		<br/>
-		<button ng-click="delayDoomsday()" class="btn btn-warning" l="cancel">Cancel</button>
-	</div>	
+
+<div ng-show="currentReport._id">	
 	<!-- Report detail view. -->
-	<div class="row hidden-print actionbar-row">
-		<div class="col-md-12 actionbar-affix" id="actionbar-affix">
-			<div class="row">
-		<div class="col-md-4">
-			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="reports.back">Reports</span></a>
-			<!-- <a href="#/reports/{{currentReport.copyOf}}" ng-show="currentReport.copyOf" class="pull-right"><i class="glyphicon glyphicon-download"></i> <span l="report.copyof">This is a copy.</span></a>		 -->
-		</div>
-		<!-- Action bar -->
-		<div class="col-md-8">
-			<div ng-include src="'views/reports_detail/actionbar.html'"></div>
-		</div>
+	<div class="container-fluid">
+		<div class="row hidden-print actionbar-row">
+			<div class="col-md-12 actionbar-affix" id="actionbar-affix">
+				<div class="row">
+			<div class="col-md-4">
+				<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="reports.back">Reports</span></a>
+				<!-- <a href="#/reports/{{currentReport.copyOf}}" ng-show="currentReport.copyOf" class="pull-right"><i class="glyphicon glyphicon-download"></i> <span l="report.copyof">This is a copy.</span></a>		 -->
 			</div>
+			<!-- Action bar -->
+			<div class="col-md-8">
+				<div ng-include src="'views/reports_detail/actionbar.html'"></div>
+			</div>
+				</div>
+			</div>
+			<script>
+			$('#actionbar-affix').affix({
+				offset: {
+					top: 52,
+					bottom: 0 
+					//function () {
+					//return (this.bottom = $('.footer').outerHeight(true))
+					//}
+				}
+			});
+		</script>
 		</div>
-		<script>
-    $('#actionbar-affix').affix({
-		offset: {
-			top: 52,
-			bottom: 0 
-			//function () {
-			//return (this.bottom = $('.footer').outerHeight(true))
-			//}
-		}
-    });
-</script>
 	</div>
+	<div class="container">
+		<div class="error-box  alert alert-danger" ng-show="deleteTimer">
+			<h4><span l="report.killing.msg">Deleting report {{reportToDelete.name}} in</span> {{remainingSecondsBeforeDoomsday}}</h4>
+			<br/>
+			<button ng-click="delayDoomsday()" class="btn btn-warning" l="cancel">Cancel</button>
+		</div>	
+	<error></error>
     <!-- Display company logo in print view-->
     <div class="visible-print-inline">
         <div class="row report-brand">        
@@ -280,29 +285,30 @@
 		<div ng-include src="'views/reports_detail/images.html'"></div>
 		</div>
 	</div>
-</div>
-<div class="row section hidden-print">
-	<div class="col-md-12">
-		<a href="#/reports/{{currentReport.copyOf}}" ng-show="currentReport.copyOf"><i class="glyphicon glyphicon-download"></i> <span l="report.copyof">This is a copy.</span></a>
-		<div>
-			<span ng-show="currentReport.createdOn"><span l="report.createdon">Creation date</span>: {{currentReport.createdOn | date:'yyyy-MM-dd HH:mm:ss'}}</span>
-			<span ng-show="currentReport.createdOn && currentReport.lastModified"> | </span>
-			<span ng-show="currentReport.lastModified"> <span l="report.lastmodified">Last modified</span>: {{currentReport.lastModified | date:'yyyy-MM-dd HH:mm:ss'}} </span>
-			<span ng-show="(currentReport.createdOn || currentReport.lastModified) && currentReport.version"> | </span>
-			<span ng-show="currentReport.version">v{{currentReport.version}}</span>
+	<div class="row section hidden-print">
+		<div class="col-md-12">
+			<a href="#/reports/{{currentReport.copyOf}}" ng-show="currentReport.copyOf"><i class="glyphicon glyphicon-download"></i> <span l="report.copyof">This is a copy.</span></a>
+			<div>
+				<span ng-show="currentReport.createdOn"><span l="report.createdon">Creation date</span>: {{currentReport.createdOn | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+				<span ng-show="currentReport.createdOn && currentReport.lastModified"> | </span>
+				<span ng-show="currentReport.lastModified"> <span l="report.lastmodified">Last modified</span>: {{currentReport.lastModified | date:'yyyy-MM-dd HH:mm:ss'}} </span>
+				<span ng-show="(currentReport.createdOn || currentReport.lastModified) && currentReport.version"> | </span>
+				<span ng-show="currentReport.version">v{{currentReport.version}}</span>
+			</div>
 		</div>
 	</div>
-</div>
-<div ng-show="reportNotFound">
-	<div class="row">
-		<div class="col-md-12">
-			<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="back">back</span></a>
+	<div ng-show="reportNotFound">
+		<div class="row">
+			<div class="col-md-12">
+				<a href="#/reports"><i class="glyphicon glyphicon-chevron-left"></i> <span l="back">back</span></a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h2 l="report.notfound.title">Report not found</h2>
+				<p l="report.notfound.message">Could not load given report. Maybe it was deleted?</p>
+			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<h2 l="report.notfound.title">Report not found</h2>
-			<p l="report.notfound.message">Could not load given report. Maybe it was deleted?</p>
-		</div>
 	</div>
 </div>
