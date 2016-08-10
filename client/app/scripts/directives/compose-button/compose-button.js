@@ -27,7 +27,7 @@ var //directive configuration
                     var mask = iElement.find('div.compose-button-mask'),
                         composeButton = iElement.find('div.compose-button'),
                         dialog = iElement.find('div.compose-button-dialog'),
-                        input = iElement.find('input');
+                        input = iElement.find('div.compose-button-dialog input');
                     
                     scope.language = langService;
                     
