@@ -437,5 +437,20 @@ $state-color-green: green;
     }
 }
 
+/* On lager devices make pagination appear centered */
+@media (min-width: 991px) {
+    .pager .next>a, .pager .next>span {
+        float: none;
+        margin-left:20px;
+    }
+
+    .pager .previous>a, .pager .previous>span {
+        float: none;
+        margin-right:20px;
+    }
+
+}
+
+
 
 

@@ -53,10 +53,6 @@ var //directive configuration
                         scope.onClick()(scope.newReportName);
                     }
                     
-                    // dialog.on('hide', function() {
-                    //     jQuery(window.document).unbind('keyup');
-                    // });
-                    
                     
                     function showDialog() {
                         var maskHeight,
@@ -69,7 +65,7 @@ var //directive configuration
                         mask.show();
                         dialog.show();
                         //delay to get focus 
-                        input.focus(100);
+                        input.focus(150);
                         
                         dialog.bind('keyup', function(event) {
 						      //hide dialog on escape
