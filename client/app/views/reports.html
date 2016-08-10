@@ -9,7 +9,7 @@
             </div>
         </div>
     </div>
-    <div class="row visible-xs" style="margin-bottom: 10px;">
+    <div class="row visible-xs-block visible-sm-block" style="margin-bottom: 10px;">
         <form role="form" class="col-md-12">	
             <div class="form-group">
                 <div class="input-group">
@@ -105,17 +105,19 @@
                         </tr>			
                     </tbody>
                 </table>
-            </div>
-            <div>
-                <ul class="pager">
-                <li class="previous"><a href="" ng-show="reportsWrapper._links.prev" ng-click="loadReports('prev')"><i class="glyphicon glyphicon-chevron-left"></i></a></li>
-                <li ng-show="reportsWrapper.totalPages > 1">
-                        {{reportsWrapper.currentPage}}/{{reportsWrapper.totalPages}}
-                </li>
-                <li class="next"><a href="" ng-show="reportsWrapper._links.next" ng-click="loadReports('next')"><i class="glyphicon glyphicon-chevron-right"></i></a></li>
-                </ul>
-            </div>
+            </div>            
         </div>
     </div>
-    <compose-button class="hidden-xs" title="reports.new.button" on-click="createNewReport"></compose-button>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <ul class="pager">
+            <li class="previous"><a href="" ng-show="reportsWrapper._links.prev" ng-click="loadReports('prev')"><i class="glyphicon glyphicon-chevron-left"></i></a></li>
+            <li ng-show="reportsWrapper.totalPages > 1">
+                    {{reportsWrapper.currentPage}}/{{reportsWrapper.totalPages}}
+            </li>
+            <li class="next"><a href="" ng-show="reportsWrapper._links.next" ng-click="loadReports('next')"><i class="glyphicon glyphicon-chevron-right"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <compose-button class="hidden-xs hidden-sm" title="reports.new.button" on-click="createNewReport"></compose-button>
 </div>

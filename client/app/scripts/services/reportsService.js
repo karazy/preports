@@ -13,7 +13,7 @@ angular.module('PReports.services').service('reportsService', [
             'getReports' : getReports
         };
         
-        const PAGINATION_LIMIT = 25;
+        const PAGINATION_LIMIT = 10;
         
         function setupGlobalSearchParams() {
              //initialize global search parameters if they don't exist on $rootScope
