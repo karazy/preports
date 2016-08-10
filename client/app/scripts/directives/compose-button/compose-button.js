@@ -12,7 +12,7 @@ var //directive configuration
 		transclude: true,
 		priority: 100,
 		scope: {
-			'title': '@',
+			'cbTitle': '@',
 			'onClick': '&',
             'datasource': '='
 		},
