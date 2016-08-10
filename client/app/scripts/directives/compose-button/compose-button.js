@@ -65,7 +65,7 @@ var //directive configuration
                         mask.show();
                         dialog.show();
                         //delay to get focus 
-                        input.focus(150);
+                        //input.focus(150);
                         
                         dialog.bind('keyup', hideDialogByEsc);
                     }
