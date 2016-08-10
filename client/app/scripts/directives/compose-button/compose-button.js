@@ -57,15 +57,18 @@ var //directive configuration
                     function showDialog() {
                         var maskHeight,
                             maskWidth;
-                            
+
+                        console.log('CB_1');   
                         maskHeight = jQuery(document).height();
+                        console.log('CB_1');
                         maskWidth = jQuery(window).width();
+                        console.log('CB_1');
                         //Set height and width to mask to fill up the whole screen
                         mask.css({'width':maskWidth,'height':maskHeight}); 
                         mask.show();
                         dialog.show();
                         //delay to get focus 
-                        //input.focus(150);
+                        input.focus(1000);
                         
                         dialog.bind('keyup', hideDialogByEsc);
                     }
