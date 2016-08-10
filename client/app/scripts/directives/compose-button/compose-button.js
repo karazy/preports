@@ -67,18 +67,20 @@ var //directive configuration
                         //delay to get focus 
                         input.focus(150);
                         
-                        dialog.bind('keyup', function(event) {
-						      //hide dialog on escape
-                            if(event.which == 27) {
-                                hideDialog();	
-                            }						
-                        });
+                        dialog.bind('keyup', hideDialogByEsc);
                     }
                     
                     function hideDialog() {
                         mask.hide();
                         dialog.hide();  
-                        dialog.unbind('keyup');                      
+                        dialog.unbind('keyup',hideDialogByEsc);                      
+                    }
+                    
+                    function hideDialogByEsc(event) {
+                        //hide dialog on escape
+                        if(event.which == 27) {
+                            hideDialog();	
+                        }						
                     }
                     
                     
