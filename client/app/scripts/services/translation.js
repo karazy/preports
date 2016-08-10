@@ -476,6 +476,10 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Speichern",
 			"EN" : "Save"
 		},
+        "create" : {
+			"DE" :  "Anlegen",
+			"EN" : "Create"
+		},
 		"cancel" : {
 			"DE" :  "Abbrechen",
 			"EN" : "Cancel"
@@ -527,9 +531,6 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 		"error.title" : {
 			"DE" :  "Fehler",
 			"EN" : "Error"
-		},
-		"undo" : {
-			"DE" :  "Rückgängig"
 		},
 		"next" : {
 			"DE" : "Nächste"

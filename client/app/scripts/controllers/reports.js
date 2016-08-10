@@ -1354,16 +1354,17 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
           }
         }
       )
-      .add(
-        {
-          combo: 'esc',
-          description: 'Unfocus field',
-          allowIn: ['INPUT'],
-          callback: function() {
-            angular.element('input').blur();
-          }
-        }
-      )
+    //   .add(
+    //     {
+    //       combo: 'esc',
+    //       description: 'Unfocus field',
+    //       allowIn: ['INPUT'],
+    //       callback: function(event) {
+    //         angular.element('input').blur();
+    //         return true;
+    //       }
+    //     }
+    //   )
       .add(
         {
           combo: 'down',

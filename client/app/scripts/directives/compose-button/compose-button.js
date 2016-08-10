@@ -1,8 +1,9 @@
 'use strict';
 /**
-*  Inspired by Google Inbox and http://bootsnipp.com/snippets/featured/inbox-by-gmail 
+* Inspired by Google Inbox and http://bootsnipp.com/snippets/featured/inbox-by-gmail 
+* Used to create new reports. 
 */
-angular.module('PReports.directives').directive('composeButton', ['$locale', 'language', '$interpolate', function($locale, langService,$interpolate) {
+angular.module('PReports.directives').directive('composeButton', ['$locale', 'language', '$interpolate', '$timeout', function($locale, langService,$interpolate, $timeout) {
 
 var //directive configuration
 		config = {
@@ -13,6 +14,7 @@ var //directive configuration
 		scope: {
 			'title': '@',
 			'onClick': '&',
+            'datasource': '='
 		},
 		templateUrl: 'views/templates/composeButton.html',
 		compile: function(element, attrs, transclude) {
@@ -38,23 +40,22 @@ var //directive configuration
                     });
                     
                     composeButton.bind('click', function() {
+                        scope.newReportName = '';
                         showDialog();
                     });
 
                     mask.bind('click', function() {
                         hideDialog();
                     });
-
-                    // dialog.bind('keyup', function(event) {
-					// 	//hide dialog on escape
-					// 	if(event.which == 27) {
-					// 		scope.closeDialog();	
-					// 	}						
-					// });
+                    
                     
                     scope.save = function() {
                         scope.onClick()(scope.newReportName);
                     }
+                    
+                    // dialog.on('hide', function() {
+                    //     jQuery(window.document).unbind('keyup');
+                    // });
                     
                     
                     function showDialog() {
@@ -69,11 +70,19 @@ var //directive configuration
                         dialog.show();
                         //delay to get focus 
                         input.focus(100);
+                        
+                        dialog.bind('keyup', function(event) {
+						      //hide dialog on escape
+                            if(event.which == 27) {
+                                hideDialog();	
+                            }						
+                        });
                     }
                     
                     function hideDialog() {
                         mask.hide();
-                        dialog.hide();
+                        dialog.hide();  
+                        dialog.unbind('keyup');                      
                     }
                     
                     
