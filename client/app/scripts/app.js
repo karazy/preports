@@ -77,7 +77,7 @@ angular.module('PReports', [
       });
 
       $httpProvider.defaults.headers.common['Accept'] = 'application/hal+json';
-      
+      //true for debug logs
       $logProvider.debugEnabled(false);
 
       //Configure TextAngular Options
