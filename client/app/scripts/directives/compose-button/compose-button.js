@@ -64,8 +64,8 @@ var //directive configuration
                         //Set height and width to mask to fill up the whole screen
                         mask.css({'width':maskWidth,'height':maskHeight});
                         $timeout(function() {
-                        input.focus(150); 
-                        }, 50);
+                        input.trigger("focus");
+                        }, 150);
                         mask.show();
                         dialog.show();
                         //delay to get focus                                                                     
