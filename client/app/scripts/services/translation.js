@@ -90,6 +90,14 @@ angular.module("PReports.translations", [], ["$provide", function($provide) {
 			"DE" :  "Aktion",
 			"EN" : "Action"
 		},
+        "reports.table.empty.1" : {
+            "DE" :  "Keine Reports gefunden.",
+			"EN" : "No reports found!"
+        },
+        "reports.table.empty.2" : {
+            "DE" :  "Überprüfe deine Suchparameter oder erstelle einen neuen Report.",
+			"EN" : "Check your search parameters or add a new one."
+        },
         "reports.search.clear" : {
             "DE" : "Suche löschen",
             "EN" : "Clear search"

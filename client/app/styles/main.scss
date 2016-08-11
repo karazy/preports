@@ -349,6 +349,20 @@ table {
   }
 }
 
+.reports-table-empty {
+    text-align: center;
+    margin-top: 50px;
+    
+    .empty-whoops {
+        font-size: 4em;
+        font-weight: bold;
+    }
+    
+    .empty-description {
+        font-size: 2em;
+    }
+}
+
 $state-size: 15px;
 $state-radius: 50%;
 $state-color-yellow: #F4E544;

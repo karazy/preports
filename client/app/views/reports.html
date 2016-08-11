@@ -78,7 +78,7 @@
                         <th><i class="glyphicon glyphicon-picture"></i></th>
                         <th l="reports.table.actions">Actions</th>
                     </thead>
-                    <tbody>
+                    <tbody ng-show="reports.length > 0">
                         <tr ng-repeat="r in reports | orderBy:['year']" ng-click="showReport(r._id, $event)" ng-class="{'row-selected' : $index == selectedReportSearchRow}">
                             <td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
                             <td>{{r.week}}</td>
@@ -103,8 +103,14 @@
                                 </span>	
                             </td>
                         </tr>			
-                    </tbody>
+                    </tbody>                    
                 </table>
+                <div class="reports-table-empty" ng-hide="reports.length > 0">
+                    <p class="empty-whoops">Whooops!</p>
+                    <p><i class="fa fa-file fa-5x" aria-hidden="true"></i></p>
+                    <p class="empty-description" l="reports.table.empty.1">No reports found!</p>
+                    <p class="empty-description" l="reports.table.empty.2">Check your search parameters or add a new one.</p>
+                </div>
             </div>            
         </div>
     </div>
