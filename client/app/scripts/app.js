@@ -58,7 +58,7 @@ angular.module('PReports', [
   'ui.sortable',
   'textAngular',
   'cfp.hotkeys'
-]).config(['$routeProvider', '$httpProvider', '$provide', function ($routeProvider, $httpProvider, $provide) {
+]).config(['$routeProvider', '$httpProvider', '$provide', '$logProvider', function ($routeProvider, $httpProvider, $provide, $logProvider) {
     $routeProvider
       .when('/reports', {
         templateUrl: 'views/reports.html',
@@ -77,6 +77,8 @@ angular.module('PReports', [
       });
 
       $httpProvider.defaults.headers.common['Accept'] = 'application/hal+json';
+      
+      $logProvider.debugEnabled(false);
 
       //Configure TextAngular Options
       $provide.decorator('taOptions', ['$delegate', function(taOptions){

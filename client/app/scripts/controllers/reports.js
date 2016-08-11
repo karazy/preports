@@ -133,7 +133,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
     function loadReports(direction, searchParams) {
       var page;
-      $log.log('loadReports');
+      
+      $log.debug('loadReports');
 
       $scope.selectedReportSearchRow = null;
 
