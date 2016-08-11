@@ -80,7 +80,7 @@
                     </thead>
                     <tbody ng-show="reports.length > 0">
                         <tr ng-repeat="r in reports | orderBy:['year']" ng-click="showReport(r._id, $event)" ng-class="{'row-selected' : $index == selectedReportSearchRow}">
-                            <td><a href="#/reports/{{r._id}}"><i class="glyphicon glyphicon-edit"></i> {{r.name}}</a></td>
+                            <td><a href="#/reports/{{r._id}}">{{r.name}}</a></td>
                             <td>{{r.week}}</td>
                             <td>{{r.year}}</td>
                             <td>
