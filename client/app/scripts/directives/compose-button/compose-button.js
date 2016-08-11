@@ -3,7 +3,7 @@
 * Inspired by Google Inbox and http://bootsnipp.com/snippets/featured/inbox-by-gmail 
 * Used to create new reports. 
 */
-angular.module('PReports.directives').directive('composeButton', ['$locale', 'language', '$interpolate', '$timeout', function($locale, langService,$interpolate, $timeout) {
+angular.module('PReports.directives').directive('composeButton', ['$locale', 'language', '$interpolate', '$timeout', 'hotkeys', function($locale, langService,$interpolate, $timeout, hotkeys) {
 
 var //directive configuration
 		config = {
@@ -27,7 +27,9 @@ var //directive configuration
                     var mask = iElement.find('div.compose-button-mask'),
                         composeButton = iElement.find('div.compose-button'),
                         dialog = iElement.find('div.compose-button-dialog'),
-                        input = iElement.find('div.compose-button-dialog input');
+                        input = iElement.find('div.compose-button-dialog input'),
+                        //holds the normal esc hotkey
+                        hotkeySave;
                     
                     scope.language = langService;
                     
@@ -58,30 +60,38 @@ var //directive configuration
                         var maskHeight,
                             maskWidth;
                         
-                        dialog.bind('keyup', hideDialogByEsc);
                         maskHeight = angular.element(document).height();
                         maskWidth = angular.element(window).width();
                         //Set height and width to mask to fill up the whole screen
                         mask.css({'width':maskWidth,'height':maskHeight});
+                        //delay to get focus
                         $timeout(function() {
-                        input.trigger("focus");
+                            input.trigger("focus");
                         }, 150);
+                        
                         mask.show();
                         dialog.show();
-                        //delay to get focus                                                                     
+                        
+                        //replace the existing esc hotkey temporarily with one to close the new report dialog
+                        hotkeySave = hotkeys.get('esc');
+                        hotkeys.del('esc');                        
+                        hotkeys.add(
+                            {
+                            combo: 'esc',
+                            allowIn: ['INPUT'],
+                            description: 'Close new report dialog',
+                            callback: function(event) {
+                                hideDialog();
+                                }
+                            }
+                        );                                                               
                     }
                     
                     function hideDialog() {
                         mask.hide();
                         dialog.hide();  
-                        dialog.unbind('keyup',hideDialogByEsc);                      
-                    }
-                    
-                    function hideDialogByEsc(event) {
-                        //hide dialog on escape
-                        if(event.which == 27) {
-                            hideDialog();	
-                        }						
+                        hotkeys.del('esc');
+                        hotkeys.add(hotkeySave);                      
                     }
                     
                     
