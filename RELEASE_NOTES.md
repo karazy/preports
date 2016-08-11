@@ -1,5 +1,9 @@
 #Release Notes
 
+###1.8.1 Lumpy Lion
+- Added a Google Inbox inspired compose button to create new reports. That means more space for the report overview.
+- Switched back to narrow report layout since it is better readable.
+
 ###1.8.0 Lumpy Lion
 - Sticky actionbar when editing a report
 - Report search parameters are reflected in URL so you can send someone a prefiltered view.
