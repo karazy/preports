@@ -65,7 +65,7 @@
                             <i class="glyphicon glyphicon-arrow-down" ng-show="search.sortProperty == 'name_normalized' && search.sortDirection == 'desc'"></i>
                             <i class="glyphicon glyphicon-arrow-up" ng-show="search.sortProperty == 'name_normalized' && search.sortDirection == 'asc'"></i> 
                         </th>
-                        <th ng-click="sortList('week')" style="width:80px" class="column-sortable">
+                        <th ng-click="sortList('week')" style="width:85px" class="column-sortable">
                             <span l="reports.table.week">Week</span>
                             <i class="glyphicon glyphicon-arrow-down" ng-show="search.sortProperty == 'week' && search.sortDirection == 'desc'"></i>
                             <i class="glyphicon glyphicon-arrow-up" ng-show="search.sortProperty == 'week' && search.sortDirection == 'asc'"></i>
@@ -79,7 +79,9 @@
                         <th l="reports.table.actions">Actions</th>
                     </thead>
                     <tbody ng-show="reports.length > 0">
-                        <tr ng-repeat="r in reports | orderBy:['year']" ng-click="showReport(r._id, $event)" ng-class="{'row-selected' : $index == selectedReportSearchRow}">
+                        <tr ng-repeat="r in reports | orderBy:['year']" ng-click="showReport(r._id, $event)" ng-class="{'row-selected' : $index == selectedReportSearchRow}"
+                        uib-popover-template="templateUrl"  popover-placement="left"
+                        popover-hoverable="true" popover-is-open="r.popoverOpen">
                             <td><a href="#/reports/{{r._id}}">{{r.name}}</a></td>
                             <td>{{r.week}}</td>
                             <td>{{r.year}}</td>

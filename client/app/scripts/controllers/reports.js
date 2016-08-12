@@ -25,6 +25,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     helper, hotkeys, notificationService, commandService, $q, reportsService) {
 
     var REPORT_DELETE_TIMEOUT = 3000;
+    
+    $scope.templateUrl = "views/templates/popover.html";
 
     /**
     * Reports retrieved after search.
