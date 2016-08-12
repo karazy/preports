@@ -1433,6 +1433,33 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
         $scope.notificationProviders = providers;
       });
     }
+    
+    /**
+     * 
+     */
+    function getYearsFromToday(baseYear) {
+        var years = [],
+            currentYear = (new Date()).getFullYear();
+        
+        years.push(currentYear);
+        years.push(currentYear+1);
+        
+        if(typeof baseYear !== 'number') {
+            return years;
+        }
+        
+        if(baseYear < 2000) {
+            baseYear = 2000;
+        }
+        
+        while(currentYear > baseYear) {
+            currentYear--;
+            years.push(currentYear);
+        }
+        
+        return years;
+        
+    }
    
 
     //## Init Section
