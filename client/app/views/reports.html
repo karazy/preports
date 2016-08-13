@@ -74,9 +74,9 @@
                         <th><i class="glyphicon glyphicon-euro"></i></th>
                         <th><i class="glyphicon glyphicon-hourglass"></i></th>
                         <th><i class="glyphicon glyphicon-thumbs-up"></i></th>
-                        <th>Δ%</th>			
+                        <th style="min-width:40px">Δ%</th>			
                         <th><i class="glyphicon glyphicon-picture"></i></th>
-                        <th l="reports.table.actions">Actions</th>
+                        <th l="reports.table.actions" style="min-width:90px">Actions</th>
                     </thead>
                     <tbody ng-show="reports.length > 0">
                         <tr ng-repeat="r in reports | orderBy:['year']" ng-click="showReport(r._id, $event)" ng-class="{'row-selected' : $index == selectedReportSearchRow}">
