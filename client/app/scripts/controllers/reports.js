@@ -31,7 +31,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     */
     $scope.reports = [];
     $scope.currentReport = null;
-    $scope.years = [2014, 2015, 2016, 2017];
+    $scope.years = null;
     
     $scope.config = config;
 
@@ -1434,31 +1434,12 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
       });
     }
     
-    /**
-     * 
-     */
-    function getYearsFromToday(baseYear) {
-        var years = [],
-            currentYear = (new Date()).getFullYear();
-        
-        years.push(currentYear);
-        years.push(currentYear+1);
-        
-        if(typeof baseYear !== 'number') {
-            return years;
-        }
-        
-        if(baseYear < 2000) {
-            baseYear = 2000;
-        }
-        
-        while(currentYear > baseYear) {
-            currentYear--;
-            years.push(currentYear);
-        }
-        
-        return years;
-        
+
+
+    function calculateYearRange() {
+      var baseYear = config.reportsBaseYear || (new Date()).getFullYear();
+      
+      $scope.years = helper.getYearsFromToday(baseYear);
     }
    
 
@@ -1471,6 +1452,8 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
     function activate() {
 
         $log.debug('activate');
+
+        calculateYearRange();
         
         //initially load reports or report entity based on url
        
@@ -1485,7 +1468,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
             loadProjectNames();
             registerWatchForSearch();
             registerReportSearchHotkeys();
-        }
+        }        
         
          //Setup File Upload immediately. Otherwise there will be erors like
         //https://github.com/nervgh/angular-file-upload/issues/183    
@@ -1493,7 +1476,7 @@ angular.module('PReports').controller('ReportCtrl', ['$scope',
 
         registerEventHandlers();
         
-        getNotificationProviders();
+        getNotificationProviders();        
     }
 
     //##Init section end

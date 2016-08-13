@@ -22,7 +22,7 @@ angular.module('PReports.services').service('config', ['$http', function($http) 
 			'USD': '\$ $1.$2'
 		},
 		'defaultCostTypes' : [],
-        'baseYear' : 2014
+		'reportsBaseYear' : 2014
 	}
 
 	/**

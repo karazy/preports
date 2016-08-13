@@ -85,7 +85,38 @@ angular.module('PReports.services').factory('helper', function() {
 				//per default return 52 weeks, which fits most years
 				return 52;
 			}
+		},
+
+		/**
+		 * 
+		 */
+		getYearsFromToday: function(baseYear) {
+			var years = [],
+				currentYear = (new Date()).getFullYear(),
+				yearCount;	
+			
+			if(typeof baseYear !== 'number') {
+				years.push(currentYear);
+				years.push(currentYear+1);
+				return years;
+			}
+			
+			if(baseYear < 2000) {
+				baseYear = 2000;
+			}
+
+			yearCount = baseYear;
+
+			
+			while(yearCount <= (currentYear + 1)) {
+				years.push(yearCount);
+				yearCount++;				
+			}
+			
+			return years;
+			
 		}
+
 	};
 
 	return helperFunctions;
