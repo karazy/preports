@@ -1,5 +1,9 @@
 #Release Notes
 
+###1.8.2 Lumpy Lion
+- Show a message when no reports are found.
+- Minor improvements.
+
 ###1.8.1 Lumpy Lion
 - Added a Google Inbox inspired compose button to create new reports. That means more space for the report overview.
 - Switched back to narrow report layout since it is better readable.
