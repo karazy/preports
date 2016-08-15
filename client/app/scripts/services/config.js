@@ -13,9 +13,9 @@ angular.module('PReports.services').service('config', ['$http', function($http) 
 		@private
 	*/
 	self.config_ = {
-		'serviceUrl' : 'http://127.0.0.1',
-		'servicePort' : '3000',
-		'version' : '1.8.1 Lumpy Lion',
+		'serviceUrl' : '',
+		'servicePort' : '',
+		'version' : '1.8.2 Lumpy Lion',
 		'priceRegExp' : /([0123456789]+)\.([0123456789]*)/,
 		'currencyFormats' : {
 			'EUR': '$1,$2 €',
