@@ -73,7 +73,6 @@
     "string-template",
     "winston"
   ],
-  "private": true,
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
