@@ -6,7 +6,7 @@
  */
 
 var winston 	= require('winston');
-var uuid 		= require('node-uuid');
+var uuid 		= require('uuid');
 var path		= require('path');
 var config		= require('../../config/environment');
 
