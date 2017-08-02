@@ -5,7 +5,7 @@ branches:
  only:
   - development
 before_script:
-- rvm install 2.x
+- rvm install 2.2.4
 - npm install -g bower grunt-cli
 - gem install sass
 - gem install compass
